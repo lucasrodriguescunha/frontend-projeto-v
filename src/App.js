@@ -1,17 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
-import { PrimeReactProvider } from 'primereact/api';
-import { ButtonExample } from './components/button';
+import React from "react";
+import {PrimeReactProvider} from "primereact/api";
+import AppRoutes from "./Routes"; // Importa as rotas
 
 function App() {
-  return (
-    <PrimeReactProvider>
-      <div>
-        <h1>Teste</h1>
-        <ButtonExample>Teste</ButtonExample>
-      </div>
-    </PrimeReactProvider>
-  );
+    return (
+        <PrimeReactProvider>
+            <AppRoutes/> {/* Renderiza as rotas corretamente */}
+        </PrimeReactProvider>
+    );
 }
 
 export default App;
