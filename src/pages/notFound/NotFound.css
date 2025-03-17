@@ -1,0 +1,54 @@
+/* Resetando algumas propriedades do body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f0f0;
+    background-image: linear-gradient(to bottom, #fff, #e0e0e0);
+}
+
+.not-found-content {
+    text-align: center;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    max-width: 600px;
+    width: 100%;
+}
+
+.not-found-title {
+    font-size: 100px;
+    font-weight: bold;
+    color: #555;
+    margin: 0;
+}
+
+.not-found-message {
+    font-size: 1.5rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+.not-found-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 25px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.not-found-link:hover {
+    background-color: #555;
+}
