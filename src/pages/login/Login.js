@@ -116,7 +116,9 @@ function Login() {
 
                     <Button id="login-button" label="Acessar" type="submit"/>
 
-                    <p id="request-password">Solicitar nova senha</p>
+                    <p id="request-password" onClick={() => navigate("/novasenha")}>
+                        Solicitar nova senha
+                    </p>
                 </form>
             </Card>
         </div>
