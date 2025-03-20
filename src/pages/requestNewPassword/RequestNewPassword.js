@@ -9,7 +9,7 @@ import {Toast} from "primereact/toast";
 
 import "./RequestNewPassword.css";
 
-function RequestNewPassword() {
+const RequestNewPassword = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
     const toast = React.useRef(null); // Referência para o Toast

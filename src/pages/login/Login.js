@@ -11,7 +11,7 @@ import {Password} from "primereact/password";
 
 import "./Login.css";
 
-function Login() {
+const Login = () => {
     const [checked, setChecked] = useState(true);
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
