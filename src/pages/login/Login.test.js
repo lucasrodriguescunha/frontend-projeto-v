@@ -1,6 +1,6 @@
 import React from "react";
 import {fireEvent, render, screen} from "@testing-library/react";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter} from "react-router";
 import Login from "./Login";
 import "@testing-library/jest-dom";
 
@@ -60,8 +60,8 @@ describe("Login Component", () => {
 
     test("Realiza login com sucesso e navega para /home", () => {
         const mockNavigate = jest.fn();
-        jest.mock("react-router-dom", () => ({
-            ...jest.requireActual("react-router-dom"),
+        jest.mock("react-router", () => ({
+            ...jest.requireActual("react-router"),
             useNavigate: () => mockNavigate,
         }));
 
