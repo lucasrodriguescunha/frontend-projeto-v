@@ -1,4 +1,4 @@
-#container-login {
+#container-register {
     background-color: #677FFA;
     width: 100vw;
     height: 100vh;
@@ -24,14 +24,14 @@
     text-align: center;
 }
 
-#login-text {
+#register-text {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
     padding: 0;
 }
 
-#login-description {
+#register-description {
     font-size: 1rem;
     font-weight: normal;
     color: #8C95A4;
@@ -56,7 +56,7 @@ form {
     margin: 0;
 }
 
-#login-button {
+#register-button {
     background-color: #677FFA;
     width: 80%;
     margin-top: 1rem;
@@ -67,17 +67,14 @@ form {
     cursor: pointer;
 }
 
-#login-button:hover {
+#register-button:hover {
     background-color: #5567d9;
 }
 
-#request-password {
+#log-in-button {
     margin-bottom: 0;
     text-align: center;
     color: #677FFA;
     cursor: pointer;
 }
 
-#request-password:hover {
-    text-decoration: underline;
-}

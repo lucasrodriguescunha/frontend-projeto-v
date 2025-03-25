@@ -12,12 +12,11 @@ import "./RequestNewPassword.css";
 const RequestNewPassword = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
-    const toast = React.useRef(null); // Referência para o Toast
+    const toast = React.useRef(null);
 
     const handleAccess = (e) => {
         e.preventDefault();
 
-        // Validações antes de permitir o login
         if (!email) {
             toast.current.show({
                 severity: 'error',
@@ -28,7 +27,6 @@ const RequestNewPassword = () => {
             return;
         }
 
-        // Validação do formato do e-mail
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             toast.current.show({
@@ -40,7 +38,6 @@ const RequestNewPassword = () => {
             return;
         }
 
-        // Se a validação passar, exibe o Toast de sucesso e navega para o próximo passo
         toast.current.show({
             severity: 'success',
             summary: 'Email enviado',
@@ -48,26 +45,20 @@ const RequestNewPassword = () => {
             life: 3000,
         });
 
-        // Atrasar a navegação para garantir que o Toast seja exibido
         setTimeout(() => {
-            navigate("/"); // Redireciona para o Dashboard
-        }, 3000); // 3000ms é o tempo em que o Toast será mostrado (ajuste conforme necessário)
+            navigate("/");
+        }, 3000);
     };
 
     return (
-        <div id="container-login">
-            <Toast ref={toast}/> {/* Exibindo o Toast */}
-
-            <div id="custom-title">
-                {/*<Image src={docIcon} alt="Ícone de documento" width="auto" height="auto"/>*/}
-                <h1>QualiAI</h1>
-            </div>
+        <div id="container-request">
+            <Toast ref={toast}/>
 
             <Card id="custom-card">
-                <p id="login-text">Solicitar nova senha</p>
-                <p id="login-description">Por favor, insira seu e-mail.</p>
+                <p id="request-text">Solicitar nova senha</p>
+                <p id="request-description">Por favor, insira seu e-mail.</p>
 
-                <form id="custom-form" onSubmit={handleAccess}>
+                <form onSubmit={handleAccess}>
                     <IconField iconPosition="left">
                         <InputIcon className="pi pi-envelope"/>
                         <InputText
@@ -77,7 +68,7 @@ const RequestNewPassword = () => {
                         />
                     </IconField>
 
-                    <Button id="login-button" label="Solicitar" type="submit"/>
+                    <Button id="request-button" label="Solicitar" type="submit"/>
                 </form>
             </Card>
         </div>
