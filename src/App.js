@@ -1,11 +1,13 @@
 import React from "react";
 import {PrimeReactProvider} from "primereact/api";
-import AppRoutes from "./AppRoutes"; // Importa as rotas
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
+import AppRoutes from "./AppRoutes";
 
-function App() {
+import './App.css'
+
+const App = () => {
     return (
         <PrimeReactProvider>
             <AppRoutes/> {/* Renderiza as rotas corretamente */}
