@@ -1,0 +1,19 @@
+.card {
+    width: 300px;
+    margin: 10px;
+}
+
+.cardTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.customButton {
+    background-color: #677FFA;
+}
+
+.customButton:hover {
+    background-color: #5567d9;
+}
