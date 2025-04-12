@@ -1,28 +1,27 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {Toast} from "primereact/toast";
-import {Card} from "primereact/card";
-import {IconField} from "primereact/iconfield";
-import {InputIcon} from "primereact/inputicon";
-import {InputText} from "primereact/inputtext";
-import {Password} from "primereact/password";
-import {Checkbox} from "primereact/checkbox";
-import {Button} from "primereact/button";
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { Checkbox } from "primereact/checkbox";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Toast } from "primereact/toast";
+import { Password } from "primereact/password";
 
-import "./Register.css";
+import styles from "./Login.module.css";
 
-const Register = () => {
+const Login = () => {
     const [checked, setChecked] = useState(true);
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [senha, setSenha] = useState("");
     const navigate = useNavigate();
-    const toast = React.useRef(null);
+    const toast = useRef(null);
 
     const handleAccess = (e) => {
         e.preventDefault();
 
-        if (!email || !password) {
+        if (!email || !senha) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Campos obrigatórios',
@@ -44,7 +43,7 @@ const Register = () => {
         }
 
         const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-        if (!senhaRegex.test(password)) {
+        if (!senhaRegex.test(senha)) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Senha inválida',
@@ -56,8 +55,8 @@ const Register = () => {
 
         toast.current.show({
             severity: 'success',
-            summary: 'Cadastro bem-sucedido',
-            detail: 'Você foi cadastrado com sucesso!',
+            summary: 'Login bem-sucedido',
+            detail: 'Você foi logado com sucesso!',
             life: 3000,
         });
 
@@ -66,30 +65,21 @@ const Register = () => {
         }, 3000);
     };
 
-    const login = () => {
-        navigate("/login");
+    const requestPassword = () => {
+        navigate("/nova-senha");
     }
 
     return (
-        <div id="container-register">
-            <Toast ref={toast}/>
+        <div className={styles.containerLogin}>
+            <Toast ref={toast} />
 
-            <Card id="custom-card">
-                <p id="register-text">Bem-vindo(a)</p>
-                <p id="register-description">Por favor, insira seus dados.</p>
+            <Card className={styles.customCard}>
+                <p className={styles.loginText}>Bem-vindo(a)</p>
+                <p className={styles.loginDescription}>Por favor, insira seus dados.</p>
 
-                <form id="custom-form" onSubmit={handleAccess}>
+                <form onSubmit={handleAccess} className={styles.form}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-user"/>
-                        <InputText
-                            placeholder="Nome"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </IconField>
-
-                    <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope"/>
+                        <InputIcon className="pi pi-envelope" />
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -100,8 +90,8 @@ const Register = () => {
                     <Password
                         placeholder="Senha"
                         name="senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={senha}
+                        onChange={(e) => setSenha(e.target.value)}
                         toggleMask
                         promptLabel="Insira a senha"
                         weakLabel="Fraca"
@@ -109,25 +99,24 @@ const Register = () => {
                         strongLabel="Forte"
                     />
 
-                    <div id="checkbox-container">
+                    <div className={styles.checkboxContainer}>
                         <Checkbox
-                            id="checkbox"
+                            inputId="checkbox"
                             onChange={(e) => setChecked(e.checked)}
                             checked={checked}
                         />
                         <label htmlFor="checkbox">Lembrar-me</label>
                     </div>
 
-                    <Button id="register-button" label="Cadastrar" type="submit"/>
+                    <Button className={styles.loginButton} label="Acessar" type="submit" />
 
-                    <p id="log-in-button" onClick={login}>
-                        Ir para Login
+                    <p className={styles.requestPassword} onClick={requestPassword}>
+                        Solicitar nova senha
                     </p>
                 </form>
             </Card>
         </div>
     );
-}
+};
 
-
-export default Register;
+export default Login;

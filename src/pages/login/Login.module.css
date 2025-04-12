@@ -1,4 +1,6 @@
-#container-login {
+/* Login.module.css */
+
+.containerLogin {
     background-color: #677FFA;
     width: 100vw;
     height: 100vh;
@@ -11,7 +13,7 @@
     box-sizing: border-box;
 }
 
-#custom-card {
+.customCard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,39 +26,39 @@
     text-align: center;
 }
 
-#login-text {
+.loginText {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
     padding: 0;
 }
 
-#login-description {
+.loginDescription {
     font-size: 1rem;
     font-weight: normal;
     color: #8C95A4;
     margin-bottom: 2.1875rem;
 }
 
-form {
+.form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     align-items: center;
 }
 
-#checkbox-container {
+.checkboxContainer {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-top: 1rem;
 }
 
-#checkbox {
+.checkbox {
     margin: 0;
 }
 
-#login-button {
+.loginButton {
     background-color: #677FFA;
     width: 80%;
     margin-top: 1rem;
@@ -67,17 +69,17 @@ form {
     cursor: pointer;
 }
 
-#login-button:hover {
+.loginButton:hover {
     background-color: #5567d9;
 }
 
-#request-password {
+.requestPassword {
     margin-bottom: 0;
     text-align: center;
     color: #677FFA;
     cursor: pointer;
 }
 
-#request-password:hover {
+.requestPassword:hover {
     text-decoration: underline;
 }

@@ -1,0 +1,8 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #677FFA;
+    height: 100vh;
+}

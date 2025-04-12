@@ -1,27 +1,28 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router";
-import {IconField} from "primereact/iconfield";
-import {InputIcon} from "primereact/inputicon";
-import {InputText} from "primereact/inputtext";
-import {Checkbox} from "primereact/checkbox";
-import {Button} from "primereact/button";
-import {Card} from "primereact/card";
-import {Toast} from "primereact/toast";
-import {Password} from "primereact/password";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
+import { Card } from "primereact/card";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Checkbox } from "primereact/checkbox";
+import { Button } from "primereact/button";
 
-import "./Login.css";
+import styles from "./Register.module.css";
 
-const Login = () => {
+const Register = () => {
     const [checked, setChecked] = useState(true);
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const toast = React.useRef(null);
 
     const handleAccess = (e) => {
         e.preventDefault();
 
-        if (!email || !senha) {
+        if (!email || !password) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Campos obrigatórios',
@@ -43,7 +44,7 @@ const Login = () => {
         }
 
         const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-        if (!senhaRegex.test(senha)) {
+        if (!senhaRegex.test(password)) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Senha inválida',
@@ -55,8 +56,8 @@ const Login = () => {
 
         toast.current.show({
             severity: 'success',
-            summary: 'Login bem-sucedido',
-            detail: 'Você foi logado com sucesso!',
+            summary: 'Cadastro bem-sucedido',
+            detail: 'Você foi cadastrado com sucesso!',
             life: 3000,
         });
 
@@ -65,21 +66,30 @@ const Login = () => {
         }, 3000);
     };
 
-    const requestPassword = () => {
-        navigate("/nova-senha");
+    const login = () => {
+        navigate("/login");
     }
 
     return (
-        <div id="container-login">
-            <Toast ref={toast}/>
+        <div className={styles.container}>
+            <Toast ref={toast} />
 
-            <Card id="custom-card">
-                <p id="login-text">Bem-vindo(a)</p>
-                <p id="login-description">Por favor, insira seus dados.</p>
+            <Card className={styles.card}>
+                <p className={styles.title}>Bem-vindo(a)</p>
+                <p className={styles.description}>Por favor, insira seus dados.</p>
 
-                <form onSubmit={handleAccess}>
+                <form className={styles.form} onSubmit={handleAccess}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope"/>
+                        <InputIcon className="pi pi-user" />
+                        <InputText
+                            placeholder="Nome"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </IconField>
+
+                    <IconField iconPosition="left">
+                        <InputIcon className="pi pi-envelope" />
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -90,8 +100,8 @@ const Login = () => {
                     <Password
                         placeholder="Senha"
                         name="senha"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         toggleMask
                         promptLabel="Insira a senha"
                         weakLabel="Fraca"
@@ -99,24 +109,24 @@ const Login = () => {
                         strongLabel="Forte"
                     />
 
-                    <div id="checkbox-container">
+                    <div className={styles.checkboxContainer}>
                         <Checkbox
-                            id="checkbox"
+                            inputId="checkbox"
                             onChange={(e) => setChecked(e.checked)}
                             checked={checked}
                         />
                         <label htmlFor="checkbox">Lembrar-me</label>
                     </div>
 
-                    <Button id="login-button" label="Acessar" type="submit"/>
+                    <Button className={styles.registerButton} label="Cadastrar" type="submit" />
 
-                    <p id="request-password" onClick={requestPassword}>
-                        Solicitar nova senha
+                    <p className={styles.loginRedirect} onClick={login}>
+                        Ir para Login
                     </p>
                 </form>
             </Card>
         </div>
     );
-}
+};
 
-export default Login;
+export default Register;
