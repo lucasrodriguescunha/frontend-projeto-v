@@ -1,13 +1,13 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {IconField} from "primereact/iconfield";
-import {InputIcon} from "primereact/inputicon";
-import {InputText} from "primereact/inputtext";
-import {Button} from "primereact/button";
-import {Card} from "primereact/card";
-import {Toast} from "primereact/toast";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Toast } from "primereact/toast";
 
-import "./RequestNewPassword.css";
+import styles from "./RequestNewPassword.module.css";
 
 const RequestNewPassword = () => {
     const [email, setEmail] = useState("");
@@ -51,16 +51,16 @@ const RequestNewPassword = () => {
     };
 
     return (
-        <div id="container-request">
-            <Toast ref={toast}/>
+        <div className={styles.container}>
+            <Toast ref={toast} />
 
-            <Card id="custom-card">
-                <p id="request-text">Solicitar nova senha</p>
-                <p id="request-description">Por favor, insira seu e-mail.</p>
+            <Card className={styles.card}>
+                <p className={styles.title}>Solicitar nova senha</p>
+                <p className={styles.description}>Por favor, insira seu e-mail.</p>
 
-                <form onSubmit={handleAccess}>
+                <form className={styles.form} onSubmit={handleAccess}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope"/>
+                        <InputIcon className="pi pi-envelope" />
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -68,7 +68,7 @@ const RequestNewPassword = () => {
                         />
                     </IconField>
 
-                    <Button id="request-button" label="Solicitar" type="submit"/>
+                    <Button className={styles.requestButton} label="Solicitar" type="submit" />
                 </form>
             </Card>
         </div>

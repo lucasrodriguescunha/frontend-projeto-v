@@ -1,10 +1,6 @@
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-}
+/* Remover estilos globais como "body" e ".p-button" se não forem realmente necessários como globais */
 
-.not-found-container {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +9,7 @@ body {
     background-image: linear-gradient(to bottom, #fff, #e0e0e0);
 }
 
-.not-found-content {
+.content {
     text-align: center;
     padding: 30px;
     border-radius: 15px;
@@ -23,30 +19,14 @@ body {
     width: 100%;
 }
 
-.not-found-title {
+.title {
     font-size: 85px;
     font-weight: bold;
     color: #555;
 }
 
-.not-found-message {
+.message {
     font-size: 1.4rem;
     color: #555;
     margin-top: 5px;
-}
-
-.p-button {
-    margin-top: 20px;
-    background-color: #677FFA;
-    border-color: #677FFA;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.p-button:hover {
-    background-color: #5566CC;
-    border-color: #5566CC;
-}
-
-.p-button .p-button-label {
-    color: white;
 }
