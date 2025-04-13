@@ -1,0 +1,27 @@
+.pageContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #677FFA;
+}
+
+.card {
+    width: 300px;
+    text-align: center;
+    margin-bottom: 200px;
+}
+
+.title {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.button {
+    background-color: #677FFA;
+    margin-top: 1rem;
+}
+
+.button:hover {
+    background-color: #5567d9;
+}
