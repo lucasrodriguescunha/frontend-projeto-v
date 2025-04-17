@@ -1,8 +1,19 @@
+.wrapper {
+    padding: 30px;
+    background-color: #677FFA;
+    min-height: 100vh;
+}
+
+.title {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+
 .container {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    padding: 20px;
-    background-color: #677FFA;
-    height: 100vh;
+    gap: 20px;
 }
