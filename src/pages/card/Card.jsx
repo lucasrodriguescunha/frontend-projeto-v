@@ -1,9 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card as PrimeCard } from 'primereact/card';
 import { Button } from 'primereact/button';
 import styles from './Card.module.css';
 
 const Card = ({ title, content, showButton }) => {
+  const navigate = useNavigate();
+
+  const handleAccessClick = () => {
+    navigate('/upload-image');
+  };
+
   return (
     <div className={styles.card}>
       <PrimeCard>
@@ -11,9 +18,10 @@ const Card = ({ title, content, showButton }) => {
         <p>{content}</p>
         {showButton && (
           <Button 
-            label="Enviar imagem"
+            label="Acessar"
             className={styles.customButton}
             size="small"
+            onClick={handleAccessClick}
           />
         )}
       </PrimeCard>
