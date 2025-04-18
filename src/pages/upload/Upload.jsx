@@ -3,7 +3,7 @@ import {Card} from 'primereact/card';
 import {Button} from 'primereact/button';
 import {useNavigate} from 'react-router';
 import styles from './Upload.module.css';
-import UploadImage from "../../components/UploadImage";
+import UploadImage from '../../components/upload/UploadImage';
 
 const Upload = () => {
     const navigate = useNavigate();

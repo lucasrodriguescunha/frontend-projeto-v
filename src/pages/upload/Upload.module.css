@@ -19,7 +19,13 @@
 
 .button {
     background-color: #677FFA;
+    width: 80%;
     margin-top: 1rem;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
 }
 
 .button:hover {
