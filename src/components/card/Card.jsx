@@ -17,7 +17,9 @@ const Card = ({title, subTitle, content, route}) => {
         <div className={styles.cardContainer}>
             <PrimeCard className={styles.card} title={title} subTitle={subTitle}>
                 <p>{content}</p>
-                <Button label='Acessar' className={styles.cardButton} onClick={handleAccessClick}/>
+                <div className={styles.buttonContainer}>
+                    <Button label='Acessar' className={styles.cardButton} onClick={handleAccessClick}/>
+                </div>
             </PrimeCard>
         </div>
     );
