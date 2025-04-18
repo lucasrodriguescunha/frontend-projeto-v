@@ -1,7 +1,8 @@
 import React from 'react';
 import {FileUpload} from 'primereact/fileupload';
+import styles from './UploadImage.module.css';
 
-const Upload = () => {
+const UploadImage = () => {
     return (
         <div className="card">
             <FileUpload name="demo[]" url={'/api/upload'} multiple accept="image/*" maxFileSize={1000000}
@@ -11,4 +12,4 @@ const Upload = () => {
     )
 }
 
-export default Upload;
+export default UploadImage;
