@@ -1,10 +1,10 @@
 import {Route, Routes} from "react-router";
-import NotFound from "./pages/notFound/NotFound";
-import RequestNewPassword from "./pages/requestNewPassword/RequestNewPassword";
-import Register from "./pages/register/Register";
-import Login from "./pages/login/Login";
-import Container from "./pages/container/Container";
-import Upload from "./pages/upload/Upload";
+import NotFound from "./pages/NotFound/NotFound";
+import RequestNewPassword from "./pages/RequestNewPassword/RequestNewPassword";
+import Register from "./pages/Register/Register";
+import Login from "./pages/Login/Login";
+import Container from "./pages/Container/Container";
+import Upload from "./pages/Upload/Upload";
 
 const AppRoutes = () => {
     return (

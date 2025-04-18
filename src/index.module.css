@@ -11,3 +11,11 @@
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:global(.p-fileupload .p-button) {
+  background-color: #677FFA;
+}
+
+:global(.p-fileupload .p-button:hover) {
+  background-color: #5567d9;
+}
