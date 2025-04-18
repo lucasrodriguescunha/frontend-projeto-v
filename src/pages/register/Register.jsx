@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Toast } from "primereact/toast";
-import { Card } from "primereact/card";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import { Checkbox } from "primereact/checkbox";
-import { Button } from "primereact/button";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {Toast} from "primereact/toast";
+import {Card} from "primereact/card";
+import {IconField} from "primereact/iconfield";
+import {InputIcon} from "primereact/inputicon";
+import {InputText} from "primereact/inputtext";
+import {Password} from "primereact/password";
+import {Checkbox} from "primereact/checkbox";
+import {Button} from "primereact/button";
 
 import styles from "./Register.module.css";
 
@@ -72,7 +72,7 @@ const Register = () => {
 
     return (
         <div className={styles.container}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
 
             <Card className={styles.card}>
                 <p className={styles.title}>Bem-vindo(a)</p>
@@ -80,7 +80,7 @@ const Register = () => {
 
                 <form className={styles.form} onSubmit={handleAccess}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-user" />
+                        <InputIcon className="pi pi-user"/>
                         <InputText
                             placeholder="Nome"
                             value={name}
@@ -89,7 +89,7 @@ const Register = () => {
                     </IconField>
 
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope" />
+                        <InputIcon className="pi pi-envelope"/>
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -118,7 +118,7 @@ const Register = () => {
                         <label htmlFor="checkbox">Lembrar-me</label>
                     </div>
 
-                    <Button className={styles.registerButton} label="Cadastrar" type="submit" />
+                    <Button className={styles.registerButton} label="Cadastrar" type="submit"/>
 
                     <p className={styles.loginRedirect} onClick={login}>
                         Ir para Login

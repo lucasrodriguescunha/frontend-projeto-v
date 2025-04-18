@@ -1,13 +1,13 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
-import { InputText } from "primereact/inputtext";
-import { Checkbox } from "primereact/checkbox";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
-import { Toast } from "primereact/toast";
-import { Password } from "primereact/password";
+import React, {useRef, useState} from "react";
+import {useNavigate} from "react-router";
+import {IconField} from "primereact/iconfield";
+import {InputIcon} from "primereact/inputicon";
+import {InputText} from "primereact/inputtext";
+import {Checkbox} from "primereact/checkbox";
+import {Button} from "primereact/button";
+import {Card} from "primereact/card";
+import {Toast} from "primereact/toast";
+import {Password} from "primereact/password";
 
 import styles from "./Login.module.css";
 
@@ -31,23 +31,22 @@ const Login = () => {
             return;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        // Validação básica de formato
+        if (!email.includes("@") || !email.includes(".")) {
             toast.current.show({
                 severity: 'error',
                 summary: 'E-mail inválido',
-                detail: 'Por favor, insira um e-mail válido.',
+                detail: 'O e-mail deve conter "@" e "."',
                 life: 3000,
             });
             return;
         }
 
-        const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-        if (!senhaRegex.test(senha)) {
+        if (senha.length < 8) {
             toast.current.show({
                 severity: 'error',
-                summary: 'Senha inválida',
-                detail: 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.',
+                summary: 'Senha muito curta',
+                detail: 'A senha deve ter no mínimo 8 caracteres.',
                 life: 3000,
             });
             return;
@@ -66,12 +65,12 @@ const Login = () => {
     };
 
     const requestPassword = () => {
-        navigate("/nova-senha");
+        navigate("/redefinir-senha");
     }
 
     return (
         <div className={styles.containerLogin}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
 
             <Card className={styles.customCard}>
                 <p className={styles.loginText}>Bem-vindo(a)</p>
@@ -79,7 +78,7 @@ const Login = () => {
 
                 <form onSubmit={handleAccess} className={styles.form}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope" />
+                        <InputIcon className="pi pi-envelope"/>
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -108,7 +107,7 @@ const Login = () => {
                         <label htmlFor="checkbox">Lembrar-me</label>
                     </div>
 
-                    <Button className={styles.loginButton} label="Acessar" type="submit" />
+                    <Button className={styles.loginButton} label="Acessar" type="submit"/>
 
                     <p className={styles.requestPassword} onClick={requestPassword}>
                         Solicitar nova senha

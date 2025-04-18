@@ -7,7 +7,7 @@
 }
 
 .card {
-    width: 300px;
+    width: auto;
     text-align: center;
     margin-bottom: 200px;
 }

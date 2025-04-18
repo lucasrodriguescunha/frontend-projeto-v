@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
-import { Card } from "primereact/card";
-import { Toast } from "primereact/toast";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {IconField} from "primereact/iconfield";
+import {InputIcon} from "primereact/inputicon";
+import {InputText} from "primereact/inputtext";
+import {Button} from "primereact/button";
+import {Card} from "primereact/card";
+import {Toast} from "primereact/toast";
 
 import styles from "./RequestNewPassword.module.css";
 
@@ -52,7 +52,7 @@ const RequestNewPassword = () => {
 
     return (
         <div className={styles.container}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
 
             <Card className={styles.card}>
                 <p className={styles.title}>Solicitar nova senha</p>
@@ -60,7 +60,7 @@ const RequestNewPassword = () => {
 
                 <form className={styles.form} onSubmit={handleAccess}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope" />
+                        <InputIcon className="pi pi-envelope"/>
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -68,7 +68,7 @@ const RequestNewPassword = () => {
                         />
                     </IconField>
 
-                    <Button className={styles.requestButton} label="Solicitar" type="submit" />
+                    <Button className={styles.requestButton} label="Solicitar" type="submit"/>
                 </form>
             </Card>
         </div>
