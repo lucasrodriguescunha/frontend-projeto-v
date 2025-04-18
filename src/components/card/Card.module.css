@@ -1,0 +1,16 @@
+.cardContainer {
+    width: 250px;
+    margin: 20px;
+}
+
+.card {
+    height: 200px;
+}
+
+.cardButton {
+    background-color: #677FFA;
+}
+
+.cardButton:hover {
+    background-color: #5567d9;
+}
