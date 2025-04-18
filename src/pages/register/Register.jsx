@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {Toast} from "primereact/toast";
 import {Card} from "primereact/card";
 import {IconField} from "primereact/iconfield";

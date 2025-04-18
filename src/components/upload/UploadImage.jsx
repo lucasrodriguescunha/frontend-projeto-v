@@ -1,6 +1,5 @@
 import React from 'react';
 import {FileUpload} from 'primereact/fileupload';
-import styles from './UploadImage.module.css';
 
 const UploadImage = () => {
     return (
