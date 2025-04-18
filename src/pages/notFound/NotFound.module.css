@@ -1,5 +1,3 @@
-/* Remover estilos globais como "body" e ".p-button" se não forem realmente necessários como globais */
-
 .container {
     display: flex;
     justify-content: center;
