@@ -6,7 +6,7 @@ import "primeicons/primeicons.css";
 import AppRoutes from "./AppRoutes";
 
 import './App.module.css';
-import './styles/variables.module.css';
+import './styles/Variables.module.css';
 
 const App = () => {
     return (

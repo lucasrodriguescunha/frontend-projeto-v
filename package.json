@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
+    "axios": "^1.8.4",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.3",
     "react": "^19.0.0",
