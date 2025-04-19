@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { FileUpload } from 'primereact/fileupload';
 import { Paginator } from 'primereact/paginator';
+import { Badge } from 'primereact/badge';
 
 const UploadImage = () => {
     const [arquivos, setArquivos] = useState([]);
@@ -81,13 +82,24 @@ const UploadImage = () => {
                     accept="image/*"
                     maxFileSize={1000000}
                     chooseLabel="Escolher"
-                    uploadLabel="Upload"
+                    uploadLabel={
+                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                            Upload
+                            {arquivos.length > 0 && (
+                                <Badge
+                                    value={arquivos.length}
+                                    style={{ marginLeft: '8px' }}
+                                />
+                            )}
+                        </span>
+                    }
                     cancelLabel="Cancelar"
                     emptyTemplate={<p className="m-0">Arraste e solte os arquivos aqui.</p>}
                     showUploadButton={arquivos.length > 0}
                     showCancelButton={arquivos.length > 0}
                     auto={false}
                     itemTemplate={() => null}
+                    uploadIcon={null}
                 />
             </div>
 
