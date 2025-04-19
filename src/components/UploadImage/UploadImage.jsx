@@ -118,7 +118,16 @@ const UploadImage = () => {
                             />
                             <div style={{ flex: 1 }}>
                                 <strong>{arquivo.name}</strong>
-                                <p>{arquivo.status}</p>
+                                <p>
+                                    {arquivo.status === 'Aguardando upload...' ? (
+                                        <>
+                                            <i className="pi pi-spin pi-spinner" style={{ marginRight: '8px' }}></i>
+                                            Aguardando upload...
+                                        </>
+                                    ) : (
+                                        arquivo.status
+                                    )}
+                                </p>
                             </div>
                         </div>
                     ))}
