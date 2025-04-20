@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# QualiAI
+## Sistema de Reconhecimento de Imagens para Controle de Qualidade
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+O **QualiAI** é um sistema em desenvolvimento voltado para a inspeção visual automatizada, utilizando tecnologias de visão computacional e aprendizado de máquina. Seu objetivo é identificar defeitos e classificar produtos durante o processo de fabricação. Com essa solução, é possível reduzir custos operacionais, aumentar a precisão das inspeções e garantir altos padrões de qualidade de forma eficiente e confiável.
 
-## Available Scripts
+### Funcionalidades
 
-In the project directory, you can run:
+**Detecção Automática de Defeitos:**  
+- Classificação de produtos como "Defeituosos" ou "Não Defeituosos" com base em imagens capturadas.
 
-### `npm start`
+**Análise em Tempo Real:**  
+- Processamento instantâneo de imagens através de uma API Flask com suporte a CORS.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Relatórios de Qualidade:**  
+- Geração de dados que podem ser integrados ao ERP da empresa para análise de desempenho e rastreabilidade.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Aprendizado Contínuo:**  
+- Modelo treinado com CNNs utilizando dados aumentados para melhorar a robustez da IA ao longo do tempo.
 
-### `npm test`
+**Interface Amigável (em construção)**  
+- Visão futura: Interface web para upload e visualização dos resultados das inspeções.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Tecnologias utilizadas
 
-### `npm run build`
+**Inteligência Artificial**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Python
+- TensorFlow / Keras
+- Flask
+- NumPy
+- PIL (Python Imaging Library)
+- Matplotlib (para visualização do treinamento)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Frontend**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- React.js (JavaScript)
+- Vite
+- CSS
+- Prime React
+- Prime Icons
 
-### `npm run eject`
+**Backend**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Spring Boot (Java)
+- Flyway
+- PostgreSQL
+- Docker
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Testes**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+-
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Funcionamento
 
-## Learn More
+1. Uma imagem do produto é enviada para o endpoint `/api/upload`.
+2. A imagem é processada e redimensionada para 256x256 pixels.
+3. O modelo treinado classifica a imagem como "Defeituosa" ou "Não defeituosa".
+4. O resultado é retornado como JSON para fácil integração com outros sistemas.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Treinamento do Modelo
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+O modelo é uma CNN (Rede Neural Convolucional) treinada com `TensorFlow` e `Keras`. Os dados passaram por:
+- Redimensionamento e normalização
+- Aumento de dados (data augmentation)
+- Validação cruzada com separação entre `train` e `val`
 
-### Code Splitting
+```python
+model = keras.Sequential([
+    layers.Conv2D(32, (3,3), activation='relu', input_shape=(256, 256, 3)),
+    layers.MaxPooling2D((2,2)),
+    layers.Conv2D(64, (3,3), activation='relu'),
+    layers.MaxPooling2D((2,2)),
+    layers.Conv2D(128, (3,3), activation='relu'),
+    layers.MaxPooling2D((2,2)),
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(1, activation='sigmoid')
+])
+```
+### Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Método:** `POST`
+- **URL:** `/api/upload`
+- **Descrição:** Envia uma imagem para o modelo de IA que irá analisá-la e retornar se o produto está defeituoso ou não defeituoso.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Motivação
+Manter a qualidade dos produtos é essencial para a satisfação dos clientes e a reputação da empresa. Métodos manuais são lentos e propensos a erros. Ao empregar IA e visão computacional, conseguimos automação, agilidade e precisão no processo de inspeção.
