@@ -1,7 +1,7 @@
 # QualiAI
 ## Sistema de Reconhecimento de Imagens para Controle de Qualidade
 
-O **QualiAI** é um sistema que está sendo desenvolvido para ser inteligente de inspeção visual automatizada, desenvolvido com tecnologias de visão computacional e aprendizado de máquina para identificar defeitos em produtos e também produtos durante o processo de fabricação. Com ele, é possível reduzir custos operacionais, aumentar a precisão da inspeção e garantir altos padrões de qualidade de forma eficiente e confiável.
+O **QualiAI** é um sistema em desenvolvimento voltado para a inspeção visual automatizada, utilizando tecnologias de visão computacional e aprendizado de máquina. Seu objetivo é identificar defeitos e classificar produtos durante o processo de fabricação. Com essa solução, é possível reduzir custos operacionais, aumentar a precisão das inspeções e garantir altos padrões de qualidade de forma eficiente e confiável.
 
 ### Funcionalidades
 
@@ -33,15 +33,25 @@ O **QualiAI** é um sistema que está sendo desenvolvido para ser inteligente de
 
 **Frontend**
 
-- React.js
+- React.js (JavaScript)
 - Vite
 - CSS
 - Prime React
+- Prime Icons
 
----
+**Backend**
 
-## 📸 Como Funciona
+- Spring Boot (Java)
+- Flyway
+- PostgreSQL
+- Docker
 
+**Testes**
+
+-
+
+
+### Funcionamento
 1. Uma imagem do produto é enviada para o endpoint `/api/upload`.
 2. A imagem é processada e redimensionada para 256x256 pixels.
 3. O modelo treinado classifica a imagem como "Defeituosa" ou "Não defeituosa".
