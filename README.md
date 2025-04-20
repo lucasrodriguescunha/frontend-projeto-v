@@ -50,16 +50,14 @@ O **QualiAI** é um sistema em desenvolvimento voltado para a inspeção visual 
 
 -
 
-
 ### Funcionamento
+
 1. Uma imagem do produto é enviada para o endpoint `/api/upload`.
 2. A imagem é processada e redimensionada para 256x256 pixels.
 3. O modelo treinado classifica a imagem como "Defeituosa" ou "Não defeituosa".
 4. O resultado é retornado como JSON para fácil integração com outros sistemas.
 
----
-
-## 🧪 Treinamento do Modelo
+### Treinamento do Modelo
 
 O modelo é uma CNN (Rede Neural Convolucional) treinada com `TensorFlow` e `Keras`. Os dados passaram por:
 - Redimensionamento e normalização
@@ -79,33 +77,11 @@ model = keras.Sequential([
     layers.Dense(1, activation='sigmoid')
 ])
 ```
+### Endpoints
 
-## 📡 API
+- **Método:** `POST`
+- **URL:** `/api/upload`
+- **Descrição:** Envia uma imagem para o modelo de IA que irá analisá-la e retornar se o produto está defeituoso ou não defeituoso.
 
-POST /api/upload
-
-Descrição: Recebe uma imagem e retorna a classificação
-
-Body (form-data):
-
-file: Arquivo de imagem .jpg, .png ou .jpeg
-
-Resposta:
-
-json
-Copiar
-Editar
-{
-  "resultado": "Não defeituosa"
-}
-
-## 💡 Motivação
+### Motivação
 Manter a qualidade dos produtos é essencial para a satisfação dos clientes e a reputação da empresa. Métodos manuais são lentos e propensos a erros. Ao empregar IA e visão computacional, conseguimos automação, agilidade e precisão no processo de inspeção.
-
-## 🧠 Tecnologias utilizadas
-🐍 Python
-🤖 TensorFlow / Keras
-🌐 Flask
-📊 NumPy
-🖼️ PIL (Python Imaging Library)
-📈 Matplotlib (para visualização do treinamento)
