@@ -1,8 +1,8 @@
 import React from 'react';
 import Card from '../../components/Card/Card'
-import styles from './Container.module.css'
+import styles from './Base.module.css'
 
-const Container = () => {
+const Base = () => {
   return (
     <div className={styles.container}>
         <Card title="Analisar imagem" subTitle="Envie sua imagem para análise." route="/upload"/>
@@ -11,4 +11,4 @@ const Container = () => {
   )
 }
 
-export default Container;
+export default Base;

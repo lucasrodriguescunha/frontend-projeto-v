@@ -3,7 +3,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import RequestNewPassword from "./pages/RequestNewPassword/RequestNewPassword";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
-import Container from "./pages/Container/Container";
+import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
 
 const AppRoutes = () => {
@@ -14,7 +14,7 @@ const AppRoutes = () => {
             {/*<Route path="/about" element={<About/>}/>*/}
             <Route path="*" element={<NotFound/>}/>
             <Route path="/redefinir-senha" element={<RequestNewPassword/>}/>
-            <Route path="/home" element={<Container/>}/>
+            <Route path="/app" element={<Base/>}/>
             <Route path="/upload" element={<Upload/>}/>
         </Routes>
     );
