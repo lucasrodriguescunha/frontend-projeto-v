@@ -1,0 +1,47 @@
+#version: '3.9'
+
+services:
+  # Banco de dados (PostgreSQL)
+  database:
+    container_name: database
+    image: postgres:12
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # pgAdmin para gerenciar o PostgreSQL
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '8081:80'
+    depends_on:
+      - database
+    # Aplicação (API)
+  backend:
+    image: gersin/qualiai:1.0.0
+    ports:
+      - '${API_PORT}:${API_PORT}'
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      API_HOST: ${API_HOST}
+      API_PORT: ${API_PORT}
+      DB_TYPE: ${DB_TYPE}
+      DB_HOST: ${DB_HOST}
+      DB_URL: ${DB_URL}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+    depends_on:
+      - database
+volumes:
+  pgdata: { }

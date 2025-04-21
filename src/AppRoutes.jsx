@@ -5,6 +5,7 @@ import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
 import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
+import Admin from "./pages/Admin/Admin";
 
 const AppRoutes = () => {
     return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
             <Route path="/redefinir-senha" element={<RequestNewPassword/>}/>
             <Route path="/app" element={<Base/>}/>
             <Route path="/upload" element={<Upload/>}/>
+            <Route path="/admin" element={<Admin/>}/>
         </Routes>
     );
 };

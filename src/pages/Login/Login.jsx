@@ -8,20 +8,21 @@ import {Button} from "primereact/button";
 import {Card} from "primereact/card";
 import {Toast} from "primereact/toast";
 import {Password} from "primereact/password";
+import userService from "../../services/UserService";
 
 import styles from "./Login.module.css";
 
 const Login = () => {
     const [checked, setChecked] = useState(true);
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const toast = useRef(null);
 
-    const handleAccess = (e) => {
+    const handleAccess = async (e) => {
         e.preventDefault();
 
-        if (!email || !senha) {
+        if (!email || !password) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Campos obrigatórios',
@@ -31,7 +32,6 @@ const Login = () => {
             return;
         }
 
-        // Validação básica de formato
         if (!email.includes("@") || !email.includes(".")) {
             toast.current.show({
                 severity: 'error',
@@ -42,7 +42,7 @@ const Login = () => {
             return;
         }
 
-        if (senha.length < 8) {
+        if (password.length < 8) {
             toast.current.show({
                 severity: 'error',
                 summary: 'Senha muito curta',
@@ -52,21 +52,39 @@ const Login = () => {
             return;
         }
 
-        toast.current.show({
-            severity: 'success',
-            summary: 'Login bem-sucedido',
-            detail: 'Você foi logado com sucesso!',
-            life: 3000,
-        });
+        try {
+            const response = await userService.login({
+                email_usuario: email,
+                senha_usuario: password
+            });
 
-        setTimeout(() => {
-            navigate("/home");
-        }, 3000);
+            localStorage.setItem("X-API-KEY", response.apiKey);
+            sessionStorage.setItem("tokenJWT", response.tokenJWT);
+
+            toast.current.show({
+                severity: 'success',
+                summary: 'Login bem-sucedido',
+                detail: 'Você foi logado com sucesso!',
+                life: 3000,
+            });
+
+            setTimeout(() => {
+                navigate("/app");
+            }, 3000);
+
+        } catch (error) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Erro ao logar',
+                detail: error.message || "E-mail ou senha incorretos.",
+                life: 3000,
+            });
+        }
     };
 
     const requestPassword = () => {
         navigate("/redefinir-senha");
-    }
+    };
 
     return (
         <div className={styles.containerLogin}>
@@ -88,9 +106,9 @@ const Login = () => {
 
                     <Password
                         placeholder="Senha"
-                        name="senha"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        name="password"
+                        value={password} // corrigido aqui
+                        onChange={(e) => setPassword(e.target.value)} // corrigido aqui
                         toggleMask
                         promptLabel="Insira a senha"
                         weakLabel="Fraca"
