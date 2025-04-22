@@ -76,6 +76,7 @@ const Register = () => {
                 navigate("/app");
             }, 3000);
 
+
         } catch (error) {
             console.error("Erro ao cadastrar:", error);
             toast.current.show({

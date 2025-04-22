@@ -29,6 +29,7 @@ class UserService {
     }
 
     handleError(error) {
+        console.error("Erro na requisição:", error); // <-- adicionado
         if (error.response && error.response.data) {
             throw new Error(error.response.data.message || "Erro de requisição.");
         } else {
