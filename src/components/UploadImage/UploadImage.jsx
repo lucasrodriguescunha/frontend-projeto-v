@@ -14,7 +14,8 @@ const UploadImage = () => {
             file,
             name: file.name,
             preview: URL.createObjectURL(file),
-            status: 'Aguardando upload...'
+            status: 'Aguardando upload...',
+            data_analise: null
         }));
 
         setArquivos(selecionados);
@@ -37,9 +38,13 @@ const UploadImage = () => {
                 const data = await response.json();
                 const index = novosArquivos.findIndex((a) => a.name === item.name);
 
-                novosArquivos[index].status = response.ok
-                    ? `Qualidade: ${data.resultado}`
-                    : `Erro: ${data.error}`;
+                if (response.ok) {
+                    novosArquivos[index].status = `Qualidade: ${data.resultado}`;
+                    novosArquivos[index].data_analise = data.data_analise;
+                    novosArquivos[index].confianca = data.confianca;
+                } else {
+                    novosArquivos[index].status = `Erro: ${data.error}`;
+                }
             } catch (err) {
                 const index = novosArquivos.findIndex((a) => a.name === item.name);
                 novosArquivos[index].status = `Erro ao conectar: ${err.message}`;
@@ -140,6 +145,16 @@ const UploadImage = () => {
                                         arquivo.status
                                     )}
                                 </p>
+                                {arquivo.data_analise && (
+                                    <p>
+                                        Data da análise: {arquivo.data_analise}
+                                    </p>
+                                )}
+                                {arquivo.confianca !== undefined && (
+                                    <p style={{ fontSize: '0.85rem', color: '#666' }}>
+                                        Confiança: {arquivo.confianca}%
+                                    </p>
+                                )}
                             </div>
                         </div>
                     ))}
