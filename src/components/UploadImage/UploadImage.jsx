@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { FileUpload } from 'primereact/fileupload';
-import { Paginator } from 'primereact/paginator';
-import { Badge } from 'primereact/badge';
+import React, {useRef, useState} from 'react';
+import {FileUpload} from 'primereact/fileupload';
+import {Paginator} from 'primereact/paginator';
+import {Badge} from 'primereact/badge';
 
 const UploadImage = () => {
     const [arquivos, setArquivos] = useState([]);
@@ -22,7 +22,7 @@ const UploadImage = () => {
         setFirst(0);
     };
 
-    const onUpload = async ({ files }) => {
+    const onUpload = async ({files}) => {
         const novosArquivos = [...arquivos];
 
         for (const item of arquivos) {
@@ -39,9 +39,9 @@ const UploadImage = () => {
                 const index = novosArquivos.findIndex((a) => a.name === item.name);
 
                 if (response.ok) {
-                    novosArquivos[index].status = `Qualidade: ${data.resultado}`;
-                    novosArquivos[index].data_analise = data.data_analise;
-                    novosArquivos[index].confianca = data.confianca;
+                    novosArquivos[index].status = `Qualidade: ${data.relatorio.resultado}`;
+                    novosArquivos[index].data_analise = data.relatorio.data_analise;
+                    novosArquivos[index].confianca = data.relatorio.confianca;
                 } else {
                     novosArquivos[index].status = `Erro: ${data.error}`;
                 }
@@ -88,12 +88,12 @@ const UploadImage = () => {
                     maxFileSize={1000000}
                     chooseLabel="Escolher"
                     uploadLabel={
-                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                        <span style={{display: 'flex', alignItems: 'center'}}>
                             Upload
                             {arquivos.length > 0 && (
                                 <Badge
                                     value={arquivos.length}
-                                    style={{ marginLeft: '8px' }}
+                                    style={{marginLeft: '8px'}}
                                 />
                             )}
                         </span>
@@ -109,7 +109,7 @@ const UploadImage = () => {
             </div>
 
             {arquivos.length > 0 && (
-                <div style={{ marginTop: '1rem' }}>
+                <div style={{marginTop: '1rem'}}>
                     {arquivosPaginados.map((arquivo, index) => (
                         <div
                             key={index}
@@ -133,12 +133,12 @@ const UploadImage = () => {
                                     borderRadius: '8px'
                                 }}
                             />
-                            <div style={{ flex: 1 }}>
+                            <div style={{flex: 1}}>
                                 <strong>{arquivo.name}</strong>
                                 <p>
                                     {arquivo.status === 'Aguardando upload...' ? (
                                         <>
-                                            <i className="pi pi-spin pi-spinner" style={{ marginRight: '8px' }}></i>
+                                            <i className="pi pi-spin pi-spinner" style={{marginRight: '8px'}}></i>
                                             Aguardando upload...
                                         </>
                                     ) : (
@@ -165,7 +165,7 @@ const UploadImage = () => {
                             rows={rows}
                             totalRecords={arquivos.length}
                             onPageChange={onPageChange}
-                            template={{ layout: 'PrevPageLink CurrentPageReport NextPageLink' }}
+                            template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
                         />
                     )}
                 </div>
