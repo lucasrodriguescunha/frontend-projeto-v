@@ -9,7 +9,7 @@ const Upload = () => {
     const navigate = useNavigate();
 
     const redirectHome = () => {
-        navigate("/home");
+        navigate("/app");
     };
 
     return (
