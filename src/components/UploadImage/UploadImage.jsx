@@ -151,7 +151,7 @@ const UploadImage = () => {
                                     </p>
                                 )}
                                 {arquivo.confianca !== undefined && (
-                                    <p style={{ fontSize: '0.85rem', color: '#666' }}>
+                                    <p>
                                         Confiança: {arquivo.confianca}%
                                     </p>
                                 )}
