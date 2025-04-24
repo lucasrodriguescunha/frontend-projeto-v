@@ -12,6 +12,10 @@ const Upload = () => {
         navigate("/app");
     };
 
+    const redirectHistoric = () => {
+        navigate("/app/historic");
+    }
+
     return (
         <div className={styles.pageContainer}>
             <Card className={styles.card}>
@@ -20,6 +24,8 @@ const Upload = () => {
                 <UploadImage/>
 
                 <Button label="Voltar para página inicial" className={styles.button} onClick={redirectHome}/>
+                <Button label="Visualizar histórico" icon="pi pi-paper" className={styles.button}
+                        onClick={redirectHistoric}/>
             </Card>
         </div>
     );

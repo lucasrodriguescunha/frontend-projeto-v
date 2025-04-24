@@ -6,18 +6,26 @@ import Login from "./pages/Login/Login";
 import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
 import Admin from "./pages/Admin/Admin";
+import Historic from "./pages/Historic/Historic";
+
+const appRoutes = [
+    {path: "/app", element: <Base/>},
+    {path: "/app/upload", element: <Upload/>},
+    {path: "/app/historic", element: <Historic/>},
+    {path: "/app/admin", element: <Admin/>},
+    //...
+];
 
 const AppRoutes = () => {
     return (
         <Routes>
             <Route path="/" element={<Register/>}/>
             <Route path="/login" element={<Login/>}/>
-            {/*<Route path="/about" element={<About/>}/>*/}
+            <Route path="/app/redefinir-senha" element={<RequestNewPassword/>}/>
+            {appRoutes.map(({path, element}) => (
+                <Route key={path} path={path} element={element}/>
+            ))}
             <Route path="*" element={<NotFound/>}/>
-            <Route path="/redefinir-senha" element={<RequestNewPassword/>}/>
-            <Route path="/app" element={<Base/>}/>
-            <Route path="/upload" element={<Upload/>}/>
-            <Route path="/admin" element={<Admin/>}/>
         </Routes>
     );
 };
