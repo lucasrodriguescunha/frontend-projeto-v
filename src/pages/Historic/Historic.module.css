@@ -17,10 +17,12 @@
     align-items: center;
     justify-content: center;
     color: #000000;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 0.25rem;
     background: #FFFFFF;
-    width: 900px;
+    height: 70%;
+    width: 90%;
+    max-width: 700px;
     text-align: center;
 }
 
@@ -45,4 +47,15 @@
 .table {
     width: 100%;
     border-radius: 0.25rem;
+}
+
+:global(.custom-upload-button) {
+    background-color: #677FFA !important;
+    border-color: #677FFA !important;
+    color: #fff !important;
+}
+
+:global(.custom-upload-button:hover) {
+    background-color: #5567d9 !important;
+    border-color: #5567d9 !important;
 }
