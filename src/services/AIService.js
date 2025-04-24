@@ -1,9 +1,10 @@
-import {aiApi} from "./axios-config"; // seu arquivo com baseURL configurada
+import {aiApi} from "./axios-config";
 
 class AIService {
-    async uploadImage(file) {
+    async uploadImage(file, grupoId) {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("grupo_id", grupoId);
 
         try {
             const response = await aiApi.post("/upload", formData, {
