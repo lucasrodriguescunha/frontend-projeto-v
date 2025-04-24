@@ -1,0 +1,48 @@
+.container {
+    background-color: var(--color-primary);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    padding: 2rem;
+    border-radius: 0.25rem;
+    background: #FFFFFF;
+    width: 900px;
+    text-align: center;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.description {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #8C95A4;
+    margin-bottom: 1.5rem;
+}
+
+.tableWrapper {
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+    border-radius: 0.25rem;
+}
