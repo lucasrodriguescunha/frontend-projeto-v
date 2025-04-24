@@ -1,9 +1,9 @@
-import api from "./axios-config";
+import {userApi} from "./axios-config";
 
 class UserService {
     async postUsuario(usuario) {
         try {
-            const response = await api.post("/usuarios", usuario);
+            const response = await userApi.post("/usuarios", usuario);
             return response.data;
         } catch (error) {
             this.handleError(error);
@@ -12,7 +12,7 @@ class UserService {
 
     async getUsuarios() {
         try {
-            const response = await api.get("/usuarios/consulta");
+            const response = await userApi.get("/usuarios/consulta");
             return response.data;
         } catch (error) {
             this.handleError(error);
@@ -21,7 +21,7 @@ class UserService {
 
     async login(dados) {
         try {
-            const response = await api.post("/auth/login", dados);
+            const response = await userApi.post("/auth/login", dados);
             return response.data;
         } catch (error) {
             this.handleError(error);

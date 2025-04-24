@@ -3,6 +3,8 @@ import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
 import {Badge} from 'primereact/badge';
 
+import aiService from "../../services/AIService";
+
 const UploadImage = () => {
     const [arquivos, setArquivos] = useState([]);
     const [first, setFirst] = useState(0);
@@ -22,36 +24,30 @@ const UploadImage = () => {
         setFirst(0);
     };
 
-    const onUpload = async ({files}) => {
-        const novosArquivos = [...arquivos];
+    const onUpload = async () => {
+        try {
+            const atualizados = await Promise.all(
+                arquivos.map(async (item) => {
+                    const response = await aiService.uploadImage(item.file);
+                    const resultado = response.resultado;
 
-        for (const item of arquivos) {
-            const formData = new FormData();
-            formData.append('file', item.file);
+                    return {
+                        ...item,
+                        status: `Qualidade: ${resultado.resultado}`,
+                        data_analise: resultado.data_analise,
+                        confianca: resultado.confianca
+                    };
+                })
+            );
 
-            try {
-                const response = await fetch('http://localhost:5000/api/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                const data = await response.json();
-                const index = novosArquivos.findIndex((a) => a.name === item.name);
-
-                if (response.ok) {
-                    novosArquivos[index].status = `Qualidade: ${data.relatorio.resultado}`;
-                    novosArquivos[index].data_analise = data.relatorio.data_analise;
-                    novosArquivos[index].confianca = data.relatorio.confianca;
-                } else {
-                    novosArquivos[index].status = `Erro: ${data.error}`;
-                }
-            } catch (err) {
-                const index = novosArquivos.findIndex((a) => a.name === item.name);
-                novosArquivos[index].status = `Erro ao conectar: ${err.message}`;
-            }
+            setArquivos(atualizados);
+        } catch (err) {
+            const falhou = arquivos.map((item) => ({
+                ...item,
+                status: `Erro ao conectar: ${err.message}`
+            }));
+            setArquivos(falhou);
         }
-
-        setArquivos([...novosArquivos]);
     };
 
     const onClear = () => {
@@ -78,7 +74,7 @@ const UploadImage = () => {
             <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
                 <FileUpload
                     ref={fileUploadRef}
-                    name="demo[]"
+                    name="file"
                     customUpload
                     uploadHandler={onUpload}
                     onSelect={onSelect}
@@ -91,10 +87,7 @@ const UploadImage = () => {
                         <span style={{display: 'flex', alignItems: 'center'}}>
                             Upload
                             {arquivos.length > 0 && (
-                                <Badge
-                                    value={arquivos.length}
-                                    style={{marginLeft: '8px'}}
-                                />
+                                <Badge value={arquivos.length} style={{marginLeft: '8px'}}/>
                             )}
                         </span>
                     }
@@ -146,14 +139,10 @@ const UploadImage = () => {
                                     )}
                                 </p>
                                 {arquivo.data_analise && (
-                                    <p>
-                                        Data da análise: {arquivo.data_analise}
-                                    </p>
+                                    <p>Data da análise: {arquivo.data_analise}</p>
                                 )}
                                 {arquivo.confianca !== undefined && (
-                                    <p>
-                                        Confiança: {arquivo.confianca}%
-                                    </p>
+                                    <p>Confiança: {arquivo.confianca}%</p>
                                 )}
                             </div>
                         </div>
@@ -166,6 +155,7 @@ const UploadImage = () => {
                             totalRecords={arquivos.length}
                             onPageChange={onPageChange}
                             template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
+                            currentPageReportTemplate="{currentPage} de {totalPages}"
                         />
                     )}
                 </div>
