@@ -2,16 +2,21 @@ import React, {useRef, useState} from 'react';
 import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
 import {Badge} from 'primereact/badge';
+import {v4 as uuidv4} from 'uuid';
 
 import aiService from "../../services/AIService";
 
 const UploadImage = () => {
     const [arquivos, setArquivos] = useState([]);
     const [first, setFirst] = useState(0);
+    const [grupoId, setGrupoId] = useState(null);
     const fileUploadRef = useRef(null);
     const rows = 1;
 
     const onSelect = (event) => {
+        const novoGrupoId = uuidv4(); // Novo ID por seleção
+        setGrupoId(novoGrupoId);
+
         const selecionados = Array.from(event.files).map((file) => ({
             file,
             name: file.name,
@@ -28,7 +33,7 @@ const UploadImage = () => {
         try {
             const atualizados = await Promise.all(
                 arquivos.map(async (item) => {
-                    const response = await aiService.uploadImage(item.file);
+                    const response = await aiService.uploadImage(item.file, grupoId);
                     const resultado = response.resultado;
 
                     return {
@@ -53,6 +58,7 @@ const UploadImage = () => {
     const onClear = () => {
         setArquivos([]);
         setFirst(0);
+        setGrupoId(null);
     };
 
     const onPageChange = (event) => {
@@ -64,11 +70,11 @@ const UploadImage = () => {
     return (
         <div>
             <style>
-                {`
-                    .ocultar-conteudo .p-fileupload-content {
+                {
+                    `.ocultar-conteudo .p-fileupload-content {
                         display: none !important;
-                    }
-                `}
+                    }`
+                }
             </style>
 
             <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
