@@ -12,13 +12,13 @@ const Card = ({title, subTitle, content, route}) => {
             navigate(route)
         }
     }
-    
+
     return (
         <div className={styles.cardContainer}>
             <PrimeCard className={styles.card} title={title} subTitle={subTitle}>
                 <p>{content}</p>
                 <div className={styles.buttonContainer}>
-                    <Button label='Acessar' className={styles.cardButton} onClick={handleAccessClick}/>
+                    <Button icon="pi pi-arrow-right" className={styles.cardButton} onClick={handleAccessClick}/>
                 </div>
             </PrimeCard>
         </div>
