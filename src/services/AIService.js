@@ -16,9 +16,27 @@ class AIService {
         }
     }
 
-    async listarResultados() {
+    async listAnalysis() {
         try {
             const response = await aiApi.get("/listar");
+            return response.data;
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    async filterDefeituosa() {
+        try {
+            const response = await aiApi.get("/filtrar/defeituosa");
+            return response.data;
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    async filterNaoDefeituosa() {
+        try {
+            const response = await aiApi.get("/filtrar/nao_defeituosa");
             return response.data;
         } catch (error) {
             this.handleError(error);

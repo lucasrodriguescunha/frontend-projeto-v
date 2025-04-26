@@ -4,13 +4,21 @@ import {Paginator} from 'primereact/paginator';
 import {Badge} from 'primereact/badge';
 import {v4 as uuidv4} from 'uuid';
 import ImageModel from "../../models/ImageModel";
+import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 import aiService from "../../services/AIService";
+
+const analysisOptions = [
+    "Maças",
+    "Laranjas",
+    "Pêras",
+];
 
 const UploadImage = () => {
     const [arquivos, setArquivos] = useState([]);
     const [first, setFirst] = useState(0);
     const [grupoId, setGrupoId] = useState(null);
+    const [selectedAnalysis, setSelectedAnalysis] = useState(null);
     const fileUploadRef = useRef(null);
     const rows = 1;
 
@@ -65,13 +73,12 @@ const UploadImage = () => {
 
     return (
         <div>
-            <style>
-                {
-                    `.ocultar-conteudo .p-fileupload-content {
-                        display: none !important;
-                    }`
-                }
-            </style>
+            <DropdownMenu
+                options={analysisOptions}
+                placeholder="Selecione uma fruta"
+                selectedOption={selectedAnalysis}
+                onOptionChange={setSelectedAnalysis}
+            />
 
             <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
                 <FileUpload

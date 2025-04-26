@@ -49,6 +49,12 @@
     border-radius: 0.25rem;
 }
 
+
+.dropdownContainer {
+    display: flex;
+    justify-content: center;
+}
+
 :global(.custom-upload-button) {
     background-color: #677FFA !important;
     border-color: #677FFA !important;

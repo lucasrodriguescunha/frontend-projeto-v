@@ -1,31 +1,39 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Toast } from "primereact/toast";
-import { Card } from "primereact/card";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Paginator } from "primereact/paginator";
-import { Button } from "primereact/button";
-import { Skeleton } from "primereact/skeleton";
-import { useNavigate } from "react-router";
+import React, {useEffect, useRef, useState} from "react";
+import {Toast} from "primereact/toast";
+import {Card} from "primereact/card";
+import {DataTable} from "primereact/datatable";
+import {Column} from "primereact/column";
+import {Paginator} from "primereact/paginator";
+import {Button} from "primereact/button";
+import {Skeleton} from "primereact/skeleton";
+import DropdownMenu from "../../components/DropdownMenu/DropdownMenu";
+import {useNavigate} from "react-router";
 
 import aiService from "../../services/AIService";
+
 import styles from "./Historic.module.css";
+
+const filterByQuality = [
+    "Defeituosa",
+    "Não defeituosa"
+];
 
 const Historic = () => {
     const [grupos, setGrupos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [selectedQuality, setSelectedQuality] = useState(null);
     const toast = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchResultados = async () => {
+        const fetchAnalysis = async () => {
             try {
-                const data = await aiService.listarResultados();
-                const resultadosArray = Object.values(data).flat();
+                const data = await aiService.listAnalysis();
+                const analysisArray = Object.values(data).flat();
 
                 const agrupado = new Map();
-                resultadosArray.forEach(item => {
+                analysisArray.forEach(item => {
                     const grupo = item.grupo_id || 'Sem ID';
                     if (!agrupado.has(grupo)) {
                         agrupado.set(grupo, []);
@@ -46,7 +54,7 @@ const Historic = () => {
             }
         };
 
-        fetchResultados();
+        fetchAnalysis();
     }, []);
 
     const onPageChange = (e) => {
@@ -56,17 +64,72 @@ const Historic = () => {
     const totalGrupos = grupos.length;
     const grupoAtual = grupos[currentPage];
 
+    const handleQualityChange = async (quality) => {
+        setSelectedQuality(quality);
+        setLoading(true);
+
+        try {
+            let data = [];
+            if (quality === "Defeituosa") {
+                data = await aiService.filterDefeituosa();
+            } else if (quality === "Não defeituosa") {
+                data = await aiService.filterNaoDefeituosa();
+            } else {
+                data = await aiService.listAnalysis(); // caso eu adicione "Resetar filtros"
+            }
+
+            const agrupado = new Map();
+            data.forEach(item => {
+                const grupo = item.grupo_id || 'Sem ID';
+                if (!agrupado.has(grupo)) {
+                    agrupado.set(grupo, []);
+                }
+                agrupado.get(grupo).push(item);
+            });
+
+            setGrupos(Array.from(agrupado.entries()).reverse());
+            setCurrentPage(0);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Erro',
+                detail: error.message,
+                life: 3000
+            });
+        }
+    };
+
     return (
         <div className={styles.container}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
             <Card className={styles.card}>
                 <p className={styles.title}>Histórico de Análises</p>
+
+                <div className={styles.dropdownContainer}>
+                    <DropdownMenu
+                        options={filterByQuality}
+                        placeholder="Selecione a qualidade"
+                        selectedOption={selectedQuality}
+                        onOptionChange={handleQualityChange}
+                    />
+
+                    {/*<DropdownMenu*/}
+                    {/*    options={filterByQuality}*/}
+                    {/*    placeholder="Selecione a qualidade"*/}
+                    {/*    selectedOption={selectedQuality}*/}
+                    {/*    onOptionChange={setSelectedQuality}*/}
+                    {/*/>*/}
+                </div>
+
+
                 <p className={styles.description}>
                     {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."}
                 </p>
                 <div className={styles.tableWrapper}>
                     <DataTable
-                        value={loading ? Array.from({ length: 5 }) : grupoAtual ? grupoAtual[1] : []}
+                        value={loading ? Array.from({length: 5}) : grupoAtual ? grupoAtual[1] : []}
                         scrollable
                         scrollHeight="200px"
                         emptyMessage={"Nenhuma informação encontrada."}
@@ -77,40 +140,40 @@ const Historic = () => {
                             header="Arquivo"
                             body={(rowData) =>
                                 loading
-                                    ? <Skeleton width="80%" height="1.5rem" />
+                                    ? <Skeleton width="80%" height="1.5rem"/>
                                     : rowData.nome_arquivo
                             }
-                            style={{ minWidth: '150px' }}
+                            style={{minWidth: '150px'}}
                         />
                         <Column
                             field="resultado"
                             header="Resultado"
                             body={(rowData) =>
                                 loading
-                                    ? <Skeleton width="70%" height="1.5rem" />
+                                    ? <Skeleton width="70%" height="1.5rem"/>
                                     : rowData.resultado
                             }
-                            style={{ minWidth: '150px' }}
+                            style={{minWidth: '150px'}}
                         />
                         <Column
                             field="confianca"
                             header="Confiança (%)"
                             body={(rowData) =>
                                 loading
-                                    ? <Skeleton width="50%" height="1.5rem" />
+                                    ? <Skeleton width="50%" height="1.5rem"/>
                                     : rowData.confianca
                             }
-                            style={{ minWidth: '120px' }}
+                            style={{minWidth: '120px'}}
                         />
                         <Column
                             field="data_analise"
                             header="Data de Análise"
                             body={(rowData) =>
                                 loading
-                                    ? <Skeleton width="60%" height="1.5rem" />
+                                    ? <Skeleton width="60%" height="1.5rem"/>
                                     : rowData.data_analise
                             }
-                            style={{ minWidth: '160px' }}
+                            style={{minWidth: '160px'}}
                         />
                     </DataTable>
 
@@ -127,7 +190,7 @@ const Historic = () => {
                 <Button
                     label="Voltar para página inicial"
                     className="p-button custom-upload-button"
-                    style={{ marginTop: '1rem' }}
+                    style={{marginTop: '1rem'}}
                     onClick={() => navigate("/app/home")}
                 />
             </Card>
