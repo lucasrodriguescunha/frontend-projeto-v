@@ -75,89 +75,90 @@ const UploadImage = () => {
     return (
         <div>
             <div className={arquivos.length > 0 ? styles['ocultar-conteudo'] : ''}>
-            <DropdownMenu
-                options={analysisOptions}
-                placeholder="Selecione uma fruta"
-                selectedOption={selectedAnalysis}
-                onOptionChange={setSelectedAnalysis}
-            />
-
-            <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
-                <FileUpload
-                    ref={fileUploadRef}
-                    name="file"
-                    customUpload
-                    uploadHandler={onUpload}
-                    onSelect={onSelect}
-                    onClear={onClear}
-                    multiple
-                    accept="image/*"
-                    maxFileSize={1000000}
-                    chooseLabel="Escolher"
-                    uploadLabel={
-                        <span className={styles['upload-label']}>
-                            Upload
-                            {arquivos.length > 0 && (
-                                <Badge value={arquivos.length} className={styles.badge} />
-                            )}
-                        </span>
-                    }
-                    cancelLabel="Cancelar"
-                    emptyTemplate={<p className="m-0">Arraste e solte os arquivos aqui.</p>}
-                    showUploadButton={arquivos.length > 0}
-                    showCancelButton={arquivos.length > 0}
-                    auto={false}
-                    itemTemplate={() => null}
-                    uploadIcon={null}
+                <DropdownMenu
+                    options={analysisOptions}
+                    placeholder="Selecione uma fruta"
+                    selectedOption={selectedAnalysis}
+                    onOptionChange={setSelectedAnalysis}
                 />
-            </div>
 
-            {arquivos.length > 0 && (
-                <div className={styles['margin-top']}>
-                    {arquivosPaginados.map((arquivo, index) => (
-                        <div
-                            key={index}
-                            className={styles['arquivo-container']}
-                        >
-                            <img
-                                src={arquivo.preview}
-                                alt={arquivo.name}
-                                className={styles['preview-imagem']}
-                            />
-                            <div className={styles['info-container']}>
-                                <strong>{arquivo.name}</strong>
-                                <p>
-                                    {arquivo.status === 'Aguardando upload...' ? (
-                                        <>
-                                            <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
-                                            Aguardando upload...
-                                        </>
-                                    ) : (
-                                        arquivo.status
-                                    )}
-                                </p>
-                                {arquivo.data_analise && (
-                                    <p>Data da análise: {arquivo.data_analise}</p>
+                <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
+                    <FileUpload
+                        ref={fileUploadRef}
+                        name="file"
+                        customUpload
+                        uploadHandler={onUpload}
+                        onSelect={onSelect}
+                        onClear={onClear}
+                        multiple
+                        accept="image/*"
+                        maxFileSize={1000000}
+                        chooseLabel="Escolher"
+                        uploadLabel={
+                            <span className={styles['upload-label']}>
+                            Upload
+                                {arquivos.length > 0 && (
+                                    <Badge value={arquivos.length} className={styles.badge}/>
                                 )}
-                                {arquivo.status !== 'Aguardando upload...' && arquivo.confianca !== undefined && (
-                                    <p>Confiança: {arquivo.confianca}%</p>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-
-                    {arquivos.length > 1 && (
-                        <Paginator
-                            first={first}
-                            rows={rows}
-                            totalRecords={arquivos.length}
-                            onPageChange={onPageChange}
-                            template={{ layout: 'PrevPageLink CurrentPageReport NextPageLink' }}
-                            currentPageReportTemplate="{currentPage} de {totalPages}"
-                        />
-                    )}
+                        </span>
+                        }
+                        cancelLabel="Cancelar"
+                        emptyTemplate={<p className="m-0">Arraste e solte os arquivos aqui.</p>}
+                        showUploadButton={arquivos.length > 0}
+                        showCancelButton={arquivos.length > 0}
+                        auto={false}
+                        itemTemplate={() => null}
+                        uploadIcon={null}
+                    />
                 </div>
-            )}
+
+                {arquivos.length > 0 && (
+                    <div className={styles['margin-top']}>
+                        {arquivosPaginados.map((arquivo, index) => (
+                            <div
+                                key={index}
+                                className={styles['arquivo-container']}
+                            >
+                                <img
+                                    src={arquivo.preview}
+                                    alt={arquivo.name}
+                                    className={styles['preview-imagem']}
+                                />
+                                <div className={styles['info-container']}>
+                                    <strong>{arquivo.name}</strong>
+                                    <p>
+                                        {arquivo.status === 'Aguardando upload...' ? (
+                                            <>
+                                                <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
+                                                Aguardando upload...
+                                            </>
+                                        ) : (
+                                            arquivo.status
+                                        )}
+                                    </p>
+                                    {arquivo.data_analise && (
+                                        <p>Data da análise: {arquivo.data_analise}</p>
+                                    )}
+                                    {arquivo.status !== 'Aguardando upload...' && arquivo.confianca !== undefined && (
+                                        <p>Confiança: {arquivo.confianca}%</p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+
+                        {arquivos.length > 1 && (
+                            <Paginator
+                                first={first}
+                                rows={rows}
+                                totalRecords={arquivos.length}
+                                onPageChange={onPageChange}
+                                template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
+                                currentPageReportTemplate="{currentPage} de {totalPages}"
+                            />
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
