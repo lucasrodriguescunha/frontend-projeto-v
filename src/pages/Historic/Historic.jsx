@@ -15,7 +15,8 @@ import styles from "./Historic.module.css";
 
 const filterByQuality = [
     "Defeituosa",
-    "Não defeituosa"
+    "Não defeituosa",
+    "Todas"
 ];
 
 const Historic = () => {
@@ -71,9 +72,9 @@ const Historic = () => {
         try {
             let data = [];
             if (quality === "Defeituosa") {
-                data = await aiService.filterDefeituosa();
+                data = await aiService.filterAnalysis();
             } else if (quality === "Não defeituosa") {
-                data = await aiService.filterNaoDefeituosa();
+                data = await aiService.filterAnalysis();
             } else {
                 data = await aiService.listAnalysis(); // caso eu adicione "Resetar filtros"
             }

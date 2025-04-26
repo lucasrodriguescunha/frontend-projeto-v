@@ -7,7 +7,7 @@ class AIService {
         formData.append("grupo_id", grupoId);
 
         try {
-            const response = await aiApi.post("/upload", formData, {
+            const response = await aiApi.post("/image", formData, {
                 headers: {"Content-Type": "multipart/form-data"}
             });
             return response.data;
@@ -18,25 +18,18 @@ class AIService {
 
     async listAnalysis() {
         try {
-            const response = await aiApi.get("/listar");
+            const response = await aiApi.get("/image"); // Agora lista tudo aqui
             return response.data;
         } catch (error) {
             this.handleError(error);
         }
     }
 
-    async filterDefeituosa() {
+    async filterAnalysis(resultado) {
         try {
-            const response = await aiApi.get("/filtrar/defeituosa");
-            return response.data;
-        } catch (error) {
-            this.handleError(error);
-        }
-    }
-
-    async filterNaoDefeituosa() {
-        try {
-            const response = await aiApi.get("/filtrar/nao_defeituosa");
+            const response = await aiApi.get("/image", {
+                params: {resultado: resultado}
+            });
             return response.data;
         } catch (error) {
             this.handleError(error);
