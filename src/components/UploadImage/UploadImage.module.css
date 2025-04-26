@@ -1,3 +1,45 @@
+.ocultar-conteudo :global(.p-fileupload-content) {
+    display: none !important;
+}
+
+.upload-label {
+    display: flex;
+    align-items: center;
+}
+
+.badge {
+    margin-left: 8px;
+}
+
+.arquivo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 1rem;
+}
+
+.preview-imagem {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.info-container {
+    flex: 1;
+}
+
+.margin-top {
+    margin-top: 1rem;
+}
+
+.spinner-icon {
+    margin-right: 8px;
+}
+
 :global(.p-fileupload .p-button) {
     background-color: #677FFA;
 }
