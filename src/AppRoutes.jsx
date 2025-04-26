@@ -9,7 +9,7 @@ import Admin from "./pages/Admin/Admin";
 import Historic from "./pages/Historic/Historic";
 
 const appRoutes = [
-    {path: "/app", element: <Base/>},
+    {path: "/app/home", element: <Base/>},
     {path: "/app/upload", element: <Upload/>},
     {path: "/app/historic", element: <Historic/>},
     {path: "/app/admin", element: <Admin/>},
@@ -21,7 +21,7 @@ const AppRoutes = () => {
         <Routes>
             <Route path="/" element={<Register/>}/>
             <Route path="/login" element={<Login/>}/>
-            <Route path="/app/redefinir-senha" element={<RequestNewPassword/>}/>
+            <Route path="/redefinir-senha" element={<RequestNewPassword/>}/>
             {appRoutes.map(({path, element}) => (
                 <Route key={path} path={path} element={element}/>
             ))}

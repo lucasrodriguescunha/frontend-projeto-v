@@ -73,7 +73,7 @@ const Register = () => {
             });
 
             setTimeout(() => {
-                navigate("/app");
+                navigate("/app/home");
             }, 3000);
 
 
@@ -92,10 +92,6 @@ const Register = () => {
         {permissao: 'Administrador', value: 'ADMINISTRADOR'},
         {permissao: 'Usuário', value: 'USUARIO'}
     ];
-
-    const login = () => {
-        navigate("/login");
-    };
 
     return (
         <div className={styles.container}>
@@ -154,7 +150,7 @@ const Register = () => {
 
                     <Button className={styles.registerButton} label="Cadastrar" type="submit"/>
 
-                    <p className={styles.loginRedirect} onClick={login}>
+                    <p className={styles.loginRedirect} onClick={() => navigate("/login")}>
                         Ir para Login
                     </p>
                 </form>

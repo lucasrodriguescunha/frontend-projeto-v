@@ -69,6 +69,7 @@ const Historic = () => {
                         value={loading ? Array.from({ length: 5 }) : grupoAtual ? grupoAtual[1] : []}
                         scrollable
                         scrollHeight="200px"
+                        emptyMessage={"Nenhuma informação encontrada."}
                         className={styles.table}
                     >
                         <Column
@@ -127,7 +128,7 @@ const Historic = () => {
                     label="Voltar para página inicial"
                     className="p-button custom-upload-button"
                     style={{ marginTop: '1rem' }}
-                    onClick={() => navigate("/app")}
+                    onClick={() => navigate("/app/home")}
                 />
             </Card>
         </div>

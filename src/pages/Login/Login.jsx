@@ -71,7 +71,7 @@ const Login = () => {
             });
 
             setTimeout(() => {
-                navigate("/app");
+                navigate("/app/home");
             }, 3000);
 
         } catch (error) {

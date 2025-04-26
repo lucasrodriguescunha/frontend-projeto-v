@@ -4,8 +4,7 @@ import { BrowserRouter } from "react-router";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-// Alterando a importação do CSS para módulo
-import './index.module.css';  // Agora é index.module.css, com CSS Modules
+import './index.module.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

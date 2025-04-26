@@ -8,24 +8,17 @@ import UploadImage from '../../components/UploadImage/UploadImage';
 const Upload = () => {
     const navigate = useNavigate();
 
-    const redirectHome = () => {
-        navigate("/app");
-    };
-
-    const redirectHistoric = () => {
-        navigate("/app/historic");
-    }
-
     return (
         <div className={styles.pageContainer}>
             <Card className={styles.card}>
-                <h2 className={styles.title}>Escolha sua imagem</h2>
+                <h2 className={styles.title}>Escolha suas imagens</h2>
 
                 <UploadImage/>
 
-                <Button label="Voltar para página inicial" className={styles.button} onClick={redirectHome}/>
+                <Button label="Voltar para página inicial" className={styles.button}
+                        onClick={() => navigate("/app/home")}/>
                 <Button label="Visualizar histórico" icon="pi pi-paper" className={styles.button}
-                        onClick={redirectHistoric}/>
+                        onClick={() => navigate("/app/historic")}/>
             </Card>
         </div>
     );

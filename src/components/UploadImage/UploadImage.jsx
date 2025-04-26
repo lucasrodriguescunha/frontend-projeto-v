@@ -3,6 +3,7 @@ import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
 import {Badge} from 'primereact/badge';
 import {v4 as uuidv4} from 'uuid';
+import ImageModel from "../../models/ImageModel";
 
 import aiService from "../../services/AIService";
 
@@ -14,15 +15,13 @@ const UploadImage = () => {
     const rows = 1;
 
     const onSelect = (event) => {
-        const novoGrupoId = uuidv4(); // Novo ID por seleção
+        const novoGrupoId = uuidv4();
         setGrupoId(novoGrupoId);
 
-        const selecionados = Array.from(event.files).map((file) => ({
+        const selecionados = Array.from(event.files).map((file) => new ImageModel({
             file,
             name: file.name,
-            preview: URL.createObjectURL(file),
-            status: 'Aguardando upload...',
-            data_analise: null
+            preview: URL.createObjectURL(file)
         }));
 
         setArquivos(selecionados);
@@ -36,22 +35,19 @@ const UploadImage = () => {
                     const response = await aiService.uploadImage(item.file, grupoId);
                     const resultado = response.resultado;
 
-                    return {
-                        ...item,
-                        status: `Qualidade: ${resultado.resultado}`,
-                        data_analise: resultado.data_analise,
-                        confianca: resultado.confianca
-                    };
+                    item.atualizarStatus(resultado);
+                    return item;
                 })
             );
 
-            setArquivos(atualizados);
+            setArquivos([...atualizados]);
         } catch (err) {
-            const falhou = arquivos.map((item) => ({
-                ...item,
-                status: `Erro ao conectar: ${err.message}`
-            }));
-            setArquivos(falhou);
+            const falhou = arquivos.map((item) => {
+                item.marcarErro(err.message);
+                return item;
+            });
+
+            setArquivos([...falhou]);
         }
     };
 
