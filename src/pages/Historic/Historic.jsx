@@ -14,9 +14,9 @@ import aiService from "../../services/AIService";
 import styles from "./Historic.module.css";
 
 const filterByQuality = [
+    "Todas",
     "Defeituosa",
-    "Não defeituosa",
-    "Todas"
+    "Não defeituosa"
 ];
 
 const Historic = () => {
@@ -70,17 +70,17 @@ const Historic = () => {
         setLoading(true);
 
         try {
-            let data = [];
-            if (quality === "Defeituosa") {
-                data = await aiService.filterAnalysis();
-            } else if (quality === "Não defeituosa") {
-                data = await aiService.filterAnalysis();
+            let data = {};
+
+            if (quality === "Defeituosa" || quality === "Não defeituosa") {
+                data = await aiService.filterAnalysis(quality);
             } else {
-                data = await aiService.listAnalysis(); // caso eu adicione "Resetar filtros"
+                data = await aiService.listAnalysis();
             }
 
+            const analysisArray = Object.values(data).flat();
             const agrupado = new Map();
-            data.forEach(item => {
+            analysisArray.forEach(item => {
                 const grupo = item.grupo_id || 'Sem ID';
                 if (!agrupado.has(grupo)) {
                     agrupado.set(grupo, []);
@@ -115,19 +115,12 @@ const Historic = () => {
                         selectedOption={selectedQuality}
                         onOptionChange={handleQualityChange}
                     />
-
-                    {/*<DropdownMenu*/}
-                    {/*    options={filterByQuality}*/}
-                    {/*    placeholder="Selecione a qualidade"*/}
-                    {/*    selectedOption={selectedQuality}*/}
-                    {/*    onOptionChange={setSelectedQuality}*/}
-                    {/*/>*/}
                 </div>
-
 
                 <p className={styles.description}>
                     {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."}
                 </p>
+
                 <div className={styles.tableWrapper}>
                     <DataTable
                         value={loading ? Array.from({length: 5}) : grupoAtual ? grupoAtual[1] : []}
@@ -188,6 +181,7 @@ const Historic = () => {
                         />
                     )}
                 </div>
+
                 <Button
                     label="Voltar para página inicial"
                     className="p-button custom-upload-button"
