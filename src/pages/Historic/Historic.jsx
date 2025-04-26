@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Paginator } from "primereact/paginator";
 import { Button } from "primereact/button";
+import { Skeleton } from "primereact/skeleton";
 import { useNavigate } from "react-router";
 
 import aiService from "../../services/AIService";
@@ -13,6 +14,7 @@ import styles from "./Historic.module.css";
 const Historic = () => {
     const [grupos, setGrupos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [loading, setLoading] = useState(true);
     const toast = useRef(null);
     const navigate = useNavigate();
 
@@ -32,7 +34,9 @@ const Historic = () => {
                 });
 
                 setGrupos(Array.from(agrupado.entries()).reverse());
+                setLoading(false);
             } catch (error) {
+                setLoading(false);
                 toast.current?.show({
                     severity: 'error',
                     summary: 'Erro',
@@ -61,19 +65,54 @@ const Historic = () => {
                     {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."}
                 </p>
                 <div className={styles.tableWrapper}>
-                    {grupoAtual && (
-                        <DataTable
-                            value={grupoAtual[1]}
-                            scrollable
-                            scrollHeight="200px"
-                            className={styles.table}
-                        >
-                            <Column field="nome_arquivo" header="Arquivo" style={{ minWidth: '150px' }} />
-                            <Column field="resultado" header="Resultado" style={{ minWidth: '150px' }} />
-                            <Column field="confianca" header="Confiança (%)" style={{ minWidth: '120px' }} />
-                            <Column field="data_analise" header="Data de Análise" style={{ minWidth: '160px' }} />
-                        </DataTable>
-                    )}
+                    <DataTable
+                        value={loading ? Array.from({ length: 5 }) : grupoAtual ? grupoAtual[1] : []}
+                        scrollable
+                        scrollHeight="200px"
+                        className={styles.table}
+                    >
+                        <Column
+                            field="nome_arquivo"
+                            header="Arquivo"
+                            body={(rowData) =>
+                                loading
+                                    ? <Skeleton width="80%" height="1.5rem" />
+                                    : rowData.nome_arquivo
+                            }
+                            style={{ minWidth: '150px' }}
+                        />
+                        <Column
+                            field="resultado"
+                            header="Resultado"
+                            body={(rowData) =>
+                                loading
+                                    ? <Skeleton width="70%" height="1.5rem" />
+                                    : rowData.resultado
+                            }
+                            style={{ minWidth: '150px' }}
+                        />
+                        <Column
+                            field="confianca"
+                            header="Confiança (%)"
+                            body={(rowData) =>
+                                loading
+                                    ? <Skeleton width="50%" height="1.5rem" />
+                                    : rowData.confianca
+                            }
+                            style={{ minWidth: '120px' }}
+                        />
+                        <Column
+                            field="data_analise"
+                            header="Data de Análise"
+                            body={(rowData) =>
+                                loading
+                                    ? <Skeleton width="60%" height="1.5rem" />
+                                    : rowData.data_analise
+                            }
+                            style={{ minWidth: '160px' }}
+                        />
+                    </DataTable>
+
                     {totalGrupos > 1 && (
                         <Paginator
                             first={currentPage}
@@ -88,7 +127,7 @@ const Historic = () => {
                     label="Voltar para página inicial"
                     className="p-button custom-upload-button"
                     style={{ marginTop: '1rem' }}
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/app")}
                 />
             </Card>
         </div>
