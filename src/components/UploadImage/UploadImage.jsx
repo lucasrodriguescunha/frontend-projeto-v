@@ -35,7 +35,7 @@ const UploadImage = () => {
                     const response = await aiService.uploadImage(item.file, grupoId);
                     const resultado = response.resultado;
 
-                    item.atualizarStatus(resultado);
+                    item.atualizarResultadoAnalise(resultado);
                     return item;
                 })
             );
@@ -43,7 +43,7 @@ const UploadImage = () => {
             setArquivos([...atualizados]);
         } catch (err) {
             const falhou = arquivos.map((item) => {
-                item.marcarErro(err.message);
+                item.definirStatusErro(err.message);
                 return item;
             });
 
