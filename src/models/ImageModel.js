@@ -8,13 +8,13 @@ class ImageModel {
         this.confianca = confianca;
     }
 
-    atualizarStatus(resultado) {
+    atualizarResultadoAnalise(resultado) {
         this.status = `Qualidade: ${resultado.resultado}`;
         this.data_analise = resultado.data_analise;
         this.confianca = resultado.confianca;
     }
 
-    marcarErro(mensagem) {
+    definirStatusErro(mensagem) {
         this.status = `Erro ao conectar: ${mensagem}`;
     }
 }

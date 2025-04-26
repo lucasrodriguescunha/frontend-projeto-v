@@ -7,6 +7,7 @@ import ImageModel from "../../models/ImageModel";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 import aiService from "../../services/AIService";
+import styles from './UploadImage.module.css';
 
 const analysisOptions = [
     "Maças",
@@ -43,7 +44,7 @@ const UploadImage = () => {
                     const response = await aiService.uploadImage(item.file, grupoId);
                     const resultado = response.resultado;
 
-                    item.atualizarStatus(resultado);
+                    item.atualizarResultadoAnalise(resultado);
                     return item;
                 })
             );
@@ -51,7 +52,7 @@ const UploadImage = () => {
             setArquivos([...atualizados]);
         } catch (err) {
             const falhou = arquivos.map((item) => {
-                item.marcarErro(err.message);
+                item.definirStatusErro(err.message);
                 return item;
             });
 
@@ -73,6 +74,7 @@ const UploadImage = () => {
 
     return (
         <div>
+            <div className={arquivos.length > 0 ? styles['ocultar-conteudo'] : ''}>
             <DropdownMenu
                 options={analysisOptions}
                 placeholder="Selecione uma fruta"
@@ -93,10 +95,10 @@ const UploadImage = () => {
                     maxFileSize={1000000}
                     chooseLabel="Escolher"
                     uploadLabel={
-                        <span style={{display: 'flex', alignItems: 'center'}}>
+                        <span className={styles['upload-label']}>
                             Upload
                             {arquivos.length > 0 && (
-                                <Badge value={arquivos.length} style={{marginLeft: '8px'}}/>
+                                <Badge value={arquivos.length} className={styles.badge} />
                             )}
                         </span>
                     }
@@ -111,36 +113,23 @@ const UploadImage = () => {
             </div>
 
             {arquivos.length > 0 && (
-                <div style={{marginTop: '1rem'}}>
+                <div className={styles['margin-top']}>
                     {arquivosPaginados.map((arquivo, index) => (
                         <div
                             key={index}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem',
-                                border: '1px solid #ccc',
-                                borderRadius: '8px',
-                                padding: '10px',
-                                marginBottom: '1rem'
-                            }}
+                            className={styles['arquivo-container']}
                         >
                             <img
                                 src={arquivo.preview}
                                 alt={arquivo.name}
-                                style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    borderRadius: '8px'
-                                }}
+                                className={styles['preview-imagem']}
                             />
-                            <div style={{flex: 1}}>
+                            <div className={styles['info-container']}>
                                 <strong>{arquivo.name}</strong>
                                 <p>
                                     {arquivo.status === 'Aguardando upload...' ? (
                                         <>
-                                            <i className="pi pi-spin pi-spinner" style={{marginRight: '8px'}}></i>
+                                            <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
                                             Aguardando upload...
                                         </>
                                     ) : (
@@ -150,7 +139,7 @@ const UploadImage = () => {
                                 {arquivo.data_analise && (
                                     <p>Data da análise: {arquivo.data_analise}</p>
                                 )}
-                                {arquivo.confianca !== undefined && (
+                                {arquivo.status !== 'Aguardando upload...' && arquivo.confianca !== undefined && (
                                     <p>Confiança: {arquivo.confianca}%</p>
                                 )}
                             </div>
@@ -163,7 +152,7 @@ const UploadImage = () => {
                             rows={rows}
                             totalRecords={arquivos.length}
                             onPageChange={onPageChange}
-                            template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
+                            template={{ layout: 'PrevPageLink CurrentPageReport NextPageLink' }}
                             currentPageReportTemplate="{currentPage} de {totalPages}"
                         />
                     )}
