@@ -7,7 +7,7 @@ class AIService {
         formData.append("grupo_id", grupoId);
 
         try {
-            const response = await aiApi.post("/image", formData, {
+            const response = await aiApi.post("/images", formData, {
                 headers: {"Content-Type": "multipart/form-data"}
             });
             return response.data;
@@ -18,7 +18,7 @@ class AIService {
 
     async listAnalysis() {
         try {
-            const response = await aiApi.get("/image"); // Agora lista tudo aqui
+            const response = await aiApi.get("/images");
             return response.data;
         } catch (error) {
             this.handleError(error);
@@ -27,7 +27,7 @@ class AIService {
 
     async filterAnalysis(resultado) {
         try {
-            const response = await aiApi.get("/image", {
+            const response = await aiApi.get("/images", {
                 params: {resultado: resultado}
             });
             return response.data;
