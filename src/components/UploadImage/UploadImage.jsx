@@ -7,6 +7,7 @@ import ImageModel from "../../models/ImageModel";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
 
 import aiService from "../../services/AIService";
+
 import styles from './UploadImage.module.css';
 
 const analysisOptions = [

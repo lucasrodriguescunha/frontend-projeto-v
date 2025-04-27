@@ -2,6 +2,7 @@ import React from 'react';
 import {Card as PrimeCard} from 'primereact/card';
 import {Button} from 'primereact/button';
 import {useNavigate} from 'react-router'
+
 import styles from './Card.module.css'
 
 const Card = ({title, subTitle, content, route}) => {

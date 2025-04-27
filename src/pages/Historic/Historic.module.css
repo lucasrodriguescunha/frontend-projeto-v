@@ -20,9 +20,8 @@
     padding: 1.5rem;
     border-radius: 0.25rem;
     background: #FFFFFF;
-    height: 70%;
-    width: 90%;
-    max-width: 700px;
+    height: 80%;
+    width: auto;
     text-align: center;
 }
 
@@ -33,22 +32,23 @@
     padding: 0;
 }
 
+.button {
+    background-color: var(--color-primary);
+    width: 80%;
+    margin-top: 1rem;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
 .description {
     font-size: 1rem;
     font-weight: normal;
     color: #8C95A4;
     margin-bottom: 1.5rem;
 }
-
-.tableWrapper {
-    width: 100%;
-}
-
-.table {
-    width: 100%;
-    border-radius: 0.25rem;
-}
-
 
 .dropdownContainer {
     display: flex;
