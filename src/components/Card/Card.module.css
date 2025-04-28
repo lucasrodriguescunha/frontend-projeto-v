@@ -16,6 +16,9 @@
     background-color: #677FFA;
 }
 
+
 .cardButton:hover {
     background-color: #5567d9;
+    transform: translateX(2px);
+    transition: transform 0.2s ease-in-out, background-color 0.3s ease;
 }

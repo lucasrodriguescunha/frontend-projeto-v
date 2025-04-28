@@ -1,17 +1,16 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
 import {Badge} from 'primereact/badge';
 import {v4 as uuidv4} from 'uuid';
 import ImageModel from "../../models/ImageModel";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
-
 import aiService from "../../services/AIService";
 
 import styles from './UploadImage.module.css';
 
 const analysisOptions = [
-    "Maças",
+    "Maçãs",
     "Laranjas",
     "Pêras",
 ];
@@ -24,7 +23,7 @@ const UploadImage = () => {
     const fileUploadRef = useRef(null);
     const rows = 1;
 
-    const onSelect = (event) => {
+    const onSelect = useCallback((event) => {
         const novoGrupoId = uuidv4();
         setGrupoId(novoGrupoId);
 
@@ -36,9 +35,9 @@ const UploadImage = () => {
 
         setArquivos(selecionados);
         setFirst(0);
-    };
+    }, []);
 
-    const onUpload = async () => {
+    const onUpload = useCallback(async () => {
         try {
             const atualizados = await Promise.all(
                 arquivos.map(async (item) => {
@@ -59,17 +58,17 @@ const UploadImage = () => {
 
             setArquivos([...falhou]);
         }
-    };
+    }, [arquivos, grupoId]);
 
-    const onClear = () => {
+    const onClear = useCallback(() => {
         setArquivos([]);
         setFirst(0);
         setGrupoId(null);
-    };
+    }, []);
 
-    const onPageChange = (event) => {
+    const onPageChange = useCallback((event) => {
         setFirst(event.first);
-    };
+    }, []);
 
     const arquivosPaginados = arquivos.slice(first, first + rows);
 
@@ -97,11 +96,11 @@ const UploadImage = () => {
                         chooseLabel="Escolher"
                         uploadLabel={
                             <span className={styles['upload-label']}>
-                            Upload
+                                Upload
                                 {arquivos.length > 0 && (
                                     <Badge value={arquivos.length} className={styles.badge}/>
                                 )}
-                        </span>
+                            </span>
                         }
                         cancelLabel="Cancelar"
                         emptyTemplate={<p className="m-0">Arraste e solte os arquivos aqui.</p>}

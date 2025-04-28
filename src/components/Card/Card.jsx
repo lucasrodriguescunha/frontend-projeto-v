@@ -1,18 +1,18 @@
-import React from 'react';
+import React, {memo, useCallback} from 'react';
 import {Card as PrimeCard} from 'primereact/card';
 import {Button} from 'primereact/button';
-import {useNavigate} from 'react-router'
+import {useNavigate} from 'react-router';
 
-import styles from './Card.module.css'
+import styles from './Card.module.css';
 
 const Card = ({title, subTitle, content, route}) => {
     const navigate = useNavigate();
 
-    const handleAccessClick = () => {
+    const handleAccessClick = useCallback(() => {
         if (route) {
-            navigate(route)
+            navigate(route);
         }
-    }
+    }, [navigate, route]);
 
     return (
         <div className={styles.cardContainer}>
@@ -24,6 +24,7 @@ const Card = ({title, subTitle, content, route}) => {
             </PrimeCard>
         </div>
     );
-}
+};
 
-export default Card;
+export default memo(Card);
+
