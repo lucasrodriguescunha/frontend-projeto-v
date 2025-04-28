@@ -6,12 +6,12 @@ import Login from "./pages/Login/Login";
 import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
 import Admin from "./pages/Admin/Admin";
-import Historic from "./pages/Historic/Historic";
+import Report from "./pages/Report/Report";
 
 const appRoutes = [
     {path: "/app/home", element: <Base/>},
     {path: "/app/upload", element: <Upload/>},
-    {path: "/app/historic", element: <Historic/>},
+    {path: "/app/report", element: <Report/>},
     {path: "/app/admin", element: <Admin/>},
     //...
 ];

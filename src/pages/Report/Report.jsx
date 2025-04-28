@@ -7,7 +7,7 @@ import {useNavigate} from "react-router";
 
 import aiService from "../../services/AIService";
 
-import styles from "./Historic.module.css";
+import styles from "./Report.module.css";
 
 const filterByQuality = [
     "Defeituosa",
@@ -115,7 +115,7 @@ const Historic = () => {
         <div className={styles.container}>
             <Toast ref={toast}/>
             <Card className={styles.card}>
-                <p className={styles.title}>Histórico de Análises</p>
+                <p className={styles.title}>Relatórios</p>
 
                 <div className={styles.dropdownContainer}>
                     <DropdownMenu
@@ -141,8 +141,8 @@ const Historic = () => {
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar (tabela, CSV, PDF, JSON...)
-                    {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."}
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
+                    {/* {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."} */}
                 </p>
 
                 <Button
