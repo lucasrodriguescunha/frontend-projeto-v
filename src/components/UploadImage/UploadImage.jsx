@@ -1,8 +1,9 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {FileUpload} from 'primereact/fileupload';
-import {Paginator} from 'primereact/paginator';
-import {Badge} from 'primereact/badge';
-import {v4 as uuidv4} from 'uuid';
+import React, { useCallback, useRef, useState } from 'react';
+import { FileUpload } from 'primereact/fileupload';
+import { Paginator } from 'primereact/paginator';
+import { Badge } from 'primereact/badge';
+import { Toast } from 'primereact/toast';
+import { v4 as uuidv4 } from 'uuid';
 import ImageModel from "../../models/ImageModel";
 import DropdownMenu from "../DropdownMenu/DropdownMenu";
 import aiService from "../../services/AIService";
@@ -20,6 +21,7 @@ const UploadImage = () => {
     const [grupoId, setGrupoId] = useState(null);
     const [selectedAnalysis, setSelectedAnalysis] = useState(null);
     const fileUploadRef = useRef(null);
+    const toast = useRef(null);
     const rows = 1;
 
     const onSelect = useCallback((event) => {
@@ -38,7 +40,12 @@ const UploadImage = () => {
 
     const onUpload = useCallback(async () => {
         if (!selectedAnalysis) {
-            alert("Por favor, selecione uma fruta antes de fazer upload.");
+            toast.current.show({
+                severity: 'warn',
+                summary: 'Atenção',
+                detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
+                life: 3000
+            });
             return;
         }
 
@@ -78,6 +85,8 @@ const UploadImage = () => {
 
     return (
         <div>
+            <Toast ref={toast} />
+
             <div className={arquivos.length > 0 ? styles['ocultar-conteudo'] : ''}>
                 <DropdownMenu
                     options={analysisOptions}
@@ -102,7 +111,7 @@ const UploadImage = () => {
                             <span className={styles['upload-label']}>
                                 Upload
                                 {arquivos.length > 0 && (
-                                    <Badge value={arquivos.length} className={styles.badge}/>
+                                    <Badge value={arquivos.length} className={styles.badge} />
                                 )}
                             </span>
                         }
@@ -156,7 +165,7 @@ const UploadImage = () => {
                                 rows={rows}
                                 totalRecords={arquivos.length}
                                 onPageChange={onPageChange}
-                                template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
+                                template={{ layout: 'PrevPageLink CurrentPageReport NextPageLink' }}
                                 currentPageReportTemplate="{currentPage} de {totalPages}"
                             />
                         )}
