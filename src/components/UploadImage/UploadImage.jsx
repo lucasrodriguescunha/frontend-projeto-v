@@ -11,8 +11,7 @@ import styles from './UploadImage.module.css';
 
 const analysisOptions = [
     "Maçãs",
-    "Laranjas",
-    "Pêras",
+    "Mangas",
 ];
 
 const UploadImage = () => {
@@ -38,10 +37,15 @@ const UploadImage = () => {
     }, []);
 
     const onUpload = useCallback(async () => {
+        if (!selectedAnalysis) {
+            alert("Por favor, selecione uma fruta antes de fazer upload.");
+            return;
+        }
+
         try {
             const atualizados = await Promise.all(
                 arquivos.map(async (item) => {
-                    const response = await aiService.uploadImage(item.file, grupoId);
+                    const response = await aiService.uploadImage(item.file, grupoId, selectedAnalysis);
                     const resultado = response.resultado;
 
                     item.atualizarResultadoAnalise(resultado);
@@ -58,7 +62,7 @@ const UploadImage = () => {
 
             setArquivos([...falhou]);
         }
-    }, [arquivos, grupoId]);
+    }, [arquivos, grupoId, selectedAnalysis]);
 
     const onClear = useCallback(() => {
         setArquivos([]);

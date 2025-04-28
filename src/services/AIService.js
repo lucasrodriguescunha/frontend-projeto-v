@@ -1,10 +1,11 @@
 import {aiApi} from "./axios-config";
 
 class AIService {
-    async uploadImage(file, grupoId) {
+    async uploadImage(file, grupoId, tipoFruta) {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("grupo_id", grupoId);
+        formData.append("tipo_fruta", tipoFruta);
 
         try {
             const response = await aiApi.post("/images", formData, {
