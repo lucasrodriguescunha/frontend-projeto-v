@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+.button:hover {
+    background-color: var(--color-secondary); 
+}
+
 .description {
     font-size: 1rem;
     font-weight: normal;
@@ -53,15 +57,4 @@
 .dropdownContainer {
     display: flex;
     justify-content: center;
-}
-
-:global(.custom-upload-button) {
-    background-color: #677FFA !important;
-    border-color: #677FFA !important;
-    color: #fff !important;
-}
-
-:global(.custom-upload-button:hover) {
-    background-color: #5567d9 !important;
-    border-color: #5567d9 !important;
 }
