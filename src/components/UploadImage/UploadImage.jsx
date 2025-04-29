@@ -52,8 +52,11 @@ const UploadImage = () => {
         try {
             const atualizados = await Promise.all(
                 arquivos.map(async (item) => {
-                    const response = await aiService.uploadImage(item.file, grupoId, selectedAnalysis);
-                    const resultado = response.resultado;
+                    const resultado = await aiService.uploadImage(item.file, grupoId, selectedAnalysis);
+
+                    if (!resultado || !resultado.resultado) {
+                        throw new Error("Resposta inválida do servidor.");
+                    }
 
                     item.atualizarResultadoAnalise(resultado);
                     return item;
