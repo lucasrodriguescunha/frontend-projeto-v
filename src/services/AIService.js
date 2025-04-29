@@ -1,4 +1,4 @@
-import {aiApi} from "./axios-config";
+import { aiApi } from "./axios-config";
 
 class AIService {
     async uploadImage(file, grupoId, tipoFruta) {
@@ -9,11 +9,20 @@ class AIService {
 
         try {
             const response = await aiApi.post("/images", formData, {
-                headers: {"Content-Type": "multipart/form-data"}
+                headers: { "Content-Type": "multipart/form-data" }
             });
-            return response.data;
+
+            if (response.data && response.data.data) {
+                return response.data.data;
+            } else {
+                throw new Error("Resposta inválida do servidor.");
+            }
         } catch (error) {
-            this.handleError(error);
+            if (error.response && error.response.data?.error) {
+                throw new Error(error.response.data.error);
+            } else {
+                throw new Error("Erro ao conectar com o servidor.");
+            }
         }
     }
 
@@ -29,7 +38,7 @@ class AIService {
     async filterAnalysis(resultado) {
         try {
             const response = await aiApi.get("/images", {
-                params: {resultado: resultado}
+                params: { resultado: resultado }
             });
             return response.data;
         } catch (error) {
@@ -39,8 +48,8 @@ class AIService {
 
     handleError(error) {
         console.error("Erro na requisição:", error);
-        if (error.response && error.response.data) {
-            throw new Error(error.response.data.message || "Erro na requisição.");
+        if (error.response && error.response.data?.error) {
+            throw new Error(error.response.data.error);
         } else {
             throw new Error("Erro ao conectar com o servidor.");
         }
