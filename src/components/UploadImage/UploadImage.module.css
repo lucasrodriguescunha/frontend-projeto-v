@@ -47,3 +47,8 @@
 :global(.p-fileupload .p-button:hover) {
     background-color: #5567d9;
 }
+
+:global(.p-fileupload .p-fileupload-buttonbar) {
+    display: flex;
+    justify-content: center;
+}
