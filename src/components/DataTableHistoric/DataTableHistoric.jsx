@@ -1,6 +1,5 @@
 import React from "react";
 import {DataTable} from "primereact/datatable";
-import styles from "../../pages/Historic/Historic.module.css";
 import {Column} from "primereact/column";
 import {Skeleton} from "primereact/skeleton";
 import {Paginator} from "primereact/paginator";
@@ -13,7 +12,6 @@ const DataTableHistoric = ({loading, grupoAtual, totalGrupos, currentPage, onPag
                 scrollable
                 scrollHeight="200px"
                 emptyMessage={"Nenhuma informação encontrada."}
-                className={styles.table}
             >
                 <Column
                     field="imagem_preview"

@@ -13,14 +13,12 @@
 
 .card {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+
     color: #000000;
     padding: 1.5rem;
     border-radius: 0.25rem;
     background: #FFFFFF;
-    height: 80%;
+    height: auto;
     width: auto;
     text-align: center;
 }

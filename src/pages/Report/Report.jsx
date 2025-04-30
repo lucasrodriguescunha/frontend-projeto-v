@@ -141,7 +141,8 @@ const Historic = () => {
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
+                    JSON
                     {/* {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."} */}
                 </p>
 
@@ -149,7 +150,7 @@ const Historic = () => {
                     label="Visualizar tabela"
                     className={styles.button}
                     style={{marginTop: '1rem'}}
-                    onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
+                    onClick={() => navigate("/app/table")}
                 />
 
                 <Button
