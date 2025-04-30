@@ -23,71 +23,38 @@ const filterByDate = [
 ];
 
 const filterByProduct = [
-    "Maças",
+    "Maçãs",
     "Laranjas",
     "Pêras",
+    "Todas"
 ];
 
-const Historic = () => {
+const Report = () => {
     const [grupos, setGrupos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedQuality, setSelectedQuality] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
     const toast = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchAnalysis = async () => {
-            try {
-                const data = await aiService.listAnalysis();
-                const analysisArray = Object.values(data).flat();
+        fetchFilteredAnalysis();
+    }, [selectedProduct, selectedQuality, selectedDate]);
 
-                const agrupado = new Map();
-                analysisArray.forEach(item => {
-                    const grupo = item.grupo_id || 'Sem ID';
-                    if (!agrupado.has(grupo)) {
-                        agrupado.set(grupo, []);
-                    }
-                    agrupado.get(grupo).push(item);
-                });
-
-                setGrupos(Array.from(agrupado.entries()).reverse());
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                toast.current?.show({
-                    severity: 'error',
-                    summary: 'Erro',
-                    detail: error.message,
-                    life: 3000
-                });
-            }
-        };
-
-        fetchAnalysis();
-    }, []);
-
-    const onPageChange = (e) => {
-        setCurrentPage(e.page);
-    };
-
-    const totalGrupos = grupos.length;
-    const grupoAtual = grupos[currentPage];
-
-    const handleQualityChange = async (quality) => {
-        setSelectedQuality(quality);
+    const fetchFilteredAnalysis = async () => {
         setLoading(true);
-
         try {
-            let data = {};
+            const params = {
+                resultado: mapQualityToParam(selectedQuality),
+                data: mapDateToParam(selectedDate),
+                tipo_fruta: mapProductToParam(selectedProduct)
+            };
 
-            if (quality === "Defeituosa" || quality === "Não defeituosa") {
-                data = await aiService.filterAnalysis(quality);
-            } else {
-                data = await aiService.listAnalysis();
-            }
-
+            const data = await aiService.getFilteredAnalysis(params);
             const analysisArray = Object.values(data).flat();
+
             const agrupado = new Map();
             analysisArray.forEach(item => {
                 const grupo = item.grupo_id || 'Sem ID';
@@ -99,16 +66,32 @@ const Historic = () => {
 
             setGrupos(Array.from(agrupado.entries()).reverse());
             setCurrentPage(0);
-            setLoading(false);
         } catch (error) {
-            setLoading(false);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Erro',
                 detail: error.message,
                 life: 3000
             });
+        } finally {
+            setLoading(false);
         }
+    };
+
+    const mapQualityToParam = (value) => {
+        if (value === "Defeituosa") return "defeituosa";
+        if (value === "Não defeituosa") return "nao_defeituosa";
+        return "todas";
+    };
+
+    const mapDateToParam = (value) => {
+        if (value === "Últimos 30 dias") return "30dias";
+        if (value === "Últimos 7 dias") return "7dias";
+        return "todas";
+    };
+
+    const mapProductToParam = (value) => {
+        return value === "Todas" || !value ? "todas" : value;
     };
 
     return (
@@ -121,29 +104,27 @@ const Historic = () => {
                     <DropdownMenu
                         options={filterByProduct}
                         placeholder="Selecione o produto"
-                        selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        selectedOption={selectedProduct}
+                        onOptionChange={setSelectedProduct}
                     />
 
                     <DropdownMenu
                         options={filterByQuality}
                         placeholder="Selecione a qualidade"
                         selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        onOptionChange={setSelectedQuality}
                     />
 
                     <DropdownMenu
                         options={filterByDate}
                         placeholder="Selecione o período"
-                        selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        selectedOption={selectedDate}
+                        onOptionChange={setSelectedDate}
                     />
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
-                    JSON
-                    {/* {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."} */}
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
                 </p>
 
                 <Button
@@ -165,7 +146,6 @@ const Historic = () => {
                     className={styles.button}
                     style={{marginTop: '1rem'}}
                     onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
-
                 />
 
                 <Button
@@ -173,7 +153,6 @@ const Historic = () => {
                     className={styles.button}
                     style={{marginTop: '1rem'}}
                     onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
-
                 />
 
                 <Button
@@ -187,4 +166,4 @@ const Historic = () => {
     );
 };
 
-export default Historic;
+export default Report;

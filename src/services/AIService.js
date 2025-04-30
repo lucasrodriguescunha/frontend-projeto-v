@@ -35,12 +35,12 @@ class AIService {
         }
     }
 
-    async filterAnalysis(resultado) {
+    async getFilteredAnalysis(filters) {
         try {
             const response = await aiApi.get("/images", {
-                params: { resultado: resultado }
+                params: filters
             });
-            return response.data;
+            return response.data.grupos;
         } catch (error) {
             this.handleError(error);
         }
