@@ -7,14 +7,14 @@ import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
 import Report from "./pages/Report/Report";
 import Admin from "./pages/Admin/Admin";
-import DataTableReport from "./components/DataTableReport/DataTableReport";
+import Table from "./pages/Table/Table";
 
 const appRoutes = [
     {path: "/app/home", element: <Base/>},
     {path: "/app/upload", element: <Upload/>},
     {path: "/app/report", element: <Report/>},
     {path: "/app/admin", element: <Admin/>},
-    {path: "/app/table", element: <DataTableReport/>},
+    {path: "/app/table", element: <Table/>},
     //...
 ];
 

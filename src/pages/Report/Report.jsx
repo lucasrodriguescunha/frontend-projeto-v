@@ -27,7 +27,7 @@ const filterByProduct = [
     "Mangas",
 ];
 
-const Historic = () => {
+const Report = () => {
     const [grupos, setGrupos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(true); // Define o estado de loading
@@ -193,4 +193,4 @@ const Historic = () => {
     );
 };
 
-export default Historic;
+export default Report;
