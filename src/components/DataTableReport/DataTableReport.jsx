@@ -4,7 +4,7 @@ import {Column} from "primereact/column";
 import {Skeleton} from "primereact/skeleton";
 import {Paginator} from "primereact/paginator";
 
-const DataTableHistoric = ({loading, grupoAtual, totalGrupos, currentPage, onPageChange}) => {
+const DataTableReport = ({loading, grupoAtual, totalGrupos, currentPage, onPageChange}) => {
     return (
         <div>
             <DataTable style={{ width: "100%", height: "100%" }}
@@ -78,4 +78,4 @@ const DataTableHistoric = ({loading, grupoAtual, totalGrupos, currentPage, onPag
     );
 };
 
-export default DataTableHistoric;
+export default DataTableReport;

@@ -23,21 +23,24 @@ const filterByDate = [
 ];
 
 const filterByProduct = [
-    "Maças",
-    "Laranjas",
-    "Pêras",
+    "Maçãs",
+    "Mangas",
 ];
 
 const Historic = () => {
     const [grupos, setGrupos] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // Define o estado de loading
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedQuality, setSelectedQuality] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(null);
     const toast = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAnalysis = async () => {
+            setLoading(true);  // Inicia o carregamento
+
             try {
                 const data = await aiService.listAnalysis();
                 const analysisArray = Object.values(data).flat();
@@ -52,38 +55,41 @@ const Historic = () => {
                 });
 
                 setGrupos(Array.from(agrupado.entries()).reverse());
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
                 toast.current?.show({
                     severity: 'error',
                     summary: 'Erro',
                     detail: error.message,
                     life: 3000
                 });
+            } finally {
+                setLoading(false); // Finaliza o carregamento
             }
         };
 
         fetchAnalysis();
-    }, []);
+    }, []);  // O useEffect é executado uma vez, quando o componente é montado
 
     const onPageChange = (e) => {
         setCurrentPage(e.page);
     };
 
-    const totalGrupos = grupos.length;
-    const grupoAtual = grupos[currentPage];
 
-    const handleQualityChange = async (quality) => {
-        setSelectedQuality(quality);
-        setLoading(true);
+
+    const handleQualityChange = async (quality, product, date) => {
+        setSelectedQuality(quality); // Atualiza o estado do 'selectedQuality'
+        setSelectedProduct(product); // Atualiza o estado do 'selectedProduct'
+        setSelectedDate(date); // Atualiza o estado do 'selectedDate'
 
         try {
             let data = {};
 
-            if (quality === "Defeituosa" || quality === "Não defeituosa") {
-                data = await aiService.filterAnalysis(quality);
+            // Construa a consulta com base nos filtros
+            if (quality !== "Todas" || product !== "Todas" || date !== "Todas") {
+                // Chama a função de filtragem se qualquer filtro estiver selecionado
+                data = await aiService.filterAnalysis(quality, product, date);
             } else {
+                // Caso contrário, chama a função para obter todos os dados
                 data = await aiService.listAnalysis();
             }
 
@@ -121,22 +127,22 @@ const Historic = () => {
                     <DropdownMenu
                         options={filterByProduct}
                         placeholder="Selecione o produto"
-                        selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        selectedOption={selectedProduct}
+                        onOptionChange={(e) => handleQualityChange(selectedQuality, e.value, selectedDate)}
                     />
 
                     <DropdownMenu
                         options={filterByQuality}
                         placeholder="Selecione a qualidade"
                         selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        onOptionChange={(e) => handleQualityChange(e.value, selectedProduct, selectedDate)}
                     />
 
                     <DropdownMenu
                         options={filterByDate}
                         placeholder="Selecione o período"
-                        selectedOption={selectedQuality}
-                        onOptionChange={handleQualityChange}
+                        selectedOption={selectedDate}
+                        onOptionChange={(e) => handleQualityChange(selectedQuality, selectedProduct, e.value)}
                     />
                 </div>
 

@@ -35,10 +35,14 @@ class AIService {
         }
     }
 
-    async filterAnalysis(resultado) {
+    async filterAnalysis(quality, product, date) {
         try {
             const response = await aiApi.get("/images", {
-                params: { resultado: resultado }
+                params: {
+                    resultado: quality,
+                    tipo_fruta: product,
+                    data: date
+                }
             });
             return response.data;
         } catch (error) {
