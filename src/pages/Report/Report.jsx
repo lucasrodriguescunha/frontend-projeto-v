@@ -3,7 +3,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {Toast} from "primereact/toast"; // Componente de notificação
 import {Card} from "primereact/card"; // Componente de cartão para layout
 import {Button} from "primereact/button"; // Botão estilizado do PrimeReact
-import DropdownMenu from "../../components/Dropdown/Dropdown"; // Componente customizado de dropdown
+import Dropdown from "../../components/Dropdown/Dropdown"; // Componente customizado de dropdown
 import {useNavigate} from "react-router"; // Hook para navegação de rotas
 import aiService from "../../services/AIService"; // Serviço que faz chamadas à API
 import styles from "./Report.module.css"; // Estilos CSS module específicos deste componente
@@ -115,28 +115,28 @@ const Report = () => {
 
     return (
         <div className={styles.container}>
-            <Toast ref={toast}/> {/* Componente para exibir notificações */}
+            <Toast ref={toast}/>
 
             <Card className={styles.card}>
                 <p className={styles.title}>Relatórios</p>
 
                 {/* Dropdowns para filtros */}
                 <div className={styles.dropdownContainer}>
-                    <DropdownMenu
+                    <Dropdown
                         options={filterByProduct}
                         placeholder="Selecione o produto"
                         selectedOption={selectedProduct}
                         onOptionChange={(value) => handleQualityChange(selectedQuality, value, selectedDate)}
                     />
 
-                    <DropdownMenu
+                    <Dropdown
                         options={filterByQuality}
                         placeholder="Selecione a qualidade"
                         selectedOption={selectedQuality}
                         onOptionChange={(value) => handleQualityChange(value, selectedProduct, selectedDate)}
                     />
 
-                    <DropdownMenu
+                    <Dropdown
                         options={filterByDate}
                         placeholder="Selecione o período"
                         selectedOption={selectedDate}

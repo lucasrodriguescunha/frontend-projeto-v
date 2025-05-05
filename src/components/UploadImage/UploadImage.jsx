@@ -11,7 +11,7 @@ import {Toast} from 'primereact/toast';
 import {v4 as uuidv4} from 'uuid';
 
 // Importa o componente de menu suspenso personalizado
-import DropdownMenu from "../Dropdown/Dropdown";
+import Dropdown from "../Dropdown/Dropdown";
 
 // Importa serviço responsável por enviar imagens para análise
 import aiService from "../../services/AIService";
@@ -143,7 +143,7 @@ const UploadImage = () => {
             {/* Esconde conteúdo se houver arquivos */}
             <div className={files.length > 0 ? styles['ocultar-conteudo'] : ''}>
                 {/* Componente de dropdown para selecionar fruta */}
-                <DropdownMenu
+                <Dropdown
                     options={analysisOptions}
                     placeholder="Selecione uma fruta"
                     selectedOption={selectedAnalysis}

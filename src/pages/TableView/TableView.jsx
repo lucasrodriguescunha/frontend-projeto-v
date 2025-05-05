@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import DataTableReport from '../../components/DataTable/DataTable';
+import {Card} from "primereact/card";
+import {Button} from "primereact/button";
+import DataTable from '../../components/DataTable/DataTable';
 
 import styles from './TableView.module.css';
 
@@ -22,15 +24,24 @@ const TableView = () => {
     };
 
     return (
-        <div className={styles.tableContainer}>
-            <h1>Relatório de Análises</h1>
-            <DataTableReport
-                loading={loading}
-                currentGroup={currentGroup}
-                totalGroups={totalGroups}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-            />
+        <div className={styles.container}>
+            <Card className={styles.card}>
+                <p className={styles.title}>Tabela</p>
+
+                <DataTable
+                    loading={loading}
+                    currentGroup={currentGroup}
+                    totalGroups={totalGroups}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                />
+
+                <Button
+                    label="Visualizar tabela"
+                    className={styles.button}
+                    style={{marginTop: '1rem'}}
+                />
+            </Card>
         </div>
     );
 };
