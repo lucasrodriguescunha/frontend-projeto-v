@@ -1,14 +1,15 @@
 import React from "react";
-import {DataTable} from "primereact/datatable";
+import {DataTable as PrimeDataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Skeleton} from "primereact/skeleton";
 import {Paginator} from "primereact/paginator";
 
-const DataTableReport = ({loading, grupoAtual, totalGrupos, currentPage, onPageChange}) => {
+const DataTable = ({loading, currentGroup, totalGroups, currentPage, onPageChange}) => {
     return (
         <div>
-            <DataTable style={{ width: "100%", height: "100%" }}
-                value={loading ? Array.from({length: 5}) : grupoAtual ? grupoAtual[1] : []}
+            <PrimeDataTable
+                style={{width: "100%", height: "100%"}}
+                value={loading ? Array.from({length: 5}) : currentGroup ? currentGroup[1] : []}
                 scrollable
                 scrollHeight="200px"
                 emptyMessage={"Nenhuma informação encontrada."}
@@ -63,13 +64,13 @@ const DataTableReport = ({loading, grupoAtual, totalGrupos, currentPage, onPageC
                     }
                     style={{minWidth: '160px'}}
                 />
-            </DataTable>
+            </PrimeDataTable>
 
-            {totalGrupos > 1 && (
+            {totalGroups > 1 && (
                 <Paginator
                     first={currentPage}
                     rows={1}
-                    totalRecords={totalGrupos}
+                    totalRecords={totalGroups}
                     onPageChange={onPageChange}
                     template="PrevPageLink PageLinks NextPageLink"
                 />
@@ -78,4 +79,4 @@ const DataTableReport = ({loading, grupoAtual, totalGrupos, currentPage, onPageC
     );
 };
 
-export default DataTableReport;
+export default DataTable;

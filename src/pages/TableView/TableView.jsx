@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import DataTableReport from '../../components/DataTableReport/DataTableReport';
-import styles from './Table.module.css';
+import React, {useEffect, useState} from 'react';
+import DataTableReport from '../../components/DataTable/DataTable';
 
-const Table = () => {
+import styles from './TableView.module.css';
+
+const TableView = () => {
     const [loading, setLoading] = useState(true);
-    const [grupoAtual, setGrupoAtual] = useState([]);
-    const [totalGrupos, setTotalGrupos] = useState(0);
+    const [currentGroup, setCurrentGroup] = useState([]);
+    const [totalGroups, setTotalGroups] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         setTimeout(() => {
-            setGrupoAtual([]);
-            setTotalGrupos(5);
+            setCurrentGroup([]);
+            setTotalGroups(5);
             setLoading(false);
         }, 2000);
     }, []);
@@ -25,8 +26,8 @@ const Table = () => {
             <h1>Relatório de Análises</h1>
             <DataTableReport
                 loading={loading}
-                grupoAtual={grupoAtual}
-                totalGrupos={totalGrupos}
+                currentGroup={currentGroup}
+                totalGroups={totalGroups}
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
             />
@@ -34,4 +35,4 @@ const Table = () => {
     );
 };
 
-export default Table;
+export default TableView;

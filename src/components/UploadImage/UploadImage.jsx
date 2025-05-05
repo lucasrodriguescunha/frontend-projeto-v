@@ -1,44 +1,79 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { FileUpload } from 'primereact/fileupload';
-import { Paginator } from 'primereact/paginator';
-import { Badge } from 'primereact/badge';
-import { Toast } from 'primereact/toast';
-import { v4 as uuidv4 } from 'uuid';
-import ImageModel from "../../models/ImageModel";
-import DropdownMenu from "../DropdownMenu/DropdownMenu";
+// Importa os hooks do React
+import React, {useCallback, useRef, useState} from 'react';
+
+// Importa componentes da biblioteca PrimeReact
+import {FileUpload} from 'primereact/fileupload';
+import {Paginator} from 'primereact/paginator';
+import {Badge} from 'primereact/badge';
+import {Toast} from 'primereact/toast';
+
+// Importa função para gerar IDs únicos
+import {v4 as uuidv4} from 'uuid';
+
+// Importa o componente de menu suspenso personalizado
+import DropdownMenu from "../Dropdown/Dropdown";
+
+// Importa serviço responsável por enviar imagens para análise
 import aiService from "../../services/AIService";
 
+// Importa os estilos CSS do módulo
 import styles from './UploadImage.module.css';
 
+// Define as opções de análise disponíveis
 const analysisOptions = [
     "Maçãs",
     "Mangas",
 ];
 
+// Componente principal de upload de imagens
 const UploadImage = () => {
-    const [arquivos, setArquivos] = useState([]);
+    // Estado para armazenar arquivos selecionados
+    const [files, setFiles] = useState([]);
+
+    // Estado da primeira página da paginação
     const [first, setFirst] = useState(0);
-    const [grupoId, setGrupoId] = useState(null);
+
+    // Identificador único do grupo de imagens (gerado a cada novo envio)
+    const [groupId, setGroupId] = useState(null);
+
+    // Categoria/fruta selecionada pelo usuário
     const [selectedAnalysis, setSelectedAnalysis] = useState(null);
+
+    // Referência ao componente FileUpload
     const fileUploadRef = useRef(null);
+
+    // Referência ao componente Toast para exibir mensagens
     const toast = useRef(null);
+
+    // Número de arquivos exibidos por página
     const rows = 1;
 
-    const onSelect = useCallback((event) => {
-        const novoGrupoId = uuidv4();
-        setGrupoId(novoGrupoId);
+    // Função chamada ao selecionar arquivos
+    const onSelectFiles = useCallback((event) => {
+        // Gera um novo ID de grupo para essa seleção
+        const newGroupId = uuidv4();
+        setGroupId(newGroupId);
 
-        const selecionados = Array.from(event.files).map((file) => new ImageModel({
+        // Mapeia os arquivos selecionados e cria objetos do tipo ImageModel
+        const selectedFiles = Array.from(event.files).map((file) => ({
             file,
             name: file.name,
-            preview: URL.createObjectURL(file)
+            preview: URL.createObjectURL(file),
+            status: 'Aguardando upload...',
+            data_analise: null,
+            confianca: null
         }));
 
-        setArquivos(selecionados);
+        // Atualiza o estado com os arquivos selectedFiles
+        setFiles(selectedFiles);
+
+        // Reinicia a paginação para o início
         setFirst(0);
     }, []);
 
-    const onUpload = useCallback(async () => {
+    // Função chamada ao clicar em "Upload"
+    const onUploadFiles = useCallback(async () => {
+        // Verifica se uma fruta foi selecionada
         if (!selectedAnalysis) {
             toast.current.show({
                 severity: 'warn',
@@ -50,47 +85,64 @@ const UploadImage = () => {
         }
 
         try {
-            const atualizados = await Promise.all(
-                arquivos.map(async (item) => {
-                    const resultado = await aiService.uploadImage(item.file, grupoId, selectedAnalysis);
+            // Envia todos os arquivos para o serviço de IA e atualiza os resultados
+            const updatedFiles = await Promise.all(
+                files.map(async (item) => {
+                    const result = await aiService.uploadImage(item.file, groupId, selectedAnalysis);
 
-                    if (!resultado || !resultado.resultado) {
+                    // Verifica se o resultado da API é válido
+                    if (!result || !result.resultado) {
                         throw new Error("Resposta inválida do servidor.");
                     }
 
-                    item.atualizarResultadoAnalise(resultado);
+                    // Atualiza o objeto com os dados da análise
+                    item.status = result.resultado;
+                    item.data_analise = result.data_analise;
+                    item.confianca = result.confianca;
+
                     return item;
                 })
             );
 
-            setArquivos([...atualizados]);
+            // Atualiza o estado com os arquivos analisados
+            setFiles([...updatedFiles]);
         } catch (err) {
-            const falhou = arquivos.map((item) => {
-                item.definirStatusErro(err.message);
+            // Em caso de erro, marca os arquivos como erro
+            const fileFailed = files.map((item) => {
+                item.status = `Erro: ${err}`;
+                item.data_analise = null;
+                item.confianca = null;
+
                 return item;
             });
 
-            setArquivos([...falhou]);
+            setFiles([...fileFailed]);
         }
-    }, [arquivos, grupoId, selectedAnalysis]);
+    }, [files, groupId, selectedAnalysis]);
 
+    // Função para limpar a seleção de arquivos
     const onClear = useCallback(() => {
-        setArquivos([]);
+        setFiles([]);
         setFirst(0);
-        setGrupoId(null);
+        setGroupId(null);
     }, []);
 
+    // Função para mudar a página da visualização
     const onPageChange = useCallback((event) => {
         setFirst(event.first);
     }, []);
 
-    const arquivosPaginados = arquivos.slice(first, first + rows);
+    // Seleciona os arquivos da página atual
+    const pagedFiles = files.slice(first, first + rows);
 
     return (
         <div>
-            <Toast ref={toast} />
+            {/* Componente Toast para mensagens */}
+            <Toast ref={toast}/>
 
-            <div className={arquivos.length > 0 ? styles['ocultar-conteudo'] : ''}>
+            {/* Esconde conteúdo se houver arquivos */}
+            <div className={files.length > 0 ? styles['ocultar-conteudo'] : ''}>
+                {/* Componente de dropdown para selecionar fruta */}
                 <DropdownMenu
                     options={analysisOptions}
                     placeholder="Selecione uma fruta"
@@ -98,77 +150,88 @@ const UploadImage = () => {
                     onOptionChange={setSelectedAnalysis}
                 />
 
-                <div className={arquivos.length > 0 ? 'ocultar-conteudo' : ''}>
+                {/* Componente de upload de arquivos */}
+                <div className={files.length > 0 ? 'ocultar-conteudo' : ''}>
                     <FileUpload
                         ref={fileUploadRef}
                         name="file"
-                        customUpload
-                        uploadHandler={onUpload}
-                        onSelect={onSelect}
+                        customUpload // Usa função personalizada para upload
+                        uploadHandler={onUploadFiles}
+                        onSelect={onSelectFiles}
                         onClear={onClear}
-                        multiple
+                        multiple // Permite múltiplos arquivos
                         accept="image/*"
-                        maxFileSize={1000000}
+                        maxFileSize={1000000} // Tamanho máximo: 1MB
                         chooseLabel="Escolher"
                         uploadLabel={
                             <span className={styles['upload-label']}>
                                 Upload
-                                {arquivos.length > 0 && (
-                                    <Badge value={arquivos.length} className={styles.badge} />
+                                {/* Badge com número de arquivos */}
+                                {files.length > 0 && (
+                                    <Badge value={files.length} className={styles.badge}/>
                                 )}
                             </span>
                         }
                         cancelLabel="Cancelar"
-                        emptyTemplate={<p className="m-0">Arraste e solte os arquivos aqui.</p>}
-                        showUploadButton={arquivos.length > 0}
-                        showCancelButton={arquivos.length > 0}
-                        auto={false}
-                        itemTemplate={() => null}
-                        uploadIcon={null}
+                        emptyTemplate={<p className="m-0">Arraste e solte as imagens aqui.</p>}
+                        showUploadButton={files.length > 0}
+                        showCancelButton={files.length > 0}
+                        auto={false} // Upload manual
+                        itemTemplate={() => null} // Não exibe template padrão
+                        uploadIcon={null} // Remove ícone de upload
                     />
                 </div>
 
-                {arquivos.length > 0 && (
+                {/* Exibe arquivos analisados */}
+                {files.length > 0 && (
                     <div className={styles['margin-top']}>
-                        {arquivosPaginados.map((arquivo, index) => (
+                        {pagedFiles.map((file, index) => (
                             <div
                                 key={index}
-                                className={styles['arquivo-container']}
+                                className={styles['file-container']}
                             >
+                                {/* Exibe imagem de pré-visualização */}
                                 <img
-                                    src={arquivo.preview}
-                                    alt={arquivo.name}
+                                    src={file.preview}
+                                    alt={file.name}
                                     className={styles['preview-imagem']}
                                 />
+
+                                {/* Informações do file */}
                                 <div className={styles['info-container']}>
-                                    <strong>{arquivo.name}</strong>
+                                    <strong>{file.name}</strong>
                                     <p>
-                                        {arquivo.status === 'Aguardando upload...' ? (
+                                        {file.status === 'Aguardando upload...' ? (
                                             <>
                                                 <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
                                                 Aguardando upload...
                                             </>
                                         ) : (
-                                            arquivo.status
+                                            file.status
                                         )}
                                     </p>
-                                    {arquivo.data_analise && (
-                                        <p>Data da análise: {arquivo.data_analise}</p>
+
+                                    {/* Data da análise, se disponível */}
+                                    {file.data_analise && (
+                                        <p>Data da análise: {file.data_analise}</p>
                                     )}
-                                    {arquivo.status !== 'Aguardando upload...' && arquivo.confianca !== undefined && (
-                                        <p>Confiança: {arquivo.confianca}%</p>
+
+                                    {/* Confiança da IA, se analisado */}
+                                    {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
+                                        <p>Confiança: {file.confianca}%</p>
                                     )}
                                 </div>
                             </div>
                         ))}
 
-                        {arquivos.length > 1 && (
+                        {/* Paginação se houver mais de um file */}
+                        {files.length > 1 && (
                             <Paginator
                                 first={first}
                                 rows={rows}
-                                totalRecords={arquivos.length}
+                                totalRecords={files.length}
                                 onPageChange={onPageChange}
-                                template={{ layout: 'PrevPageLink CurrentPageReport NextPageLink' }}
+                                template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
                                 currentPageReportTemplate="{currentPage} de {totalPages}"
                             />
                         )}
@@ -179,4 +242,5 @@ const UploadImage = () => {
     );
 };
 
+// Exporta o componente
 export default UploadImage;

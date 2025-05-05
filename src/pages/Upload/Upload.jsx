@@ -15,8 +15,10 @@ const Upload = () => {
 
                 <UploadImage/>
 
-                <Button label="Voltar para página inicial" className={styles.button}
-                        onClick={() => navigate("/app/home")}/>
+                <Button
+                    label="Voltar para página inicial"
+                    className={styles.button}
+                    onClick={() => navigate("/app/home")}/>
             </Card>
         </div>
     );

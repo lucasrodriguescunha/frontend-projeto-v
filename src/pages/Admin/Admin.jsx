@@ -18,8 +18,8 @@ const Admin = () => {
             }
         };
 
-        getUsuarios(); // Chama a função para buscar os usuários
-    }, []); // O array vazio [] garante que a função seja chamada apenas uma vez
+        getUsuarios();
+    }, []);
 
     return (
         <div className={styles.container}>

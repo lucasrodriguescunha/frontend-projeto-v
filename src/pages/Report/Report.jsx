@@ -1,61 +1,53 @@
+// Importações de bibliotecas e componentes
 import React, {useEffect, useRef, useState} from "react";
-import {Toast} from "primereact/toast";
-import {Card} from "primereact/card";
-import {Button} from "primereact/button";
-import DropdownMenu from "../../components/DropdownMenu/DropdownMenu";
-import {useNavigate} from "react-router";
+import {Toast} from "primereact/toast"; // Componente de notificação
+import {Card} from "primereact/card"; // Componente de cartão para layout
+import {Button} from "primereact/button"; // Botão estilizado do PrimeReact
+import DropdownMenu from "../../components/Dropdown/Dropdown"; // Componente customizado de dropdown
+import {useNavigate} from "react-router"; // Hook para navegação de rotas
+import aiService from "../../services/AIService"; // Serviço que faz chamadas à API
+import styles from "./Report.module.css"; // Estilos CSS module específicos deste componente
 
-import aiService from "../../services/AIService";
-
-import styles from "./Report.module.css";
-
-const filterByQuality = [
-    "Defeituosa",
-    "Não defeituosa",
-    "Todas",
-];
-
-const filterByDate = [
-    "Últimas 24 horas",
-    "Últimos 7 dias",
-    "Últimos 30 dias",
-    "Todas"
-];
-
-const filterByProduct = [
-    "Maçãs",
-    "Mangas",
-];
+// Filtros disponíveis para dropdowns
+const filterByQuality = ["Defeituosa", "Não defeituosa", "Todas"];
+const filterByDate = ["Últimas 24 horas", "Últimos 7 dias", "Últimos 30 dias", "Todas"];
+const filterByProduct = ["Maçãs", "Mangas"];
 
 const Report = () => {
-    const [grupos, setGrupos] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [loading, setLoading] = useState(true); // Define o estado de loading
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [selectedQuality, setSelectedQuality] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const toast = useRef(null);
-    const navigate = useNavigate();
+    // Estados do componente
+    const [groups, setGroups] = useState([]); // Guarda os grupos de análises
+    const [currentPage, setCurrentPage] = useState(0); // Controle de paginação
+    const [loading, setLoading] = useState(true); // Indica se os dados estão sendo carregados
+    const [selectedProduct, setSelectedProduct] = useState(null); // Produto selecionado
+    const [selectedQuality, setSelectedQuality] = useState(null); // Qualidade selecionada
+    const [selectedDate, setSelectedDate] = useState(null); // Período selecionado
 
+    const toast = useRef(null); // Referência ao componente Toast
+    const navigate = useNavigate(); // Hook para navegação entre páginas
+
+    // useEffect para buscar análises ao montar o componente
     useEffect(() => {
         const fetchAnalysis = async () => {
-            setLoading(true);  // Inicia o carregamento
+            setLoading(true);  // Ativa o estado de carregamento
 
             try {
-                const data = await aiService.listAnalysis();
-                const analysisArray = Object.values(data).flat();
+                const data = await aiService.listAnalysis(); // Chamada à API para listar análises
+                const analysisArray = Object.values(data).flat(); // Converte objeto em array plano
 
-                const agrupado = new Map();
+                // Agrupa as análises por grupo_id
+                const groupedAnalyses = new Map();
                 analysisArray.forEach(item => {
-                    const grupo = item.grupo_id || 'Sem ID';
-                    if (!agrupado.has(grupo)) {
-                        agrupado.set(grupo, []);
+                    const group = item.grupo_id || 'Sem ID';
+                    if (!groupedAnalyses.has(group)) {
+                        groupedAnalyses.set(group, []);
                     }
-                    agrupado.get(grupo).push(item);
+                    groupedAnalyses.get(group).push(item);
                 });
 
-                setGrupos(Array.from(agrupado.entries()).reverse());
+                // Atualiza o estado com os grupos ordenados (recente primeiro)
+                setGroups(Array.from(groupedAnalyses.entries()).reverse());
             } catch (error) {
+                // Exibe erro no Toast se falhar
                 toast.current?.show({
                     severity: 'error',
                     summary: 'Erro',
@@ -63,51 +55,55 @@ const Report = () => {
                     life: 3000
                 });
             } finally {
-                setLoading(false); // Finaliza o carregamento
+                setLoading(false); // Desativa o loading
             }
         };
 
-        fetchAnalysis();
-    }, []);  // O useEffect é executado uma vez, quando o componente é montado
+        fetchAnalysis(); // Executa a função ao carregar
+    }, []); // Executa apenas uma vez (componente montado)
 
+    // Atualiza a página atual (para paginação, se usada futuramente)
     const onPageChange = (e) => {
         setCurrentPage(e.page);
     };
 
-
-
+    // Função chamada sempre que algum filtro do dropdown mudar
     const handleQualityChange = async (quality, product, date) => {
-        setSelectedQuality(quality); // Atualiza o estado do 'selectedQuality'
-        setSelectedProduct(product); // Atualiza o estado do 'selectedProduct'
-        setSelectedDate(date); // Atualiza o estado do 'selectedDate'
+        // Atualiza os estados locais com os filtros selecionados
+        setSelectedQuality(quality);
+        setSelectedProduct(product);
+        setSelectedDate(date);
 
         try {
             let data = {};
 
-            // Construa a consulta com base nos filtros
+            // Se qualquer filtro for diferente de "Todas", aplica o filtro
             if (quality !== "Todas" || product !== "Todas" || date !== "Todas") {
-                // Chama a função de filtragem se qualquer filtro estiver selecionado
-                data = await aiService.filterAnalysis(quality, product, date);
+                data = await aiService.filterAnalysis(quality, product, date); // Chama a API com filtros
+                console.log("Dados filtrados recebidos da API:", data);
             } else {
-                // Caso contrário, chama a função para obter todos os dados
-                data = await aiService.listAnalysis();
+                data = await aiService.listAnalysis(); // Busca todos os dados
+                console.log("Todos os dados (sem filtro):", data);
             }
 
+            // Agrupa os dados filtrados por grupo_id
             const analysisArray = Object.values(data).flat();
-            const agrupado = new Map();
+            const groupedAnalyses = new Map();
             analysisArray.forEach(item => {
-                const grupo = item.grupo_id || 'Sem ID';
-                if (!agrupado.has(grupo)) {
-                    agrupado.set(grupo, []);
+                const group = item.grupo_id || 'Sem ID';
+                if (!groupedAnalyses.has(group)) {
+                    groupedAnalyses.set(group, []);
                 }
-                agrupado.get(grupo).push(item);
+                groupedAnalyses.get(group).push(item);
             });
 
-            setGrupos(Array.from(agrupado.entries()).reverse());
-            setCurrentPage(0);
-            setLoading(false);
+            // Atualiza o estado com os grupos filtrados
+            setGroups(Array.from(groupedAnalyses.entries()).reverse());
+            setCurrentPage(0); // Reseta para primeira página
+            setLoading(false); // Finaliza carregamento
         } catch (error) {
             setLoading(false);
+            // Mostra erro no Toast
             toast.current?.show({
                 severity: 'error',
                 summary: 'Erro',
@@ -119,39 +115,43 @@ const Report = () => {
 
     return (
         <div className={styles.container}>
-            <Toast ref={toast}/>
+            <Toast ref={toast}/> {/* Componente para exibir notificações */}
+
             <Card className={styles.card}>
                 <p className={styles.title}>Relatórios</p>
 
+                {/* Dropdowns para filtros */}
                 <div className={styles.dropdownContainer}>
                     <DropdownMenu
                         options={filterByProduct}
                         placeholder="Selecione o produto"
                         selectedOption={selectedProduct}
-                        onOptionChange={(e) => handleQualityChange(selectedQuality, e.value, selectedDate)}
+                        onOptionChange={(value) => handleQualityChange(selectedQuality, value, selectedDate)}
                     />
 
                     <DropdownMenu
                         options={filterByQuality}
                         placeholder="Selecione a qualidade"
                         selectedOption={selectedQuality}
-                        onOptionChange={(e) => handleQualityChange(e.value, selectedProduct, selectedDate)}
+                        onOptionChange={(value) => handleQualityChange(value, selectedProduct, selectedDate)}
                     />
 
                     <DropdownMenu
                         options={filterByDate}
                         placeholder="Selecione o período"
                         selectedOption={selectedDate}
-                        onOptionChange={(e) => handleQualityChange(selectedQuality, selectedProduct, e.value)}
+                        onOptionChange={(value) => handleQualityChange(selectedQuality, selectedProduct, value)}
                     />
                 </div>
 
+                {/* Descrição para instruções */}
                 <p className={styles.description}>
                     Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
                     JSON
-                    {/* {grupoAtual ? `Grupo: ${grupoAtual[0]}` : "Nenhum grupo encontrado."} */}
+                    {/* Comentado: Exibir nome do grupo atual */}
                 </p>
 
+                {/* Botão para ir para tabela de relatórios */}
                 <Button
                     label="Visualizar tabela"
                     className={styles.button}
@@ -159,6 +159,7 @@ const Report = () => {
                     onClick={() => navigate("/app/table")}
                 />
 
+                {/* Botões para gerar outros formatos (em desenvolvimento) */}
                 <Button
                     label="Gerar CSV"
                     className={styles.button}
@@ -171,7 +172,6 @@ const Report = () => {
                     className={styles.button}
                     style={{marginTop: '1rem'}}
                     onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
-
                 />
 
                 <Button
@@ -179,9 +179,9 @@ const Report = () => {
                     className={styles.button}
                     style={{marginTop: '1rem'}}
                     onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
-
                 />
 
+                {/* Botão para voltar à home */}
                 <Button
                     label="Voltar para página inicial"
                     className={styles.button}
