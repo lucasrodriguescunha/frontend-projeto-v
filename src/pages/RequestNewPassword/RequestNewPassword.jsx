@@ -1,17 +1,26 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router";
 import {IconField} from "primereact/iconfield";
 import {InputIcon} from "primereact/inputicon";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {Card} from "primereact/card";
 import {Toast} from "primereact/toast";
+import {InputOtp} from "primereact/inputotp";
 
 import styles from "./RequestNewPassword.module.css";
 
+const ValidationCode = () => {
+    const [token, setTokens] = useState();
+    return (
+        <div className={styles.containerValidationCode}>
+            <InputOtp value={token} onChange={(e) => setTokens(e.value)} integerOnly/>
+        </div>
+    )
+}
+
 const RequestNewPassword = () => {
     const [email, setEmail] = useState("");
-    const navigate = useNavigate();
+    const [showValidationCode, setShowValidationCode] = useState(false); // <-- novo estado
     const toast = React.useRef(null);
 
     const handleAccess = (e) => {
@@ -45,9 +54,8 @@ const RequestNewPassword = () => {
             life: 3000,
         });
 
-        setTimeout(() => {
-            navigate("/");
-        }, 3000);
+        // Troca para o componente de código de validação
+        setShowValidationCode(true);
     };
 
     return (
@@ -56,23 +64,29 @@ const RequestNewPassword = () => {
 
             <Card className={styles.card}>
                 <p className={styles.title}>Solicitar nova senha</p>
-                <p className={styles.description}>Por favor, insira seu e-mail.</p>
+                <p className={styles.description}>
+                    {showValidationCode ? "Digite o código de validação enviado ao seu e-mail." : "Por favor, insira seu e-mail."}
+                </p>
 
-                <form className={styles.form} onSubmit={handleAccess}>
-                    <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope"/>
-                        <InputText
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </IconField>
+                {showValidationCode ? (
+                    <ValidationCode/>
+                ) : (
+                    <form className={styles.form} onSubmit={handleAccess}>
+                        <IconField iconPosition="left">
+                            <InputIcon className="pi pi-envelope"/>
+                            <InputText
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </IconField>
 
-                    <Button className={styles.requestButton} label="Solicitar" type="submit"/>
-                </form>
+                        <Button className={styles.requestButton} label="Solicitar" type="submit"/>
+                    </form>
+                )}
             </Card>
         </div>
     );
-}
+};
 
 export default RequestNewPassword;
