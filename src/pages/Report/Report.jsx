@@ -6,6 +6,7 @@ import Dropdown from "../../components/Dropdown/Dropdown";
 import { useNavigate } from "react-router";
 import aiService from "../../services/AIService";
 import styles from "./Report.module.css";
+import DataTable from "../../components/DataTable/DataTable";
 
 const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
 const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
@@ -18,6 +19,7 @@ const Report = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [selectedQuality, setSelectedQuality] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [showTable, setShowTable] = useState(false);
 
     const toast = useRef(null);
     const navigate = useNavigate();
@@ -79,18 +81,9 @@ const Report = () => {
                 console.log("Todos os dados (sem filtro):", data);
             }
 
-            const analysisArray = Object.values(data).flat();
-            const groupedAnalyses = new Map();
-            analysisArray.forEach(item => {
-                const group = item.grupo_id || 'Sem ID';
-                if (!groupedAnalyses.has(group)) {
-                    groupedAnalyses.set(group, []);
-                }
-                groupedAnalyses.get(group).push(item);
-            });
-
-            setGroups(Array.from(groupedAnalyses.entries()).reverse());
+            setGroups(data);
             setCurrentPage(0);
+            setShowTable(true);
         } catch (error) {
             toast.current?.show({
                 severity: 'error',
@@ -113,21 +106,21 @@ const Report = () => {
                 <div className={styles.dropdownContainer}>
                     <Dropdown
                         options={filterByProduct}
-                        placeholder="Selecione o produto"
+                        placeholder="Produto"
                         selectedOption={selectedProduct}
                         onOptionChange={setSelectedProduct}
                     />
 
                     <Dropdown
                         options={filterByQuality}
-                        placeholder="Selecione a qualidade"
+                        placeholder="Qualidade"
                         selectedOption={selectedQuality}
                         onOptionChange={setSelectedQuality}
                     />
 
                     <Dropdown
                         options={filterByDate}
-                        placeholder="Selecione o período"
+                        placeholder="Período"
                         selectedOption={selectedDate}
                         onOptionChange={setSelectedDate}
                     />
@@ -143,7 +136,6 @@ const Report = () => {
                     style={{ marginTop: '1rem' }}
                     onClick={() => {
                         applyFilters();
-                        navigate("/app/table");
                     }}
                 />
 
@@ -174,6 +166,18 @@ const Report = () => {
                     style={{ marginTop: '1rem' }}
                     onClick={() => navigate("/app/home")}
                 />
+
+                {showTable && (
+                    <div className={styles.tableContainer} style={{ marginTop: '2rem' }}>
+                        <h3>Dados Filtrados</h3>
+                        <DataTable 
+                            data={groups}
+                            loading={loading}
+                            currentPage={currentPage}
+                            onPageChange={onPageChange}
+                        />
+                    </div>
+                )}
             </Card>
         </div>
     );

@@ -29,7 +29,7 @@ const Dropdown = ({ options, placeholder, selectedOption, onOptionChange }) => {
                 }))}
                 onChange={handleChange}
                 placeholder={placeholder}
-                style={{ margin: '20px' }}
+                style={{ margin: '20px', width: '200px' }}
             />
         </div>
     );
