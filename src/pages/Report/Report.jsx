@@ -8,10 +8,56 @@ import aiService from "../../services/AIService";
 import styles from "./Report.module.css";
 import DataTable from "../../components/DataTable/DataTable";
 
+// Filtros
 const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
 const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
 const filterByProduct = ["macas", "mangas"];
 
+// TableView agora é uma função interna do Report
+const TableView = ({ onBack }) => {
+    const [loading, setLoading] = useState(true);
+    const [currentGroup, setCurrentGroup] = useState([]);
+    const [totalGroups, setTotalGroups] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentGroup([]); // Simula carregamento de dados
+            setTotalGroups(5);
+            setLoading(false);
+        }, 2000);
+    }, []);
+
+    const handlePageChange = (event) => {
+        setCurrentPage(event.first);
+    };
+
+    return (
+        <div className={styles.container}>
+            <Card className={styles.card}>
+
+                <p className={styles.title}>Tabela</p>
+
+                <DataTable
+                    loading={loading}
+                    currentGroup={currentGroup}
+                    totalGroups={totalGroups}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                />
+
+                <Button
+                    label="Voltar"
+                    className={styles.button}
+                    style={{ marginTop: '1rem' }}
+                    onClick={onBack}
+                />
+            </Card>
+        </div>
+    );
+};
+
+// Componente principal
 const Report = () => {
     const [groups, setGroups] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -20,6 +66,7 @@ const Report = () => {
     const [selectedQuality, setSelectedQuality] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [showTable, setShowTable] = useState(false);
+    const [showTableViewLayout, setShowTableViewLayout] = useState(false); // <- novo estado
 
     const toast = useRef(null);
     const navigate = useNavigate();
@@ -75,10 +122,8 @@ const Report = () => {
                     selectedProduct,
                     selectedDate
                 );
-                console.log("Resultado filtrado:", data);
             } else {
                 data = await aiService.listAnalysis();
-                console.log("Todos os dados (sem filtro):", data);
             }
 
             setGroups(data);
@@ -96,11 +141,17 @@ const Report = () => {
         }
     };
 
+    // Renderização condicional entre Report e TableView
+    if (showTableViewLayout) {
+        return <TableView onBack={() => setShowTableViewLayout(false)} />;
+    }
+
     return (
         <div className={styles.container}>
             <Toast ref={toast} />
 
             <Card className={styles.card}>
+
                 <p className={styles.title}>Relatórios</p>
 
                 <div className={styles.dropdownContainer}>
@@ -110,14 +161,12 @@ const Report = () => {
                         selectedOption={selectedProduct}
                         onOptionChange={setSelectedProduct}
                     />
-
                     <Dropdown
                         options={filterByQuality}
                         placeholder="Qualidade"
                         selectedOption={selectedQuality}
                         onOptionChange={setSelectedQuality}
                     />
-
                     <Dropdown
                         options={filterByDate}
                         placeholder="Período"
@@ -134,9 +183,7 @@ const Report = () => {
                     label="Visualizar tabela"
                     className={styles.button}
                     style={{ marginTop: '1rem' }}
-                    onClick={() => {
-                        applyFilters();
-                    }}
+                    onClick={() => setShowTableViewLayout(true)}
                 />
 
                 <Button
@@ -145,21 +192,18 @@ const Report = () => {
                     style={{ marginTop: '1rem' }}
                     onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
                 />
-
                 <Button
                     label="Gerar PDF"
                     className={styles.button}
                     style={{ marginTop: '1rem' }}
                     onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
                 />
-
                 <Button
                     label="Gerar JSON"
                     className={styles.button}
                     style={{ marginTop: '1rem' }}
                     onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
                 />
-
                 <Button
                     label="Voltar para página inicial"
                     className={styles.button}
@@ -170,7 +214,7 @@ const Report = () => {
                 {showTable && (
                     <div className={styles.tableContainer} style={{ marginTop: '2rem' }}>
                         <h3>Dados Filtrados</h3>
-                        <DataTable 
+                        <DataTable
                             data={groups}
                             loading={loading}
                             currentPage={currentPage}
