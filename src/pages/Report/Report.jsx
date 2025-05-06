@@ -11,10 +11,9 @@ import DataTable from "../../components/DataTable/DataTable";
 // Filtros
 const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
 const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
-const filterByProduct = ["macas", "mangas"];
+const filterByProduct = ["macas", "mangas", "todas"];
 
-// TableView agora é uma função interna do Report
-const TableView = ({ onBack }) => {
+const TableView = ({ onBack, filteredData }) => {
     const [loading, setLoading] = useState(true);
     const [currentGroup, setCurrentGroup] = useState([]);
     const [totalGroups, setTotalGroups] = useState(0);
@@ -22,7 +21,7 @@ const TableView = ({ onBack }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setCurrentGroup([]); // Simula carregamento de dados
+            setCurrentGroup([]);
             setTotalGroups(5);
             setLoading(false);
         }, 2000);
@@ -35,13 +34,11 @@ const TableView = ({ onBack }) => {
     return (
         <div className={styles.container}>
             <Card className={styles.card}>
-
-                <p className={styles.title}>Tabela</p>
+                <p className={styles.title}>Tabela de Resultados</p>
 
                 <DataTable
+                    data={filteredData}
                     loading={loading}
-                    currentGroup={currentGroup}
-                    totalGroups={totalGroups}
                     currentPage={currentPage}
                     onPageChange={handlePageChange}
                 />
@@ -59,14 +56,13 @@ const TableView = ({ onBack }) => {
 
 // Componente principal
 const Report = () => {
-    const [groups, setGroups] = useState([]);
+    const [filteredData, setFilteredData] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [selectedQuality, setSelectedQuality] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [showTable, setShowTable] = useState(false);
-    const [showTableViewLayout, setShowTableViewLayout] = useState(false); // <- novo estado
+    const [selectedProduct, setSelectedProduct] = useState("todas");
+    const [selectedQuality, setSelectedQuality] = useState("todas");
+    const [selectedDate, setSelectedDate] = useState("todas");
+    const [showTableViewLayout, setShowTableViewLayout] = useState(false);
 
     const toast = useRef(null);
     const navigate = useNavigate();
@@ -76,18 +72,7 @@ const Report = () => {
             setLoading(true);
             try {
                 const data = await aiService.listAnalysis();
-                const analysisArray = Object.values(data).flat();
-
-                const groupedAnalyses = new Map();
-                analysisArray.forEach(item => {
-                    const group = item.grupo_id || 'Sem ID';
-                    if (!groupedAnalyses.has(group)) {
-                        groupedAnalyses.set(group, []);
-                    }
-                    groupedAnalyses.get(group).push(item);
-                });
-
-                setGroups(Array.from(groupedAnalyses.entries()).reverse());
+                setFilteredData(data);
             } catch (error) {
                 toast.current?.show({
                     severity: 'error',
@@ -112,23 +97,15 @@ const Report = () => {
         try {
             let data = {};
 
-            if (
-                selectedQuality !== "todas" ||
-                selectedProduct !== "todas" ||
-                selectedDate !== "todas"
-            ) {
-                data = await aiService.filterAnalysis(
-                    selectedQuality,
-                    selectedProduct,
-                    selectedDate
-                );
-            } else {
-                data = await aiService.listAnalysis();
-            }
+            data = await aiService.filterAnalysis(
+                selectedQuality,
+                selectedProduct,
+                selectedDate
+            );
 
-            setGroups(data);
+            setFilteredData(data);
             setCurrentPage(0);
-            setShowTable(true);
+            setShowTableViewLayout(true);
         } catch (error) {
             toast.current?.show({
                 severity: 'error',
@@ -143,7 +120,11 @@ const Report = () => {
 
     // Renderização condicional entre Report e TableView
     if (showTableViewLayout) {
-        return <TableView onBack={() => setShowTableViewLayout(false)} />;
+        return <TableView 
+            onBack={() => setShowTableViewLayout(false)} 
+            filteredData={filteredData} 
+            loading={loading} 
+        />;
     }
 
     return (
@@ -151,7 +132,6 @@ const Report = () => {
             <Toast ref={toast} />
 
             <Card className={styles.card}>
-
                 <p className={styles.title}>Relatórios</p>
 
                 <div className={styles.dropdownContainer}>
@@ -183,7 +163,7 @@ const Report = () => {
                     label="Visualizar tabela"
                     className={styles.button}
                     style={{ marginTop: '1rem' }}
-                    onClick={() => setShowTableViewLayout(true)}
+                    onClick={applyFilters}
                 />
 
                 <Button
@@ -210,18 +190,6 @@ const Report = () => {
                     style={{ marginTop: '1rem' }}
                     onClick={() => navigate("/app/home")}
                 />
-
-                {showTable && (
-                    <div className={styles.tableContainer} style={{ marginTop: '2rem' }}>
-                        <h3>Dados Filtrados</h3>
-                        <DataTable
-                            data={groups}
-                            loading={loading}
-                            currentPage={currentPage}
-                            onPageChange={onPageChange}
-                        />
-                    </div>
-                )}
             </Card>
         </div>
     );
