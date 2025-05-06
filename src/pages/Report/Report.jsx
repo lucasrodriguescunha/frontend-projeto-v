@@ -13,8 +13,19 @@ const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
 const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
 const filterByProduct = ["macas", "mangas", "todas"];
 
-const TableView = ({ onBack, filteredData, loading }) => {
+const TableView = ({ onBack, filteredData }) => {
+    const [loading, setLoading] = useState(true);
+    const [currentGroup, setCurrentGroup] = useState([]);
+    const [totalGroups, setTotalGroups] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentGroup([]);
+            setTotalGroups(5);
+            setLoading(false);
+        }, 2000);
+    }, []);
 
     const handlePageChange = (event) => {
         setCurrentPage(event.first);
