@@ -1,15 +1,17 @@
 .container {
-    background-color: var(--color-primary);
-    width: 100%;
-    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    background-color: var(--color-primary);
+    width: auto;
+    height: 100vh;
 }
 
 .card {
-    width: 100%;
-    min-height: 100vh;
-    max-width: 800px;
+    display: flex;
+    justify-content: center;
+    width: auto;
     background: #FFFFFF;
     padding: 1.5rem;
     border-radius: 0.25rem;
@@ -54,7 +56,3 @@
     background-color: var(--color-secondary);
 }
 
-.tableContainer {
-    overflow-x: auto;
-    margin-top: 2rem;
-}

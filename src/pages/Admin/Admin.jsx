@@ -1,38 +1,56 @@
-import React, {useEffect, useState} from 'react';
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import userService from "../../services/UserService";
+import React, {useState} from "react";
+import {Card} from 'primereact/card';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
+import {Button} from 'primereact/button';
+import {useNavigate} from 'react-router';
 
-import styles from './Admin.module.css';
+import styles from "./Admin.module.css";
 
 const Admin = () => {
     const [users, setUsers] = useState([]);
+    const [userRole, setUserRole] = useState();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const getUsuarios = async () => {
-            try {
-                const response = await userService.getUsuarios();
-                setUsers(response); // Atualiza o estado com os dados retornados
-            } catch (error) {
-                console.error("Erro ao buscar usuários:", error);
-            }
-        };
+    const columns = [
+        {field: 'name', header: 'Nome'},
+        {field: 'email', header: 'E-mail'},
+        {field: 'user_role', header: 'Permissão'},
+        // ... botões
+    ];
 
-        getUsuarios();
-    }, []);
+    // useEffect(() => {
+    //    userService.getUsers()
+    // });
 
     return (
         <div className={styles.container}>
-            <div className="card">
-                <DataTable value={users} tableStyle={{minWidth: '50rem'}}>
-                    <Column field="nome" header="Nome"></Column>
-                    <Column field="email" header="E-mail"></Column>
-                    <Column field="senha" header="Senha"></Column>
-                    <Column field="permissao" header="Permissão"></Column>
+            <Card className={styles.card}>
+
+                <p className={styles.title}>Controle de usuários</p>
+
+                <DataTable
+                    value={users}
+                    tableStyle={{minWidth: '50rem'}}
+                    emptyMessage="Nenhum dado encontrado."
+                >
+                    {columns.map((col, i) => (
+                        <Column key={col.field} field={col.field} header={col.header}/>
+
+                    ))}
                 </DataTable>
-            </div>
+
+                <Button icon="pi pi-pencil" severity="warning" aria-label="Edit"/>
+
+                <Button
+                    label="Voltar para página inicial"
+                    className={styles.button}
+                    onClick={() => navigate("/app/home")}
+                />
+
+            </Card>
         </div>
     );
-};
+}
 
 export default Admin;

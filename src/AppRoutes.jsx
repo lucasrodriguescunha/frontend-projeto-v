@@ -7,11 +7,13 @@ import Base from "./pages/Base/Base";
 import Upload from "./pages/Upload/Upload";
 import Report from "./pages/Report/Report";
 import Admin from "./pages/Admin/Admin";
+import Profile from "./pages/Profile/Profile";
 
 const appRoutes = [
     {path: "/app/home", element: <Base/>},
     {path: "/app/upload", element: <Upload/>},
     {path: "/app/report", element: <Report/>},
+    {path: "/app/profile", element: <Profile/>},
     {path: "/app/admin", element: <Admin/>},
     //...
 ];

@@ -23,7 +23,6 @@ const DataTable = ({ data, loading, currentPage, onPageChange }) => {
   return (
     <div>
       <PrimeDataTable
-        style={{ width: "100%", height: "100%" }}
         value={tableData}
         scrollable
         scrollHeight="200px"

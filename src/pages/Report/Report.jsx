@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Toast } from "primereact/toast";
-import { Card } from "primereact/card";
-import { Button } from "primereact/button";
+import React, {useEffect, useRef, useState} from "react";
+import {Toast} from "primereact/toast";
+import {Card} from "primereact/card";
+import {Button} from "primereact/button";
 import Dropdown from "../../components/Dropdown/Dropdown";
-import { useNavigate } from "react-router";
+import {useNavigate} from "react-router";
 import aiService from "../../services/AIService";
-import styles from "./Report.module.css";
 import DataTable from "../../components/DataTable/DataTable";
+
+import styles from "./Report.module.css";
 
 // Filtros
 const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
 const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
 const filterByProduct = ["macas", "mangas", "todas"];
 
-const TableView = ({ onBack, filteredData }) => {
+const TableView = ({onBack, filteredData}) => {
     const [loading, setLoading] = useState(true);
     const [currentGroup, setCurrentGroup] = useState([]);
     const [totalGroups, setTotalGroups] = useState(0);
@@ -46,7 +47,7 @@ const TableView = ({ onBack, filteredData }) => {
                 <Button
                     label="Voltar"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
+                    style={{marginTop: '1rem'}}
                     onClick={onBack}
                 />
             </Card>
@@ -120,16 +121,16 @@ const Report = () => {
 
     // Renderização condicional entre Report e TableView
     if (showTableViewLayout) {
-        return <TableView 
-            onBack={() => setShowTableViewLayout(false)} 
-            filteredData={filteredData} 
-            loading={loading} 
+        return <TableView
+            onBack={() => setShowTableViewLayout(false)}
+            filteredData={filteredData}
+            loading={loading}
         />;
     }
 
     return (
         <div className={styles.container}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
 
             <Card className={styles.card}>
                 <p className={styles.title}>Relatórios</p>
@@ -156,38 +157,39 @@ const Report = () => {
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
+                    JSON
                 </p>
 
                 <Button
                     label="Visualizar tabela"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
+                    style={{marginTop: '1rem'}}
                     onClick={applyFilters}
                 />
 
                 <Button
                     label="Gerar CSV"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
-                    onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
+                    style={{marginTop: '1rem'}}
+                    onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
                 />
                 <Button
                     label="Gerar PDF"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
-                    onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
+                    style={{marginTop: '1rem'}}
+                    onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
                 />
                 <Button
                     label="Gerar JSON"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
-                    onClick={() => toast.current?.show({ severity: 'info', summary: 'Em desenvolvimento', life: 3000 })}
+                    style={{marginTop: '1rem'}}
+                    onClick={() => toast.current?.show({severity: 'info', summary: 'Em desenvolvimento', life: 3000})}
                 />
                 <Button
                     label="Voltar para página inicial"
                     className={styles.button}
-                    style={{ marginTop: '1rem' }}
+                    style={{marginTop: '1rem'}}
                     onClick={() => navigate("/app/home")}
                 />
             </Card>
