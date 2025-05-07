@@ -60,10 +60,9 @@
     background-color: var(--color-primary);
     width: 100%;
     max-width: 300px;
-    margin-top: 2rem;
+    margin-top: 1rem;
     color: white;
     border: none;
-    padding: 0.75rem;
     border-radius: 0.5rem;
     font-weight: 500;
     cursor: pointer;
@@ -72,6 +71,11 @@
 
 .button:hover {
     background-color: var(--color-secondary);
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: column;
 }
 
 .avatarWrapper {

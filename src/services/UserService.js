@@ -28,6 +28,15 @@ class UserService {
         }
     }
 
+    async updateUsuario(idUsuario, usuario) {
+        try {
+            const response = await userApi.put(`/usuarios?idUsuario=${idUsuario}`, usuario);
+            return response.data;
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
     async login(dados) {
         try {
             const response = await userApi.post("/auth/login", dados);

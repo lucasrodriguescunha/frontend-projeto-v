@@ -58,8 +58,6 @@ const Login = () => {
                 senha_usuario: password
             });
 
-            console.log("Login response:", response);
-
             localStorage.setItem("X-API-KEY", response.apiKey);
             sessionStorage.setItem("tokenJWT", response.tokenJWT);
             sessionStorage.setItem("userEmail", email);
