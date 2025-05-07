@@ -4,8 +4,8 @@ import React, {useCallback, useRef, useState} from 'react';
 // Importa componentes da biblioteca PrimeReact
 import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
-import {Badge} from 'primereact/badge';
 import {Toast} from 'primereact/toast';
+import {Button} from "primereact/button";
 
 // Importa função para gerar IDs únicos
 import {v4 as uuidv4} from 'uuid';
@@ -25,6 +25,7 @@ const analysisOptions = [
     "Mangas",
 ];
 
+
 // Componente principal de upload de imagens
 const UploadImage = () => {
     // Estado para armazenar arquivos selecionados
@@ -39,6 +40,12 @@ const UploadImage = () => {
     // Categoria/fruta selecionada pelo usuário
     const [selectedAnalysis, setSelectedAnalysis] = useState(null);
 
+    const videoRef = useRef(null);
+
+    const canvasRef = useRef(null);
+
+    const [showWebcam, setShowWebcam] = useState(false);
+
     // Referência ao componente FileUpload
     const fileUploadRef = useRef(null);
 
@@ -47,6 +54,85 @@ const UploadImage = () => {
 
     // Número de arquivos exibidos por página
     const rows = 1;
+
+    // Esse é o template do botões
+    const customHeaderTemplate = (options) => {
+        const {className, chooseButton, uploadButton, cancelButton} = options;
+
+        return (
+            <div className={className} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                {chooseButton}
+                <Button
+                    label="Webcam"
+                    icon="pi pi-camera"
+                    className="p-button-secondary"
+                    onClick={startWebcam}
+                />
+                {showWebcam && (
+                    <div style={{marginBottom: '12rem'}}>
+                        <video ref={videoRef} width="300" height="200"/>
+                        <br/>
+                        <Button label="Capturar Imagem" onClick={captureImage} className="p-button-success"/>
+                        <canvas ref={canvasRef} width="300" height="200" style={{display: 'none'}}/>
+                    </div>
+                )}
+                {uploadButton}
+                {cancelButton}
+            </div>
+        );
+    };
+
+    // Função para iniciar a webcam
+    const startWebcam = () => {
+        setShowWebcam(true);
+
+        navigator.mediaDevices.getUserMedia({video: true})
+            .then(stream => {
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    videoRef.current.play();
+                }
+            })
+            .catch(err => {
+                console.error("Erro ao acessar webcam:", err);
+            });
+    };
+
+    // Função para capturar a imagem da webcam
+    const captureImage = () => {
+        const context = canvasRef.current.getContext("2d");
+        context.drawImage(videoRef.current, 0, 0, 300, 200); // largura e altura desejadas
+
+        const dataUrl = canvasRef.current.toDataURL("image/png");
+
+        const imageFile = {
+            file: dataURLtoFile(dataUrl, `webcam-${uuidv4()}.png`),
+            name: `webcam-${Date.now()}.png`,
+            preview: dataUrl,
+            status: 'Aguardando upload...',
+            data_analise: null,
+            confianca: null
+        };
+
+        setFiles([...files, imageFile]);
+        setFirst(0);
+    };
+
+    // Função auxiliar para converter o base64 para File:
+    const dataURLtoFile = (dataUrl, filename) => {
+        const arr = dataUrl.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+
+        return new File([u8arr], filename, {type: mime});
+    };
+
 
     // Função chamada ao selecionar arquivos
     const onSelectFiles = useCallback((event) => {
@@ -137,110 +223,93 @@ const UploadImage = () => {
 
     return (
         <div>
-            {/* Componente Toast para mensagens */}
             <Toast ref={toast}/>
 
-            {/* Esconde conteúdo se houver arquivos */}
             <div className={files.length > 0 ? styles['ocultar-conteudo'] : ''}>
-                {/* Componente de dropdown para selecionar fruta */}
                 <Dropdown
                     options={analysisOptions}
                     placeholder="Selecione uma fruta"
                     selectedOption={selectedAnalysis}
                     onOptionChange={setSelectedAnalysis}
+                    style={{minWidth: '100%'}}
                 />
 
-                {/* Componente de upload de arquivos */}
                 <div className={files.length > 0 ? 'ocultar-conteudo' : ''}>
                     <FileUpload
                         ref={fileUploadRef}
                         name="file"
-                        customUpload // Usa função personalizada para upload
+                        customUpload
                         uploadHandler={onUploadFiles}
                         onSelect={onSelectFiles}
                         onClear={onClear}
-                        multiple // Permite múltiplos arquivos
+                        multiple
                         accept="image/*"
-                        maxFileSize={1000000} // Tamanho máximo: 1MB
+                        maxFileSize={1000000}
                         chooseLabel="Escolher"
-                        uploadLabel={
-                            <span className={styles['upload-label']}>
-                                Upload
-                                {/* Badge com número de arquivos */}
-                                {files.length > 0 && (
-                                    <Badge value={files.length} className={styles.badge}/>
-                                )}
-                            </span>
-                        }
+                        uploadLabel="Upload"
                         cancelLabel="Cancelar"
+                        headerTemplate={customHeaderTemplate}
                         emptyTemplate={<p className="m-0">Arraste e solte as imagens aqui.</p>}
                         showUploadButton={files.length > 0}
                         showCancelButton={files.length > 0}
-                        auto={false} // Upload manual
-                        itemTemplate={() => null} // Não exibe template padrão
-                        uploadIcon={null} // Remove ícone de upload
+                        auto={false}
+                        itemTemplate={() => null}
+                        uploadIcon={null}
                     />
-                </div>
 
-                {/* Exibe arquivos analisados */}
-                {files.length > 0 && (
-                    <div className={styles['margin-top']}>
-                        {pagedFiles.map((file, index) => (
-                            <div
-                                key={index}
-                                className={styles['file-container']}
-                            >
-                                {/* Exibe imagem de pré-visualização */}
-                                <img
-                                    src={file.preview}
-                                    alt={file.name}
-                                    className={styles['preview-imagem']}
-                                />
+                    {files.length > 0 && (
+                        <div className={styles['margin-top']}>
+                            {pagedFiles.map((file, index) => (
+                                <div
+                                    key={index}
+                                    className={styles['file-container']}
+                                >
+                                    <img
+                                        src={file.preview}
+                                        alt={file.name}
+                                        className={styles['preview-imagem']}
+                                    />
 
-                                {/* Informações do file */}
-                                <div className={styles['info-container']}>
-                                    <strong>{file.name}</strong>
-                                    <p>
-                                        {file.status === 'Aguardando upload...' ? (
-                                            <>
-                                                <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
-                                                Aguardando upload...
-                                            </>
-                                        ) : (
-                                            file.status
+                                    <div className={styles['info-container']}>
+                                        <strong>{file.name}</strong>
+                                        <p>
+                                            {file.status === 'Aguardando upload...' ? (
+                                                <>
+                                                    <i className={`pi pi-spin pi-spinner ${styles['spinner-icon']}`}></i>
+                                                    Aguardando upload...
+                                                </>
+                                            ) : (
+                                                file.status
+                                            )}
+                                        </p>
+
+                                        {file.data_analise && (
+                                            <p>Data da análise: {file.data_analise}</p>
                                         )}
-                                    </p>
 
-                                    {/* Data da análise, se disponível */}
-                                    {file.data_analise && (
-                                        <p>Data da análise: {file.data_analise}</p>
-                                    )}
-
-                                    {/* Confiança da IA, se analisado */}
-                                    {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
-                                        <p>Confiança: {file.confianca}%</p>
-                                    )}
+                                        {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
+                                            <p>Confiança: {file.confianca}%</p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
 
-                        {/* Paginação se houver mais de um file */}
-                        {files.length > 1 && (
-                            <Paginator
-                                first={first}
-                                rows={rows}
-                                totalRecords={files.length}
-                                onPageChange={onPageChange}
-                                template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
-                                currentPageReportTemplate="{currentPage} de {totalPages}"
-                            />
-                        )}
-                    </div>
-                )}
+                            {files.length > 1 && (
+                                <Paginator
+                                    first={first}
+                                    rows={rows}
+                                    totalRecords={files.length}
+                                    onPageChange={onPageChange}
+                                    template={{layout: 'PrevPageLink CurrentPageReport NextPageLink'}}
+                                    currentPageReportTemplate="{currentPage} de {totalPages}"
+                                />
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
 };
 
-// Exporta o componente
 export default UploadImage;
