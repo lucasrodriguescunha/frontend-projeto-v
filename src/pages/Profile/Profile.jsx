@@ -11,7 +11,8 @@ import {useNavigate} from 'react-router';
 import styles from "./Profile.module.css";
 
 const Profile = () => {
-    const [userRole, setUserRole] = useState();
+    const [userName, setUserName] = useState("");
+    const [userEmail, setUserEmail] = useState();
     const navigate = useNavigate();
 
     return (
@@ -38,7 +39,7 @@ const Profile = () => {
                     <InputText placeholder="lucas@example.com"/>
                 </IconField>
 
-                <p>Sua permissão é: {userRole}</p>
+                <p>Sua permissão é: </p>
 
                 <Button
                     label="Voltar para página inicial"
