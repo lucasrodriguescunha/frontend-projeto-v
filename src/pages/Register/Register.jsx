@@ -73,7 +73,7 @@ const Register = () => {
             });
 
             setTimeout(() => {
-                navigate("/app/home");
+                navigate("/login");
             }, 3000);
 
 
