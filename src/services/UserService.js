@@ -19,6 +19,15 @@ class UserService {
         }
     }
 
+    async getUsuarioByEmail(email) {
+        try {
+            const response = await userApi.get(`/usuarios?emailUsuario=${email}`);
+            return response.data.usuario;
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
     async login(dados) {
         try {
             const response = await userApi.post("/auth/login", dados);
