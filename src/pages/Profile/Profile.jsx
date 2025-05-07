@@ -4,29 +4,26 @@ import { InputText } from 'primereact/inputtext';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router';
-import userService from "../../services/UserService"; // Ajuste o caminho conforme sua estrutura de pastas
+import userService from "../../services/UserService";
 
 import styles from "./Profile.module.css";
 
 const Profile = () => {
+    const [userId, setUserId] = useState(null);
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
+    // const [userPassword, setUserPassword] = useState("");
     const [userPermission, setUserPermission] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Função para carregar os dados do usuário
         const loadUserData = async () => {
             try {
-                // Recupera o email do usuário logado da sessão
                 const loggedUserEmail = sessionStorage.getItem("userEmail");
-                
                 if (loggedUserEmail) {
-                    // Busca os dados do usuário pelo email
                     const userData = await userService.getUsuarioByEmail(loggedUserEmail);
-                    
-                    // Atualiza os estados com os dados recebidos
                     if (userData) {
+                        setUserId(userData.idUsuario);
                         setUserName(userData.nome || "");
                         setUserEmail(userData.email || "");
                         setUserPermission(userData.permissao || "");
@@ -36,14 +33,34 @@ const Profile = () => {
                 console.error("Erro ao carregar dados do usuário:", error);
             }
         };
-        
         loadUserData();
     }, []);
+
+    const handleSave = async () => {
+        try {
+            const updatedUser = {
+                idUsuario: userId,
+                nome: userName,
+                email: userEmail,
+                // senha: userPassword,
+                permissao: userPermission,
+                ativo: true,
+                contaBloqueada: false,
+                contaExpiraEm: null,
+                senhaExpirada: false,
+                tentativasFalhas: 0
+            };
+            console.log("Enviando para PUT:", updatedUser);
+            await userService.updateUsuario(userId, updatedUser);
+            alert("Alterações salvas com sucesso!");
+        } catch (error) {
+            alert("Erro ao salvar alterações: " + error.message);
+        }
+    };
 
     return (
         <div className={styles.container}>
             <Card className={styles.card}>
-
                 <p className={styles.title}>Perfil</p>
 
                 <div className={styles.avatarWrapper}>
@@ -79,14 +96,23 @@ const Profile = () => {
 
                 <p className={styles.description}>Sua permissão é: <strong>{userPermission}</strong></p>
 
+                <div className={styles.buttonGroup}>
                 <Button
-                    label="Voltar para página inicial"
-                    className={styles.button}
-                    onClick={() => navigate("/app/home")}
-                />
+                        label="Salvar alterações"
+                        icon="pi pi-save"
+                        className={`${styles.button} p-button-success`}
+                        onClick={handleSave}
+                        disabled={!userId}
+                    />
+                    <Button
+                        label="Voltar para página inicial"
+                        className={styles.button}
+                        onClick={() => navigate("/app/home")}
+                    />
+                </div>
             </Card>
         </div>
     );
-}
+};
 
 export default Profile;
