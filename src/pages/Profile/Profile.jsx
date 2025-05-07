@@ -65,7 +65,7 @@ const Profile = () => {
 
                 <div className={styles.avatarWrapper}>
                     <div className={styles.avatarContainer}>
-                        <Avatar label="U" size="xlarge" shape="circle" />
+                        <Avatar label={userName.charAt(0).toUpperCase()} size="xlarge" shape="circle" />
                         <span className={styles.cameraIcon}>
                             <i className="pi pi-camera"></i>
                         </span>
@@ -97,7 +97,7 @@ const Profile = () => {
                 <p className={styles.description}>Sua permissão é: <strong>{userPermission}</strong></p>
 
                 <div className={styles.buttonGroup}>
-                <Button
+                    <Button
                         label="Salvar alterações"
                         icon="pi pi-save"
                         className={`${styles.button} p-button-success`}
