@@ -42,13 +42,19 @@
 
 :global(.p-fileupload .p-button) {
     background-color: #677FFA;
+    border: none;
+    box-shadow: none;
 }
 
 :global(.p-fileupload .p-button:hover) {
     background-color: #5567d9;
+    border: none;
+    box-shadow: none;
 }
 
 :global(.p-fileupload .p-fileupload-buttonbar) {
     display: flex;
     justify-content: center;
+    border: none;
+    box-shadow: none;
 }

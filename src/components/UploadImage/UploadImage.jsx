@@ -25,7 +25,6 @@ const analysisOptions = [
     "Mangas",
 ];
 
-
 // Componente principal de upload de imagens
 const UploadImage = () => {
     // Estado para armazenar arquivos selecionados
@@ -57,7 +56,7 @@ const UploadImage = () => {
 
     // Esse é o template do botões
     const customHeaderTemplate = (options) => {
-        const {className, chooseButton, uploadButton, cancelButton} = options;
+        const {className, chooseButton, cancelButton} = options;
 
         return (
             <div className={className} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
@@ -72,11 +71,21 @@ const UploadImage = () => {
                     <div style={{marginBottom: '12rem'}}>
                         <video ref={videoRef} width="300" height="200"/>
                         <br/>
-                        <Button label="Capturar Imagem" onClick={captureImage} className="p-button-success"/>
+                        <Button
+                            label="Capturar Imagem"
+                            onClick={captureImage}
+                            className="p-button-success"
+                        />
                         <canvas ref={canvasRef} width="300" height="200" style={{display: 'none'}}/>
                     </div>
                 )}
-                {uploadButton}
+                <Button
+                    label="Upload"
+                    icon="pi pi-upload"
+                    className="p-button-success"
+                    onClick={onUploadFiles}
+                    disabled={files.length === 0}
+                />
                 {cancelButton}
             </div>
         );
@@ -99,22 +108,36 @@ const UploadImage = () => {
     };
 
     // Função para capturar a imagem da webcam
-    const captureImage = () => {
+    const captureImage = async () => {
+        if (!selectedAnalysis) {
+            toast.current.show({
+                severity: 'warn',
+                summary: 'Atenção',
+                detail: 'Por favor, selecione uma categoria de fruta antes de capturar.',
+                life: 3000
+            });
+            return;
+        }
+
         const context = canvasRef.current.getContext("2d");
-        context.drawImage(videoRef.current, 0, 0, 300, 200); // largura e altura desejadas
+        context.drawImage(videoRef.current, 0, 0, 256, 256);
 
         const dataUrl = canvasRef.current.toDataURL("image/png");
+        const file = dataURLtoFile(dataUrl, `webcam-${uuidv4()}.png`);
 
-        const imageFile = {
-            file: dataURLtoFile(dataUrl, `webcam-${uuidv4()}.png`),
-            name: `webcam-${Date.now()}.png`,
+        const currentGroupId = groupId || uuidv4();
+        if (!groupId) setGroupId(currentGroupId);
+
+        const newFile = {
+            file,
+            name: file.name,
             preview: dataUrl,
             status: 'Aguardando upload...',
             data_analise: null,
             confianca: null
         };
 
-        setFiles([...files, imageFile]);
+        setFiles((prev) => [...prev, newFile]);
         setFirst(0);
     };
 
