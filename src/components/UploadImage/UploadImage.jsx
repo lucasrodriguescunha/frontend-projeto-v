@@ -1,60 +1,32 @@
-// Importa os hooks do React
 import React, {useCallback, useRef, useState} from 'react';
 
-// Importa componentes da biblioteca PrimeReact
 import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
 import {Toast} from 'primereact/toast';
 import {Button} from "primereact/button";
-
-// Importa função para gerar IDs únicos
 import {v4 as uuidv4} from 'uuid';
-
-// Importa o componente de menu suspenso personalizado
 import Dropdown from "../Dropdown/Dropdown";
-
-// Importa serviço responsável por enviar imagens para análise
 import aiService from "../../services/AIService";
 
-// Importa os estilos CSS do módulo
 import styles from './UploadImage.module.css';
 
-// Define as opções de análise disponíveis
 const analysisOptions = [
     "Maçãs",
     "Mangas",
 ];
 
-// Componente principal de upload de imagens
 const UploadImage = () => {
-    // Estado para armazenar arquivos selecionados
     const [files, setFiles] = useState([]);
-
-    // Estado da primeira página da paginação
     const [first, setFirst] = useState(0);
-
-    // Identificador único do grupo de imagens (gerado a cada novo envio)
     const [groupId, setGroupId] = useState(null);
-
-    // Categoria/fruta selecionada pelo usuário
     const [selectedAnalysis, setSelectedAnalysis] = useState(null);
-
     const videoRef = useRef(null);
-
     const canvasRef = useRef(null);
-
     const [showWebcam, setShowWebcam] = useState(false);
-
-    // Referência ao componente FileUpload
     const fileUploadRef = useRef(null);
-
-    // Referência ao componente Toast para exibir mensagens
     const toast = useRef(null);
-
-    // Número de arquivos exibidos por página
     const rows = 1;
 
-    // Esse é o template do botões
     const customHeaderTemplate = (options) => {
         const {className, chooseButton, cancelButton} = options;
 

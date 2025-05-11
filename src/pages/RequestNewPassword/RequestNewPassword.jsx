@@ -49,7 +49,7 @@ const RequestNewPassword = () => {
 
         toast.current.show({
             severity: 'success',
-            summary: 'Email enviado',
+            summary: 'Sucesso',
             detail: 'Código de redefinição enviado',
             life: 3000,
         });

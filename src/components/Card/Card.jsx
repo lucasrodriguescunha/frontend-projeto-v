@@ -18,7 +18,7 @@ const Card = ({title, subTitle, content, route}) => {
         <div className={styles.cardContainer}>
             <PrimeCard className={styles.card} title={title} subTitle={subTitle}>
                 <p>{content}</p>
-                <div className={styles.buttonContainer}>
+                <div>
                     <Button icon="pi pi-arrow-right" className={styles.cardButton} onClick={handleAccessClick}/>
                 </div>
             </PrimeCard>
