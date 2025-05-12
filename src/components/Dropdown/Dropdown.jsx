@@ -5,7 +5,7 @@ const labelMap = {
     'defeituosa': 'Defeituosa',
     'nao_defeituosa': 'Não Defeituosa',
     'todas': 'Todas',
-    'Últimas 24 horas': 'Últimas 24 horas',
+    '24horas': 'Últimas 24 horas',
     '7dias': '7 Dias',
     '30dias': '30 Dias',
     'macas': 'Maçãs',

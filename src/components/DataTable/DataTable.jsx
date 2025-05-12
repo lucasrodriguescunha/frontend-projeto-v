@@ -7,18 +7,44 @@ import { Paginator } from "primereact/paginator";
 const DataTable = ({ data, loading, currentPage, onPageChange }) => {
   const extractData = () => {
     if (!data || !data.grupos) return [];
-    
+
     const groups = Object.keys(data.grupos);
     if (groups.length === 0) return [];
-    
+
     const currentGroupKey = groups[currentPage % groups.length] || groups[0];
     return data.grupos[currentGroupKey] || [];
   };
-  
+
+  const formatSnakeCase = (text) => {
+    if (!text) return "";
+
+    const wordMap = {
+      nao: "Não",
+      defeituosa: "Defeituosa",
+      defeituoso: "Defeituoso",
+    };
+
+    return text
+      .split("_")
+      .map((word) => wordMap[word.toLowerCase()] || (word.charAt(0).toUpperCase() + word.slice(1)))
+      .join(" ");
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  };
+
   const tableData = loading ? Array.from({ length: 5 }) : extractData();
   const totalGroups = data && data.grupos ? Object.keys(data.grupos).length : 0;
-  
-  console.log("Table data:", tableData);
 
   return (
     <div>
@@ -30,7 +56,7 @@ const DataTable = ({ data, loading, currentPage, onPageChange }) => {
       >
         <Column
           field="nome_arquivo"
-          header="Arquivo"
+          header="Nome do Arquivo"
           body={(rowData) =>
             loading
               ? <Skeleton width="80%" height="1.5rem" />
@@ -44,27 +70,27 @@ const DataTable = ({ data, loading, currentPage, onPageChange }) => {
           body={(rowData) =>
             loading
               ? <Skeleton width="70%" height="1.5rem" />
-              : rowData.resultado
+              : formatSnakeCase(rowData.resultado)
           }
           style={{ minWidth: '150px' }}
         />
         <Column
           field="confianca"
-          header="Confiança (%)"
+          header="Confiança"
           body={(rowData) =>
             loading
               ? <Skeleton width="50%" height="1.5rem" />
-              : rowData.confianca
+              : `${rowData.confianca}%`
           }
           style={{ minWidth: '120px' }}
         />
         <Column
           field="data_analise"
-          header="Data de Análise"
+          header="Data da Análise"
           body={(rowData) =>
             loading
               ? <Skeleton width="60%" height="1.5rem" />
-              : rowData.data_analise
+              : formatDate(rowData.data_analise)
           }
           style={{ minWidth: '160px' }}
         />
