@@ -56,3 +56,20 @@
     background-color: var(--color-secondary);
 }
 
+.dropdownContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.dropdownItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.dropdownLabel {
+    font-weight: bold;
+    font-size: 1rem;
+}

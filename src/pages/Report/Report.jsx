@@ -11,7 +11,7 @@ import styles from "./Report.module.css";
 
 // Filtros
 const filterByQuality = ["defeituosa", "nao_defeituosa", "todas"];
-const filterByDate = ["Últimas 24 horas", "7dias", "30dias", "todas"];
+const filterByDate = ["24horas", "7dias", "30dias", "todas"];
 const filterByProduct = ["macas", "mangas", "todas"];
 
 const TableView = ({onBack, filteredData}) => {
@@ -55,7 +55,6 @@ const TableView = ({onBack, filteredData}) => {
     );
 };
 
-// Componente principal
 const Report = () => {
     const [filteredData, setFilteredData] = useState({});
     const [currentPage, setCurrentPage] = useState(0);
@@ -119,7 +118,6 @@ const Report = () => {
         }
     };
 
-    // Renderização condicional entre Report e TableView
     if (showTableViewLayout) {
         return <TableView
             onBack={() => setShowTableViewLayout(false)}
@@ -136,29 +134,34 @@ const Report = () => {
                 <p className={styles.title}>Relatórios</p>
 
                 <div className={styles.dropdownContainer}>
-                    <Dropdown
-                        options={filterByProduct}
-                        placeholder="Produto"
-                        selectedOption={selectedProduct}
-                        onOptionChange={setSelectedProduct}
-                    />
-                    <Dropdown
-                        options={filterByQuality}
-                        placeholder="Qualidade"
-                        selectedOption={selectedQuality}
-                        onOptionChange={setSelectedQuality}
-                    />
-                    <Dropdown
-                        options={filterByDate}
-                        placeholder="Período"
-                        selectedOption={selectedDate}
-                        onOptionChange={setSelectedDate}
-                    />
+                    <div className={styles.dropdownItem}>
+                        <label className={styles.dropdownLabel}>Produto</label>
+                        <Dropdown
+                            options={filterByProduct}
+                            selectedOption={selectedProduct}
+                            onOptionChange={setSelectedProduct}
+                        />
+                    </div>
+                    <div className={styles.dropdownItem}>
+                        <label className={styles.dropdownLabel}>Qualidade</label>
+                        <Dropdown
+                            options={filterByQuality}
+                            selectedOption={selectedQuality}
+                            onOptionChange={setSelectedQuality}
+                        />
+                    </div>
+                    <div className={styles.dropdownItem}>
+                        <label className={styles.dropdownLabel}>Período</label>
+                        <Dropdown
+                            options={filterByDate}
+                            selectedOption={selectedDate}
+                            onOptionChange={setSelectedDate}
+                        />
+                    </div>
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
-                    JSON
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
                 </p>
 
                 <Button
@@ -167,7 +170,6 @@ const Report = () => {
                     style={{marginTop: '1rem'}}
                     onClick={applyFilters}
                 />
-
                 <Button
                     label="Gerar CSV"
                     className={styles.button}
