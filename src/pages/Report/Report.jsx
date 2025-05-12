@@ -161,7 +161,8 @@ const Report = () => {
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou JSON
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
+                    JSON
                 </p>
 
                 <Button
