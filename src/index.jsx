@@ -4,8 +4,6 @@ import { BrowserRouter } from "react-router";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import './index.module.css';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <StrictMode>

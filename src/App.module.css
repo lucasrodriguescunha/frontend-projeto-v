@@ -1,4 +1,20 @@
-:global(body) {
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
     margin: 0;
     padding: 0;
+}
+
+:global(.p-fileupload .p-button) {
+    background-color: var(--color-primary);
+}
+
+:global(.p-fileupload .p-button:hover) {
+    background-color: var(--color-secondary);
+}
+
+:global(.p-fileupload-row > div) {
+    width: max-content !important;
 }

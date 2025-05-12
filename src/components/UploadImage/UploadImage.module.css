@@ -1,3 +1,8 @@
+.uploadImageContainer {
+    display: flex;
+    height: auto;
+}
+
 .ocultar-conteudo :global(.p-fileupload-content) {
     display: none !important;
 }
@@ -57,4 +62,12 @@
     justify-content: center;
     border: none;
     box-shadow: none;
+}
+
+
+@media (max-width: 768px) {
+    .uploadImageContainer {
+        display: flex;
+        flex-direction: column;
+    }
 }

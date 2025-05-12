@@ -217,7 +217,7 @@ const UploadImage = () => {
     const pagedFiles = files.slice(first, first + rows);
 
     return (
-        <div>
+        <div className={styles.uploadImageContainer}>
             <Toast ref={toast}/>
 
             <div className={files.length > 0 ? styles['ocultar-conteudo'] : ''}>
