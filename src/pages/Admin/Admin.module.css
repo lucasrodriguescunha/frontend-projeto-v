@@ -1,14 +1,17 @@
 .container {
-    background-color: var(--color-primary);
-    width: 100%;
-    min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    background-color: var(--color-primary);
+    width: auto;
+    height: 100vh;
 }
 
 .card {
+    display: flex;
+    justify-content: center;
     width: auto;
-    min-height: 100vh;
     background: #FFFFFF;
     padding: 1.5rem;
     border-radius: 0.25rem;
