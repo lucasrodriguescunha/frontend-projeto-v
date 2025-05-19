@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Card} from "primereact/card";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
@@ -7,6 +7,7 @@ import {useNavigate} from "react-router";
 import userService from "../../services/UserService";
 import {Paginator} from "primereact/paginator";
 import {Dialog} from "primereact/dialog";
+import {Toast} from "primereact/toast";
 
 import styles from "./Admin.module.css";
 
@@ -16,39 +17,27 @@ const Admin = () => {
     const [userPermission, setUserPermission] = useState();
     const [currentPage, setCurrentPage] = useState(0);
     const rowsPerPage = 5;
-
     const navigate = useNavigate();
-    const [users, setUsers] = useState([
-        {
-            nome: "Lucas Rodrigues Cunha",
-            email: "lucas@example.com",
-            permissao: "ADMINISTRADOR"
-        },
-        {
-            nome: "Joana Silva",
-            email: "joana@example.com",
-            permissao: "USUÁRIO"
-        }
-    ]);
-
+    const [users, setUsers] = useState([]);
     const [visible, setVisible] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null); // usuário selecionado
-
+    const toast = useRef(null);
 
     const allowAccessUser = () => {
         if (!selectedUser) return;
 
-        const updatedData = {
-            ativo: true,
-            contaBloqueada: false,
-            email: selectedUser.email, // use um identificador único
-        };
-
-        userService.updateUsuario(updatedData)
+        userService.unlockUser(selectedUser.email)
             .then(() => {
-                console.log("Usuário atualizado com sucesso!");
-                setVisible(false); // Fecha o diálogo
-                // Atualiza a lista de usuários se necessário
+                console.log("");
+                setVisible(false);
+
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Sucesso!',
+                    detail: 'Usuário desbloqueado com sucesso!',
+                    life: 3000,
+                })
+
                 userService.getUsuarios()
                     .then((response) => {
                         const usersFormatted = response.registros.map((user) => ({
@@ -60,9 +49,10 @@ const Admin = () => {
                     });
             })
             .catch((error) => {
-                console.error("Erro ao atualizar usuário:", error.message);
+                console.error("Erro ao desbloquear usuário:", error.message);
             });
     };
+
 
     useEffect(() => {
         userService.getUsuarios()
@@ -89,8 +79,8 @@ const Admin = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <Button
-                icon="pi pi-pencil"
-                className="p-button-warning p-button-sm"
+                icon="pi pi-lock-open"
+                className="p-button-success p-button-sm"
                 onClick={() => editUser(rowData)}
             />
         );
@@ -98,13 +88,15 @@ const Admin = () => {
 
     const footerContent = (
         <div>
-            <Button label="Sim" icon="pi pi-check" onClick={allowAccessUser} className="p-button-text"/>
-            <Button label="Não" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus/>
+            <Button style={{color: '#677FFA'}} label="Sim" icon="pi pi-check" onClick={allowAccessUser} className="p-button-text"/>
+            <Button style={{backgroundColor: '#677FFA'}} label="Não" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus/>
         </div>
     );
 
     return (
         <div className={styles.container}>
+            <Toast ref={toast} />
+
             <Card className={styles.card}>
                 <p className={styles.title}>Controle de usuários</p>
 
@@ -137,7 +129,6 @@ const Admin = () => {
             <Dialog
                 header="Desbloquear conta"
                 visible={visible}
-                style={{width: '50vw'}}
                 onHide={() => setVisible(false)}
                 footer={footerContent}
             >

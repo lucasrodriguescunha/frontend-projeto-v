@@ -1,4 +1,4 @@
-import {userApi} from "./axios-config";
+import { userApi } from "./axios-config";
 
 class UserService {
     async postUsuario(usuario) {
@@ -37,6 +37,21 @@ class UserService {
         }
     }
 
+    async unlockUser(email) {
+        try {
+            const params = new URLSearchParams({
+                emailUsuario: email,
+                operacao: "false",
+                ativo: "true"
+            });
+
+            const response = await userApi.put(`/auth/controle?${params.toString()}`);
+            return response.data;
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
     async login(dados) {
         try {
             const response = await userApi.post("/auth/login", dados);
@@ -47,12 +62,9 @@ class UserService {
     }
 
     handleError(error) {
-        console.error("Erro na requisição:", error); // <-- adicionado
-        if (error.response && error.response.data) {
-            throw new Error(error.response.data.message || "Erro de requisição.");
-        } else {
-            throw new Error("Erro ao conectar com o servidor.");
-        }
+        console.error("Erro na requisição:", error);
+        // Lança o erro completo para o frontend tratar melhor
+        throw error;
     }
 }
 

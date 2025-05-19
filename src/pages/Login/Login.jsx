@@ -74,12 +74,37 @@ const Login = () => {
             }, 3000);
 
         } catch (error) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Erro ao logar',
-                detail: error.message || "E-mail ou senha incorretos.",
-                life: 3000,
-            });
+            if (error.response) {
+                if (error.response.status === 403) {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Não autorizado',
+                        detail: 'Usuário ou senha incorretos.',
+                        life: 3000,
+                    });
+                } else if (error.response.status === 401) {
+                    toast.current.show({
+                        severity: 'warn',
+                        summary: 'Conta bloqueada',
+                        detail: 'Sua conta está bloqueada. Entre em contato com o suporte.',
+                        life: 4000,
+                    });
+                } else {
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Erro',
+                        detail: error.response.data.message || 'Erro desconhecido.',
+                        life: 3000,
+                    });
+                }
+            } else {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Erro',
+                    detail: error.message || "Erro ao conectar com o servidor.",
+                    life: 3000,
+                });
+            }
         }
     };
 
@@ -108,7 +133,7 @@ const Login = () => {
                     <Password
                         placeholder="Senha"
                         name="password"
-                        value={password} // corrigido aqui
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)} // corrigido aqui
                         toggleMask
                         promptLabel="Insira a senha"
