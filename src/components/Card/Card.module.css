@@ -1,18 +1,33 @@
 .cardContainer {
-    width: 250px;
+    width: 300px;
     margin: 20px;
+    flex-shrink: 0;
 }
 
 .card {
-    height: 200px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    position: relative;
+    padding-bottom: 3.5rem; /* espaço reservado para o botão */
 }
 
 .cardButton {
     background-color: #677FFA;
+    border: none;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .cardButton:hover {
     background-color: #5567d9;
     transform: translateX(4px);
-    transition: transform 0.5s ease;
+}
+
+.buttonWrapper {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
 }

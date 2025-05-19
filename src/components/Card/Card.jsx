@@ -17,8 +17,7 @@ const Card = ({title, subTitle, content, route}) => {
     return (
         <div className={styles.cardContainer}>
             <PrimeCard className={styles.card} title={title} subTitle={subTitle}>
-                <p>{content}</p>
-                <div>
+                <div className={styles.buttonWrapper}>
                     <Button icon="pi pi-arrow-right" className={styles.cardButton} onClick={handleAccessClick}/>
                 </div>
             </PrimeCard>
@@ -27,4 +26,3 @@ const Card = ({title, subTitle, content, route}) => {
 };
 
 export default memo(Card);
-
