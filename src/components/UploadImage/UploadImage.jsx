@@ -7,6 +7,7 @@ import {Button} from "primereact/button";
 import {v4 as uuidv4} from 'uuid';
 import Dropdown from "../Dropdown/Dropdown";
 import aiService from "../../services/AIService";
+import userService from "../../services/UserService";
 
 import styles from './UploadImage.module.css';
 
@@ -154,52 +155,53 @@ const UploadImage = () => {
 
     // Função chamada ao clicar em "Upload"
     const onUploadFiles = useCallback(async () => {
-        // Verifica se uma fruta foi selecionada
-        if (!selectedAnalysis) {
-            toast.current.show({
-                severity: 'warn',
-                summary: 'Atenção',
-                detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
-                life: 3000
-            });
-            return;
-        }
+    if (!selectedAnalysis) {
+        toast.current.show({
+            severity: 'warn',
+            summary: 'Atenção',
+            detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
+            life: 3000
+        });
+        return;
+    }
 
-        try {
-            // Envia todos os arquivos para o serviço de IA e atualiza os resultados
-            const updatedFiles = await Promise.all(
-                files.map(async (item) => {
-                    const result = await aiService.uploadImage(item.file, groupId, selectedAnalysis);
+    try {
+        const email = sessionStorage.getItem("userEmail");
+        if (!email) throw new Error("E-mail do usuário não encontrado no sessionStorage.");
 
-                    // Verifica se o resultado da API é válido
-                    if (!result || !result.resultado) {
-                        throw new Error("Resposta inválida do servidor.");
-                    }
+        const usuario = await userService.getUsuarioByEmail(email);
+        const idUsuario = usuario?.idUsuario;
+        if (!idUsuario) throw new Error("ID do usuário não encontrado.");
 
-                    // Atualiza o objeto com os dados da análise
-                    item.status = result.resultado;
-                    item.data_analise = result.data_analise;
-                    item.confianca = result.confianca;
+        const updatedFiles = await Promise.all(
+            files.map(async (item) => {
+                const result = await aiService.uploadImage(item.file, groupId, selectedAnalysis, idUsuario);
 
-                    return item;
-                })
-            );
+                if (!result || !result.resultado) {
+                    throw new Error("Resposta inválida do servidor.");
+                }
 
-            // Atualiza o estado com os arquivos analisados
-            setFiles([...updatedFiles]);
-        } catch (err) {
-            // Em caso de erro, marca os arquivos como erro
-            const fileFailed = files.map((item) => {
-                item.status = `Erro: ${err}`;
-                item.data_analise = null;
-                item.confianca = null;
+                item.status = result.resultado;
+                item.data_analise = result.data_analise;
+                item.confianca = result.confianca;
 
                 return item;
-            });
+            })
+        );
 
-            setFiles([...fileFailed]);
-        }
-    }, [files, groupId, selectedAnalysis]);
+        setFiles([...updatedFiles]);
+    } catch (err) {
+        const fileFailed = files.map((item) => {
+            item.status = `Erro: ${err.message}`;
+            item.data_analise = null;
+            item.confianca = null;
+
+            return item;
+        });
+
+        setFiles([...fileFailed]);
+    }
+}, [files, groupId, selectedAnalysis]);
 
     // Função para limpar a seleção de arquivos
     const onClear = useCallback(() => {

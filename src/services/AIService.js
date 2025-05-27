@@ -1,11 +1,12 @@
 import { aiApi } from "./axios-config";
 
 class AIService {
-    async uploadImage(file, grupoId, tipoFruta) {
+    async uploadImage(file, grupoId, tipoFruta, idUsuario) {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("grupo_id", grupoId);
         formData.append("tipo_fruta", tipoFruta);
+        formData.append("id_usuario", idUsuario);
 
         try {
             const response = await aiApi.post("/images", formData, {
@@ -26,30 +27,30 @@ class AIService {
         }
     }
 
-    async uploadWebcamImage(file, grupoId, tipoFruta) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("grupo_id", grupoId);
-        formData.append("tipo_fruta", tipoFruta);
+    async uploadWebcamImage(imageData, grupoId, tipoFruta, idUsuario) {
+    const payload = {
+        image_data: imageData,
+        grupo_id: grupoId,
+        tipo_fruta: tipoFruta,
+        id_usuario: idUsuario,
+    };
 
-        try {
-            const response = await aiApi.post("/images/webcam", formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+    try {
+        const response = await aiApi.post("/images/webcam", payload);
 
-            if (response.data && response.data.data) {
-                return response.data.data;
-            } else {
-                throw new Error("Resposta inválida do servidor.");
-            }
-        } catch (error) {
-            if (error.response && error.response.data?.error) {
-                throw new Error(error.response.data.error);
-            } else {
-                throw new Error("Erro ao conectar com o servidor.");
-            }
+        if (response.data && response.data.data) {
+            return response.data.data;
+        } else {
+            throw new Error("Resposta inválida do servidor.");
+        }
+    } catch (error) {
+        if (error.response && error.response.data?.error) {
+            throw new Error(error.response.data.error);
+        } else {
+            throw new Error("Erro ao conectar com o servidor.");
         }
     }
+}
 
     async listAnalysis() {
         try {
