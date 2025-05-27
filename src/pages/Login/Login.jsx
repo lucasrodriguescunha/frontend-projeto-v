@@ -9,6 +9,7 @@ import {Card} from "primereact/card";
 import {Toast} from "primereact/toast";
 import {Password} from "primereact/password";
 import userService from "../../services/UserService";
+import { useEffect } from "react";
 
 import styles from "./Login.module.css";
 
@@ -18,6 +19,21 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const toast = useRef(null);
+
+    useEffect(() => {
+    const shouldForceLogin = sessionStorage.getItem("forceLogin");
+
+    if (shouldForceLogin === "true") {
+        toast.current.show({
+            severity: 'info',
+            summary: 'Reautenticação necessária',
+            detail: 'Por favor, faça login novamente.',
+            life: 4000,
+        });
+
+        sessionStorage.removeItem("forceLogin");
+    }
+}, []);
 
     const handleAccess = async (e) => {
         e.preventDefault();

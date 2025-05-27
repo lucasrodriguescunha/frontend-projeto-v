@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router';
 import userService from "../../services/UserService";
 
@@ -12,9 +13,14 @@ const Profile = () => {
     const [userId, setUserId] = useState(null);
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
-    // const [userPassword, setUserPassword] = useState("");
     const [userPermission, setUserPermission] = useState("");
+
+    // Valores originais para comparação
+    const [originalName, setOriginalName] = useState("");
+    const [originalEmail, setOriginalEmail] = useState("");
+
     const navigate = useNavigate();
+    const toast = useRef(null);
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -27,6 +33,10 @@ const Profile = () => {
                         setUserName(userData.nome || "");
                         setUserEmail(userData.email || "");
                         setUserPermission(userData.permissao || "");
+
+                        // Armazena os valores iniciais
+                        setOriginalName(userData.nome || "");
+                        setOriginalEmail(userData.email || "");
                     }
                 }
             } catch (error) {
@@ -42,7 +52,6 @@ const Profile = () => {
                 idUsuario: userId,
                 nome: userName,
                 email: userEmail,
-                // senha: userPassword,
                 permissao: userPermission,
                 ativo: true,
                 contaBloqueada: false,
@@ -50,16 +59,38 @@ const Profile = () => {
                 senhaExpirada: false,
                 tentativasFalhas: 0
             };
-            console.log("Enviando para PUT:", updatedUser);
+
             await userService.updateUsuario(userId, updatedUser);
-            alert("Alterações salvas com sucesso!");
+
+            sessionStorage.setItem("userEmail", updatedUser.email);
+            sessionStorage.setItem("forceLogin", "true");
+
+            toast.current?.show({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Alterações salvas com sucesso!',
+                life: 2500
+            });
+
+            setTimeout(() => {
+                window.location.href = "http://localhost:4200/login";
+            }, 2500);
         } catch (error) {
-            alert("Erro ao salvar alterações: " + error.message);
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Erro',
+                detail: 'Erro ao salvar alterações: ' + error.message,
+                life: 3000
+            });
         }
     };
 
+    const hasChanges = userName !== originalName || userEmail !== originalEmail;
+
     return (
         <div className={styles.container}>
+            <Toast ref={toast} />
+
             <Card className={styles.card}>
                 <p className={styles.title}>Perfil</p>
 
@@ -76,7 +107,7 @@ const Profile = () => {
                     <span className={styles.inputIcon}>
                         <i className="pi pi-user"></i>
                     </span>
-                    <InputText 
+                    <InputText
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
                         className={styles.input}
@@ -87,7 +118,7 @@ const Profile = () => {
                     <span className={styles.inputIcon}>
                         <i className="pi pi-envelope"></i>
                     </span>
-                    <InputText 
+                    <InputText
                         value={userEmail}
                         onChange={(e) => setUserEmail(e.target.value)}
                         className={styles.input}
@@ -102,7 +133,7 @@ const Profile = () => {
                         icon="pi pi-save"
                         className={`${styles.button} p-button-success`}
                         onClick={handleSave}
-                        disabled={!userId}
+                        disabled={!userId || !hasChanges}
                     />
                     <Button
                         label="Voltar para página inicial"
