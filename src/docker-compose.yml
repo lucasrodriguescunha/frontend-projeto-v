@@ -27,7 +27,7 @@ services:
       - database
     # Aplicação (API)
   backend:
-    image: gersin/qualiai:1.0.3
+    image: gersin/qualiai:latest
     ports:
       - '${API_PORT}:${API_PORT}'
     environment:

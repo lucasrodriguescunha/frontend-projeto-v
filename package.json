@@ -5,6 +5,8 @@
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "axios": "^1.8.4",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.3",
     "QualiAI": "file:",
