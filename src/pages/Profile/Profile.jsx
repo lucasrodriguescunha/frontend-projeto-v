@@ -87,6 +87,15 @@ const Profile = () => {
 
     const hasChanges = userName !== originalName || userEmail !== originalEmail;
 
+    const handleLogout = () => {
+        // Remove os dados do localStorage
+        sessionStorage.removeItem("tokenJWT");
+        sessionStorage.removeItem("userEmail");
+        
+        // Redireciona para a página de login
+        navigate("/");
+    };
+
     return (
         <div className={styles.container}>
             <Toast ref={toast} />
@@ -140,6 +149,12 @@ const Profile = () => {
                         className={styles.button}
                         onClick={() => navigate("/app/home")}
                     />
+                    <Button
+                        label="Sair"
+                        className={styles.button}
+                        onClick={handleLogout}
+                    >
+                    </Button>
                 </div>
             </Card>
         </div>

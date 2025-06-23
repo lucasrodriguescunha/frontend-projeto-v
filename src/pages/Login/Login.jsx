@@ -74,7 +74,6 @@ const Login = () => {
                 senha_usuario: password
             });
 
-            localStorage.setItem("X-API-KEY", response.apiKey);
             sessionStorage.setItem("tokenJWT", response.tokenJWT);
             sessionStorage.setItem("userEmail", email);
 
