@@ -101,3 +101,35 @@
 .clearCredentials:hover {
     text-decoration: underline;
 }
+
+.clearButton {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border: none;
+    background: transparent;
+    color: #dc3545;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clearButton:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #c82333;
+}
+
+.clearDialog {
+    max-width: 400px;
+}
+
+.dialogContent {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.dialogFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 1rem;
+}

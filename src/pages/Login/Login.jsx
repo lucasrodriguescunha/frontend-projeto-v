@@ -8,6 +8,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Toast } from "primereact/toast";
 import { Password } from "primereact/password";
+import { Dialog } from "primereact/dialog";
 import userService from "../../services/UserService";
 import { useEffect } from "react";
 
@@ -30,6 +31,7 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showClearDialog, setShowClearDialog] = useState(false);
     const navigate = useNavigate();
     const toast = useRef(null);
 
@@ -95,13 +97,18 @@ const Login = () => {
         setEmail("");
         setPassword("");
         setChecked(false);
-
+        setShowClearDialog(false);
+        
         toast.current.show({
-            severity: 'info',
-            summary: 'Credenciais limpas',
-            detail: 'Suas credenciais salvas foram removidas.',
+            severity: 'success',
+            summary: 'Credenciais removidas',
+            detail: 'Suas credenciais salvas foram removidas com sucesso.',
             life: 3000,
         });
+    };
+
+    const confirmClearCredentials = () => {
+        setShowClearDialog(true);
     };
 
     const handleAccess = async (e) => {
@@ -156,9 +163,12 @@ const Login = () => {
                 life: 3000,
             });
 
+            // Se há credenciais salvas, dar mais tempo para o usuário decidir se quer limpar
+            const redirectDelay = localStorage.getItem("rememberedEmail") ? 8000 : 3000;
+            
             setTimeout(() => {
                 navigate("/app/home");
-            }, 3000);
+            }, redirectDelay);
 
         } catch (error) {
             if (error.response) {
@@ -245,13 +255,49 @@ const Login = () => {
                             Solicitar nova senha
                         </p>
                         {localStorage.getItem("rememberedEmail") && (
-                            <p className={styles.clearCredentials} onClick={clearSavedCredentials}>
-                                Limpar credenciais salvas
-                            </p>
+                            <Button
+                                icon="pi pi-trash"
+                                label="Limpar credenciais salvas"
+                                className={`${styles.clearButton} p-button-text p-button-danger`}
+                                onClick={confirmClearCredentials}
+                                size="small"
+                            />
                         )}
                     </div>
                 </form>
             </Card>
+
+            <Dialog
+                visible={showClearDialog}
+                onHide={() => setShowClearDialog(false)}
+                header="Confirmar limpeza"
+                modal
+                className={styles.clearDialog}
+                footer={
+                    <div className={styles.dialogFooter}>
+                        <Button
+                            label="Cancelar"
+                            icon="pi pi-times"
+                            onClick={() => setShowClearDialog(false)}
+                            className="p-button-text"
+                        />
+                        <Button
+                            label="Limpar"
+                            icon="pi pi-trash"
+                            onClick={clearSavedCredentials}
+                            className="p-button-danger"
+                        />
+                    </div>
+                }
+            >
+                <div className={styles.dialogContent}>
+                    <i className="pi pi-exclamation-triangle" style={{ fontSize: '2rem', color: '#dc3545', marginBottom: '1rem' }}></i>
+                    <p>Tem certeza que deseja remover suas credenciais salvas?</p>
+                    <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '0.5rem' }}>
+                        Esta ação não pode ser desfeita. Você precisará inserir suas credenciais novamente na próxima vez.
+                    </p>
+                </div>
+            </Dialog>
         </div>
     );
 };
