@@ -1,13 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Card} from "primereact/card";
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import {Button} from "primereact/button";
-import {useNavigate} from "react-router";
+import React, { useEffect, useRef, useState } from "react";
+import { Card } from "primereact/card";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router";
 import userService from "../../services/UserService";
-import {Paginator} from "primereact/paginator";
-import {Dialog} from "primereact/dialog";
-import {Toast} from "primereact/toast";
+import { Paginator } from "primereact/paginator";
+import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 
 import styles from "./Admin.module.css";
 
@@ -28,7 +28,6 @@ const Admin = () => {
 
         userService.unlockUser(selectedUser.email)
             .then(() => {
-                console.log("");
                 setVisible(false);
 
                 toast.current.show({
@@ -57,7 +56,6 @@ const Admin = () => {
     useEffect(() => {
         userService.getUsuarios()
             .then((response) => {
-                console.log("Usuários retornados:", response);
                 const usersFormatted = response.registros.map((user) => ({
                     nome: user.nome,
                     email: user.email,
@@ -71,7 +69,6 @@ const Admin = () => {
     }, []);
 
     const editUser = (rowData) => {
-        console.log("Editar usuário:", rowData);
         setSelectedUser(rowData);
         setVisible(true);
     };
@@ -88,8 +85,8 @@ const Admin = () => {
 
     const footerContent = (
         <div>
-            <Button style={{color: '#677FFA'}} label="Sim" icon="pi pi-check" onClick={allowAccessUser} className="p-button-text"/>
-            <Button style={{backgroundColor: '#677FFA'}} label="Não" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus/>
+            <Button style={{ color: '#677FFA' }} label="Sim" icon="pi pi-check" onClick={allowAccessUser} className="p-button-text" />
+            <Button style={{ backgroundColor: '#677FFA' }} label="Não" icon="pi pi-times" onClick={() => setVisible(false)} autoFocus />
         </div>
     );
 
@@ -102,13 +99,13 @@ const Admin = () => {
 
                 <DataTable
                     value={users.slice(currentPage, currentPage + rowsPerPage)}
-                    tableStyle={{minWidth: '50rem'}}
+                    tableStyle={{ minWidth: '50rem' }}
                     emptyMessage="Nenhum dado encontrado."
                 >
-                    <Column field="nome" header="Nome"/>
-                    <Column field="email" header="E-mail"/>
-                    <Column field="permissao" header="Permissão"/>
-                    <Column header="Ações" body={actionBodyTemplate} style={{textAlign: 'center', width: '100px'}}/>
+                    <Column field="nome" header="Nome" />
+                    <Column field="email" header="E-mail" />
+                    <Column field="permissao" header="Permissão" />
+                    <Column header="Ações" body={actionBodyTemplate} style={{ textAlign: 'center', width: '100px' }} />
                 </DataTable>
 
                 <Paginator

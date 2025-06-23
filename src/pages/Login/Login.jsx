@@ -56,28 +56,15 @@ const Login = () => {
             const savedEmail = localStorage.getItem("rememberedEmail");
             const savedPassword = localStorage.getItem("rememberedPassword");
             
-            console.log("Tentando carregar credenciais salvas:", { 
-                savedEmail: savedEmail ? "existe" : "não existe", 
-                savedPassword: savedPassword ? "existe" : "não existe" 
-            });
-            
             if (savedEmail && savedPassword) {
                 const decryptedEmail = decryptData(savedEmail);
                 const decryptedPassword = decryptData(savedPassword);
-                
-                console.log("Dados descriptografados:", { 
-                    email: decryptedEmail ? "válido" : "inválido", 
-                    password: decryptedPassword ? "válido" : "inválido" 
-                });
                 
                 if (decryptedEmail && decryptedPassword) {
                     setEmail(decryptedEmail);
                     setPassword(decryptedPassword);
                     setChecked(true);
-                    console.log("Credenciais carregadas com sucesso");
                 }
-            } else {
-                console.log("Nenhuma credencial salva encontrada");
             }
         } catch (error) {
             console.error("Erro ao carregar credenciais salvas:", error);
@@ -85,8 +72,6 @@ const Login = () => {
     };
 
     const saveCredentials = () => {
-        console.log("saveCredentials chamada:", { checked, email: email ? "preenchido" : "vazio", password: password ? "preenchido" : "vazio" });
-        
         if (checked && email && password) {
             try {
                 const encryptedEmail = encryptData(email);
@@ -94,8 +79,6 @@ const Login = () => {
                 
                 localStorage.setItem("rememberedEmail", encryptedEmail);
                 localStorage.setItem("rememberedPassword", encryptedPassword);
-                
-                console.log("Credenciais salvas com sucesso");
             } catch (error) {
                 console.error("Erro ao salvar credenciais:", error);
             }
@@ -103,7 +86,6 @@ const Login = () => {
             // Limpar credenciais salvas se "Lembrar-me" não estiver marcado
             localStorage.removeItem("rememberedEmail");
             localStorage.removeItem("rememberedPassword");
-            console.log("Credenciais removidas (checkbox desmarcado)");
         }
     };
 
@@ -113,7 +95,7 @@ const Login = () => {
         setEmail("");
         setPassword("");
         setChecked(false);
-        
+
         toast.current.show({
             severity: 'info',
             summary: 'Credenciais limpas',
