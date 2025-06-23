@@ -1,6 +1,5 @@
 {
-  "name": "QualiAI",
-  "version": "0.1.0",
+  "name": "qualiai",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
