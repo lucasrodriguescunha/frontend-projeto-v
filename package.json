@@ -8,7 +8,6 @@
     "jspdf-autotable": "^5.0.2",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.3",
-    "QualiAI": "file:",
     "quill": "^2.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
