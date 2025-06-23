@@ -8,6 +8,7 @@ import Upload from "./pages/Upload/Upload";
 import Report from "./pages/Report/Report";
 import Admin from "./pages/Admin/Admin";
 import Profile from "./pages/Profile/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const appRoutes = [
     {path: "/app/home", element: <Base/>},
@@ -25,7 +26,7 @@ const AppRoutes = () => {
             <Route path="/login" element={<Login/>}/>
             <Route path="/redefinir-senha" element={<RequestNewPassword/>}/>
             {appRoutes.map(({path, element}) => (
-                <Route key={path} path={path} element={element}/>
+                <Route key={path} path={path} element={<ProtectedRoute>{element}</ProtectedRoute>} />
             ))}
             <Route path="*" element={<NotFound/>}/>
         </Routes>
