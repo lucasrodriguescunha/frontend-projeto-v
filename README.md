@@ -275,4 +275,4 @@ Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) par
 
 **Desenvolvido com ❤️ pela equipe QualiAI**
 
-*Última atualização: Dezembro 2024*
+*Última atualização: Junho de 2025*
