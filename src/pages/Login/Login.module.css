@@ -81,3 +81,23 @@
 .requestPassword:hover {
     text-decoration: underline;
 }
+
+.linkContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.clearCredentials {
+    margin: 0;
+    text-align: center;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.clearCredentials:hover {
+    text-decoration: underline;
+}

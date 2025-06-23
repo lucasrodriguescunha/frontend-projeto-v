@@ -1,39 +1,126 @@
-import React, {useRef, useState} from "react";
-import {useNavigate} from "react-router";
-import {IconField} from "primereact/iconfield";
-import {InputIcon} from "primereact/inputicon";
-import {InputText} from "primereact/inputtext";
-import {Checkbox} from "primereact/checkbox";
-import {Button} from "primereact/button";
-import {Card} from "primereact/card";
-import {Toast} from "primereact/toast";
-import {Password} from "primereact/password";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import { IconField } from "primereact/iconfield";
+import { InputIcon } from "primereact/inputicon";
+import { InputText } from "primereact/inputtext";
+import { Checkbox } from "primereact/checkbox";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
+import { Toast } from "primereact/toast";
+import { Password } from "primereact/password";
 import userService from "../../services/UserService";
 import { useEffect } from "react";
 
 import styles from "./Login.module.css";
 
+// Função simples para criptografar/descriptografar (em produção, use uma biblioteca mais robusta)
+const encryptData = (data) => {
+    return btoa(encodeURIComponent(data));
+};
+
+const decryptData = (encryptedData) => {
+    try {
+        return decodeURIComponent(atob(encryptedData));
+    } catch (error) {
+        return null;
+    }
+};
+
 const Login = () => {
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const toast = useRef(null);
 
     useEffect(() => {
-    const shouldForceLogin = localStorage.getItem("forceLogin");
+        const shouldForceLogin = localStorage.getItem("forceLogin");
 
-    if (shouldForceLogin === "true") {
+        if (shouldForceLogin === "true") {
+            toast.current.show({
+                severity: 'info',
+                summary: 'Reautenticação necessária',
+                detail: 'Por favor, faça login novamente.',
+                life: 4000,
+            });
+
+            localStorage.removeItem("forceLogin");
+        }
+
+        // Carregar credenciais salvas se existirem
+        loadSavedCredentials();
+    }, []);
+
+    const loadSavedCredentials = () => {
+        try {
+            const savedEmail = localStorage.getItem("rememberedEmail");
+            const savedPassword = localStorage.getItem("rememberedPassword");
+            
+            console.log("Tentando carregar credenciais salvas:", { 
+                savedEmail: savedEmail ? "existe" : "não existe", 
+                savedPassword: savedPassword ? "existe" : "não existe" 
+            });
+            
+            if (savedEmail && savedPassword) {
+                const decryptedEmail = decryptData(savedEmail);
+                const decryptedPassword = decryptData(savedPassword);
+                
+                console.log("Dados descriptografados:", { 
+                    email: decryptedEmail ? "válido" : "inválido", 
+                    password: decryptedPassword ? "válido" : "inválido" 
+                });
+                
+                if (decryptedEmail && decryptedPassword) {
+                    setEmail(decryptedEmail);
+                    setPassword(decryptedPassword);
+                    setChecked(true);
+                    console.log("Credenciais carregadas com sucesso");
+                }
+            } else {
+                console.log("Nenhuma credencial salva encontrada");
+            }
+        } catch (error) {
+            console.error("Erro ao carregar credenciais salvas:", error);
+        }
+    };
+
+    const saveCredentials = () => {
+        console.log("saveCredentials chamada:", { checked, email: email ? "preenchido" : "vazio", password: password ? "preenchido" : "vazio" });
+        
+        if (checked && email && password) {
+            try {
+                const encryptedEmail = encryptData(email);
+                const encryptedPassword = encryptData(password);
+                
+                localStorage.setItem("rememberedEmail", encryptedEmail);
+                localStorage.setItem("rememberedPassword", encryptedPassword);
+                
+                console.log("Credenciais salvas com sucesso");
+            } catch (error) {
+                console.error("Erro ao salvar credenciais:", error);
+            }
+        } else if (!checked) {
+            // Limpar credenciais salvas se "Lembrar-me" não estiver marcado
+            localStorage.removeItem("rememberedEmail");
+            localStorage.removeItem("rememberedPassword");
+            console.log("Credenciais removidas (checkbox desmarcado)");
+        }
+    };
+
+    const clearSavedCredentials = () => {
+        localStorage.removeItem("rememberedEmail");
+        localStorage.removeItem("rememberedPassword");
+        setEmail("");
+        setPassword("");
+        setChecked(false);
+        
         toast.current.show({
             severity: 'info',
-            summary: 'Reautenticação necessária',
-            detail: 'Por favor, faça login novamente.',
-            life: 4000,
+            summary: 'Credenciais limpas',
+            detail: 'Suas credenciais salvas foram removidas.',
+            life: 3000,
         });
-
-        localStorage.removeItem("forceLogin");
-    }
-}, []);
+    };
 
     const handleAccess = async (e) => {
         e.preventDefault();
@@ -76,6 +163,9 @@ const Login = () => {
 
             localStorage.setItem("tokenJWT", response.tokenJWT);
             localStorage.setItem("userEmail", email);
+
+            // Salvar credenciais se "Lembrar-me" estiver marcado
+            saveCredentials();
 
             toast.current.show({
                 severity: 'success',
@@ -129,7 +219,7 @@ const Login = () => {
 
     return (
         <div className={styles.containerLogin}>
-            <Toast ref={toast}/>
+            <Toast ref={toast} />
 
             <Card className={styles.customCard}>
                 <p className={styles.loginText}>Bem-vindo(a)</p>
@@ -137,7 +227,7 @@ const Login = () => {
 
                 <form onSubmit={handleAccess} className={styles.form}>
                     <IconField iconPosition="left">
-                        <InputIcon className="pi pi-envelope"/>
+                        <InputIcon className="pi pi-envelope" />
                         <InputText
                             placeholder="E-mail"
                             value={email}
@@ -149,7 +239,7 @@ const Login = () => {
                         placeholder="Senha"
                         name="password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} // corrigido aqui
+                        onChange={(e) => setPassword(e.target.value)}
                         toggleMask
                         promptLabel="Insira a senha"
                         weakLabel="Fraca"
@@ -166,11 +256,18 @@ const Login = () => {
                         <label htmlFor="checkbox">Lembrar-me</label>
                     </div>
 
-                    <Button className={styles.loginButton} label="Acessar" type="submit"/>
+                    <Button className={styles.loginButton} label="Acessar" type="submit" />
 
-                    <p className={styles.requestPassword} onClick={requestPassword}>
-                        Solicitar nova senha
-                    </p>
+                    <div className={styles.linkContainer}>
+                        <p className={styles.requestPassword} onClick={requestPassword}>
+                            Solicitar nova senha
+                        </p>
+                        {localStorage.getItem("rememberedEmail") && (
+                            <p className={styles.clearCredentials} onClick={clearSavedCredentials}>
+                                Limpar credenciais salvas
+                            </p>
+                        )}
+                    </div>
                 </form>
             </Card>
         </div>
