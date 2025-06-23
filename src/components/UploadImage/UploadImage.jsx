@@ -166,8 +166,8 @@ const UploadImage = () => {
     }
 
     try {
-        const email = sessionStorage.getItem("userEmail");
-        if (!email) throw new Error("E-mail do usuário não encontrado no sessionStorage.");
+        const email = localStorage.getItem("userEmail");
+        if (!email) throw new Error("E-mail do usuário não encontrado no localStorage.");
 
         const usuario = await userService.getUsuarioByEmail(email);
         const idUsuario = usuario?.idUsuario;

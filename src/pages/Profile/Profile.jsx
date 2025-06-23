@@ -25,7 +25,7 @@ const Profile = () => {
     useEffect(() => {
         const loadUserData = async () => {
             try {
-                const loggedUserEmail = sessionStorage.getItem("userEmail");
+                const loggedUserEmail = localStorage.getItem("userEmail");
                 if (loggedUserEmail) {
                     const userData = await userService.getUsuarioByEmail(loggedUserEmail);
                     if (userData) {
@@ -62,8 +62,8 @@ const Profile = () => {
 
             await userService.updateUsuario(userId, updatedUser);
 
-            sessionStorage.setItem("userEmail", updatedUser.email);
-            sessionStorage.setItem("forceLogin", "true");
+            localStorage.setItem("userEmail", updatedUser.email);
+            localStorage.setItem("forceLogin", "true");
 
             toast.current?.show({
                 severity: 'success',
@@ -89,8 +89,8 @@ const Profile = () => {
 
     const handleLogout = () => {
         // Remove os dados do localStorage
-        sessionStorage.removeItem("tokenJWT");
-        sessionStorage.removeItem("userEmail");
+        localStorage.removeItem("tokenJWT");
+        localStorage.removeItem("userEmail");
         
         // Redireciona para a página de login
         navigate("/");

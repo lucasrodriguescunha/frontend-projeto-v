@@ -98,7 +98,7 @@ const Register = () => {
             <Toast ref={toast}/>
             <Card className={styles.card}>
                 <p className={styles.title}>Bem-vindo(a)</p>
-                <p className={styles.description}>Por favor, insira seus dados.</p>
+                <p className={styles.description}>Por favor, insira seus dados para realizar o cadastro.</p>
                 <form className={styles.form} onSubmit={handleAccess}>
                     <IconField iconPosition="left">
                         <InputIcon className="pi pi-user"/>
@@ -136,7 +136,6 @@ const Register = () => {
                         options={permissionOptions}
                         optionLabel="permissao"
                         placeholder="Selecione a permissão"
-                        style={{width: '100%'}}
                     />
 
                     <div className={styles.checkboxContainer}>

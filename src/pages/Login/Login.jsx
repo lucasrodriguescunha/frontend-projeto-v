@@ -21,7 +21,7 @@ const Login = () => {
     const toast = useRef(null);
 
     useEffect(() => {
-    const shouldForceLogin = sessionStorage.getItem("forceLogin");
+    const shouldForceLogin = localStorage.getItem("forceLogin");
 
     if (shouldForceLogin === "true") {
         toast.current.show({
@@ -31,7 +31,7 @@ const Login = () => {
             life: 4000,
         });
 
-        sessionStorage.removeItem("forceLogin");
+        localStorage.removeItem("forceLogin");
     }
 }, []);
 
@@ -74,8 +74,8 @@ const Login = () => {
                 senha_usuario: password
             });
 
-            sessionStorage.setItem("tokenJWT", response.tokenJWT);
-            sessionStorage.setItem("userEmail", email);
+            localStorage.setItem("tokenJWT", response.tokenJWT);
+            localStorage.setItem("userEmail", email);
 
             toast.current.show({
                 severity: 'success',
@@ -133,7 +133,7 @@ const Login = () => {
 
             <Card className={styles.customCard}>
                 <p className={styles.loginText}>Bem-vindo(a)</p>
-                <p className={styles.loginDescription}>Por favor, insira seus dados.</p>
+                <p className={styles.loginDescription}>Por favor, insira seus dados para realizar o login.</p>
 
                 <form onSubmit={handleAccess} className={styles.form}>
                     <IconField iconPosition="left">

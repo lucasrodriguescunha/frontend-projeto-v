@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-    const token = sessionStorage.getItem("tokenJWT");
+    const token = localStorage.getItem("tokenJWT");
     
     // Verifica se o token existe e não está vazio
     const isAuthenticated = token && token.trim() !== "";

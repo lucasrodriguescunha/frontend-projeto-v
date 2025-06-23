@@ -6,8 +6,6 @@ import Dropdown from "../../components/Dropdown/Dropdown";
 import {useNavigate} from "react-router";
 import aiService from "../../services/AIService";
 import DataTable from "../../components/DataTable/DataTable";
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 import styles from "./Report.module.css";
 
@@ -89,64 +87,6 @@ const Report = () => {
 
         fetchAnalysis();
     }, []);
-
-    const handleExportPdf = async () => {
-        setLoading(true);
-        try {
-            const data = await aiService.filterAnalysis(
-                selectedQuality,
-                selectedProduct,
-                selectedDate
-            );
-
-            if (!data.grupos || Object.keys(data.grupos).length === 0) {
-                toast.current?.show({
-                    severity: 'warn',
-                    summary: 'Aviso',
-                    detail: 'Nenhum dado disponível para exportar.',
-                    life: 3000
-                });
-                return;
-            }
-
-            const rows = [];
-
-            Object.entries(data.grupos).forEach(([grupoId, registros]) => {
-                registros.forEach((registro) => {
-                    rows.push({
-                        grupo_id: grupoId,
-                        ...registro
-                    });
-                });
-            });
-
-            const doc = new jsPDF();
-            doc.text('Relatório', 10, 10);
-
-            doc.autoTable({
-                head: [Object.keys(rows[0])],
-                body: rows.map(obj => Object.values(obj)),
-                startY: 20
-            });
-
-            doc.save('relatorio.pdf');
-
-            toast.current?.show({
-                severity: 'success',
-                summary: 'PDF gerado com sucesso!',
-                life: 3000
-            });
-        } catch (error) {
-            toast.current?.show({
-                severity: 'error',
-                summary: 'Erro',
-                detail: error.message,
-                life: 3000
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleExportJson = async () => {
         setLoading(true);
@@ -326,8 +266,7 @@ const Report = () => {
                 </div>
 
                 <p className={styles.description}>
-                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV, PDF ou
-                    JSON
+                    Escolha os filtros e clique em uma opção para gerar um relatório na forma de tabela, CSV ou JSON
                 </p>
 
                 <Button
@@ -341,12 +280,6 @@ const Report = () => {
                     className={styles.button}
                     style={{ marginTop: '1rem' }}
                     onClick={handleExportCsv}
-                />
-                <Button
-                    label="Gerar PDF"
-                    className={styles.button}
-                    style={{ marginTop: '1rem' }}
-                    onClick={handleExportPdf}
                 />
                 <Button
                     label="Gerar JSON"
