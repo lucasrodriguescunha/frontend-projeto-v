@@ -3,6 +3,12 @@
 .env
 src/services/axios-config.js
 
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
 # dependencies
 /node_modules
 /.pnp
