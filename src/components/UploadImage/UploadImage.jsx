@@ -40,18 +40,6 @@ const UploadImage = () => {
                     className="p-button-secondary"
                     onClick={startWebcam}
                 />
-                {showWebcam && (
-                    <div style={{marginBottom: '12rem'}}>
-                        <video ref={videoRef} width="300" height="200"/>
-                        <br/>
-                        <Button
-                            label="Capturar Imagem"
-                            onClick={captureImage}
-                            className="p-button-success"
-                        />
-                        <canvas ref={canvasRef} width="300" height="200" style={{display: 'none'}}/>
-                    </div>
-                )}
                 <Button
                     label="Upload"
                     icon="pi pi-upload"
@@ -64,7 +52,6 @@ const UploadImage = () => {
         );
     };
 
-    // Função para iniciar a webcam
     const startWebcam = () => {
         setShowWebcam(true);
 
@@ -80,7 +67,6 @@ const UploadImage = () => {
             });
     };
 
-    // Função para capturar a imagem da webcam
     const captureImage = async () => {
         if (!selectedAnalysis) {
             toast.current.show({
@@ -112,9 +98,25 @@ const UploadImage = () => {
 
         setFiles((prev) => [...prev, newFile]);
         setFirst(0);
+
+        if (videoRef.current && videoRef.current.srcObject) {
+            const tracks = videoRef.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+
+        setShowWebcam(false);
     };
 
-    // Função auxiliar para converter o base64 para File:
+    const closeWebcam = () => {
+        if (videoRef.current && videoRef.current.srcObject) {
+            const tracks = videoRef.current.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+        setShowWebcam(false);
+    };
+
     const dataURLtoFile = (dataUrl, filename) => {
         const arr = dataUrl.split(',');
         const mime = arr[0].match(/:(.*?);/)[1];
@@ -129,14 +131,10 @@ const UploadImage = () => {
         return new File([u8arr], filename, {type: mime});
     };
 
-
-    // Função chamada ao selecionar arquivos
     const onSelectFiles = useCallback((event) => {
-        // Gera um novo ID de grupo para essa seleção
         const newGroupId = uuidv4();
         setGroupId(newGroupId);
 
-        // Mapeia os arquivos selecionados e cria objetos do tipo ImageModel
         const selectedFiles = Array.from(event.files).map((file) => ({
             file,
             name: file.name,
@@ -146,76 +144,68 @@ const UploadImage = () => {
             confianca: null
         }));
 
-        // Atualiza o estado com os arquivos selectedFiles
         setFiles(selectedFiles);
-
-        // Reinicia a paginação para o início
         setFirst(0);
     }, []);
 
-    // Função chamada ao clicar em "Upload"
     const onUploadFiles = useCallback(async () => {
-    if (!selectedAnalysis) {
-        toast.current.show({
-            severity: 'warn',
-            summary: 'Atenção',
-            detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
-            life: 3000
-        });
-        return;
-    }
+        if (!selectedAnalysis) {
+            toast.current.show({
+                severity: 'warn',
+                summary: 'Atenção',
+                detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
+                life: 3000
+            });
+            return;
+        }
 
-    try {
-        const email = localStorage.getItem("userEmail");
-        if (!email) throw new Error("E-mail do usuário não encontrado no localStorage.");
+        try {
+            const email = localStorage.getItem("userEmail");
+            if (!email) throw new Error("E-mail do usuário não encontrado no localStorage.");
 
-        const usuario = await userService.getUsuarioByEmail(email);
-        const idUsuario = usuario?.idUsuario;
-        if (!idUsuario) throw new Error("ID do usuário não encontrado.");
+            const usuario = await userService.getUsuarioByEmail(email);
+            const idUsuario = usuario?.idUsuario;
+            if (!idUsuario) throw new Error("ID do usuário não encontrado.");
 
-        const updatedFiles = await Promise.all(
-            files.map(async (item) => {
-                const result = await aiService.uploadImage(item.file, groupId, selectedAnalysis, idUsuario);
+            const updatedFiles = await Promise.all(
+                files.map(async (item) => {
+                    const result = await aiService.uploadImage(item.file, groupId, selectedAnalysis, idUsuario);
 
-                if (!result || !result.resultado) {
-                    throw new Error("Resposta inválida do servidor.");
-                }
+                    if (!result || !result.resultado) {
+                        throw new Error("Resposta inválida do servidor.");
+                    }
 
-                item.status = result.resultado;
-                item.data_analise = result.data_analise;
-                item.confianca = result.confianca;
+                    item.status = result.resultado;
+                    item.data_analise = result.data_analise;
+                    item.confianca = result.confianca;
 
+                    return item;
+                })
+            );
+
+            setFiles([...updatedFiles]);
+        } catch (err) {
+            const fileFailed = files.map((item) => {
+                item.status = `Erro: ${err.message}`;
+                item.data_analise = null;
+                item.confianca = null;
                 return item;
-            })
-        );
+            });
 
-        setFiles([...updatedFiles]);
-    } catch (err) {
-        const fileFailed = files.map((item) => {
-            item.status = `Erro: ${err.message}`;
-            item.data_analise = null;
-            item.confianca = null;
+            setFiles([...fileFailed]);
+        }
+    }, [files, groupId, selectedAnalysis]);
 
-            return item;
-        });
-
-        setFiles([...fileFailed]);
-    }
-}, [files, groupId, selectedAnalysis]);
-
-    // Função para limpar a seleção de arquivos
     const onClear = useCallback(() => {
         setFiles([]);
         setFirst(0);
         setGroupId(null);
     }, []);
 
-    // Função para mudar a página da visualização
     const onPageChange = useCallback((event) => {
         setFirst(event.first);
     }, []);
 
-    // Seleciona os arquivos da página atual
     const pagedFiles = files.slice(first, first + rows);
 
     return (
@@ -230,6 +220,40 @@ const UploadImage = () => {
                     onOptionChange={setSelectedAnalysis}
                     style={{minWidth: '100%'}}
                 />
+
+                {showWebcam && (
+                    <div className={styles.webcamContainer}>
+                        <div className={styles.webcamModal}>
+                            <div className={styles.webcamHeader}>
+                                <h3>Capturar Imagem</h3>
+                                <Button
+                                    icon="pi pi-times"
+                                    className="p-button-text p-button-plain"
+                                    onClick={closeWebcam}
+                                />
+                            </div>
+                            <div className={styles.webcamContent}>
+                                <video ref={videoRef} width="300" height="200" className={styles.webcamVideo}/>
+                                <div className={styles.webcamActions}>
+                                    <Button
+                                        label="Capturar"
+                                        icon="pi pi-camera"
+                                        onClick={captureImage}
+                                        className="p-button-success"
+                                    />
+                                    <Button
+                                        label="Cancelar"
+                                        icon="pi pi-times"
+                                        onClick={closeWebcam}
+                                        className="p-button-secondary"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <canvas ref={canvasRef} width="300" height="200" style={{display: 'none'}}/>
 
                 <div className={files.length > 0 ? 'ocultar-conteudo' : ''}>
                     <FileUpload
@@ -257,15 +281,8 @@ const UploadImage = () => {
                     {files.length > 0 && (
                         <div className={styles['margin-top']}>
                             {pagedFiles.map((file, index) => (
-                                <div
-                                    key={index}
-                                    className={styles['file-container']}
-                                >
-                                    <img
-                                        src={file.preview}
-                                        alt={file.name}
-                                        className={styles['preview-imagem']}
-                                    />
+                                <div key={index} className={styles['file-container']}>
+                                    <img src={file.preview} alt={file.name} className={styles['preview-imagem']}/>
 
                                     <div className={styles['info-container']}>
                                         <strong>{file.name}</strong>
@@ -279,11 +296,9 @@ const UploadImage = () => {
                                                 file.status
                                             )}
                                         </p>
-
                                         {file.data_analise && (
                                             <p>Data da análise: {file.data_analise}</p>
                                         )}
-
                                         {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
                                             <p>Confiança: {file.confianca}%</p>
                                         )}
