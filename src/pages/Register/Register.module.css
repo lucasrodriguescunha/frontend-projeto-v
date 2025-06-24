@@ -81,3 +81,68 @@
 .loginRedirect:hover {
     text-decoration: underline;
 }
+
+.loginSection {
+    width: 100%;
+}
+
+.loginDivider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.dividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: #e9ecef;
+}
+
+.dividerText {
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.loginContainer:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.loginInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.loginSpan {
+    color: #495057;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.loginButton {
+    min-width: 140px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.loginButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}

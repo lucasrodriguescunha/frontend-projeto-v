@@ -82,6 +82,17 @@
     text-decoration: underline;
 }
 
+.registerText {
+    margin-bottom: 0;
+    text-align: center;
+    color: var(--color-secondary);
+    cursor: pointer;
+}
+
+.registerText:hover {
+    text-decoration: underline;
+}
+
 .linkContainer {
     display: flex;
     flex-direction: column;
@@ -132,4 +143,69 @@
     justify-content: flex-end;
     gap: 0.5rem;
     padding-top: 1rem;
+}
+
+.registerSection {
+    width: 100%;
+}
+
+.registerDivider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.dividerLine {
+    flex: 1;
+    height: 1px;
+    background-color: #e9ecef;
+}
+
+.dividerText {
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.registerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.registerContainer:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+}
+
+.registerInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+.registerSpan {
+    color: #495057;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.registerButton {
+    min-width: 140px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.registerButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }

@@ -140,9 +140,27 @@ const Register = () => {
 
                     <Button className={styles.registerButton} label="Cadastrar" type="submit" />
 
-                    <p className={styles.loginRedirect} onClick={() => navigate("/login")}>
-                        Ir para Login
-                    </p>
+                    <div className={styles.loginSection}>
+                        <div className={styles.loginDivider}>
+                            <span className={styles.dividerLine}></span>
+                            <span className={styles.dividerText}>ou</span>
+                            <span className={styles.dividerLine}></span>
+                        </div>
+                        
+                        <div className={styles.loginContainer}>
+                            <div className={styles.loginInfo}>
+                                <i className="pi pi-sign-in" style={{ fontSize: '1.2rem', color: '#007bff' }}></i>
+                                <span className={styles.loginSpan}>Já possui uma conta?</span>
+                            </div>
+                            <Button
+                                label="Fazer login"
+                                icon="pi pi-arrow-right"
+                                className={`${styles.loginButton} p-button-outlined p-button-primary`}
+                                onClick={() => navigate('/login')}
+                                size="small"
+                            />
+                        </div>
+                    </div>
                 </form>
             </Card>
         </div>

@@ -57,11 +57,11 @@ const Login = () => {
         try {
             const savedEmail = localStorage.getItem("rememberedEmail");
             const savedPassword = localStorage.getItem("rememberedPassword");
-            
+
             if (savedEmail && savedPassword) {
                 const decryptedEmail = decryptData(savedEmail);
                 const decryptedPassword = decryptData(savedPassword);
-                
+
                 if (decryptedEmail && decryptedPassword) {
                     setEmail(decryptedEmail);
                     setPassword(decryptedPassword);
@@ -78,7 +78,7 @@ const Login = () => {
             try {
                 const encryptedEmail = encryptData(email);
                 const encryptedPassword = encryptData(password);
-                
+
                 localStorage.setItem("rememberedEmail", encryptedEmail);
                 localStorage.setItem("rememberedPassword", encryptedPassword);
             } catch (error) {
@@ -98,7 +98,7 @@ const Login = () => {
         setPassword("");
         setChecked(false);
         setShowClearDialog(false);
-        
+
         toast.current.show({
             severity: 'success',
             summary: 'Credenciais removidas',
@@ -165,7 +165,7 @@ const Login = () => {
 
             // Se há credenciais salvas, dar mais tempo para o usuário decidir se quer limpar
             const redirectDelay = localStorage.getItem("rememberedEmail") ? 8000 : 3000;
-            
+
             setTimeout(() => {
                 navigate("/app/home");
             }, redirectDelay);
@@ -251,9 +251,11 @@ const Login = () => {
                     <Button className={styles.loginButton} label="Acessar" type="submit" />
 
                     <div className={styles.linkContainer}>
+                        {/*
                         <p className={styles.requestPassword} onClick={requestPassword}>
                             Solicitar nova senha
                         </p>
+                        */}
                         {localStorage.getItem("rememberedEmail") && (
                             <Button
                                 icon="pi pi-trash"
@@ -263,6 +265,28 @@ const Login = () => {
                                 size="small"
                             />
                         )}
+                    </div>
+
+                    <div className={styles.registerSection}>
+                        <div className={styles.registerDivider}>
+                            <span className={styles.dividerLine}></span>
+                            <span className={styles.dividerText}>ou</span>
+                            <span className={styles.dividerLine}></span>
+                        </div>
+
+                        <div className={styles.registerContainer}>
+                            <div className={styles.registerInfo}>
+                                <i className="pi pi-user-plus" style={{ fontSize: '1.2rem', color: '#007bff' }}></i>
+                                <span className={styles.registerSpan}>É sua primeira vez aqui?</span>
+                            </div>
+                            <Button
+                                label="Criar conta"
+                                icon="pi pi-arrow-right"
+                                className={`${styles.registerButton} p-button-outlined p-button-primary`}
+                                onClick={() => navigate('/')}
+                                size="small"
+                            />
+                        </div>
                     </div>
                 </form>
             </Card>
