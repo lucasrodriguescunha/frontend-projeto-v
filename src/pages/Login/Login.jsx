@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -10,7 +10,6 @@ import { Toast } from "primereact/toast";
 import { Password } from "primereact/password";
 import { Dialog } from "primereact/dialog";
 import userService from "../../services/UserService";
-import { useEffect } from "react";
 
 import styles from "./Login.module.css";
 
@@ -34,23 +33,34 @@ const Login = () => {
     const [showClearDialog, setShowClearDialog] = useState(false);
     const navigate = useNavigate();
     const toast = useRef(null);
+    const isMounted = useRef(true);
 
     useEffect(() => {
+        isMounted.current = true;
+        
         const shouldForceLogin = localStorage.getItem("forceLogin");
 
         if (shouldForceLogin === "true") {
-            toast.current.show({
-                severity: 'info',
-                summary: 'Reautenticação necessária',
-                detail: 'Por favor, faça login novamente.',
-                life: 4000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'Reautenticação necessária',
+                    detail: 'Por favor, faça login novamente.',
+                    life: 4000,
+                });
+            }
 
             localStorage.removeItem("forceLogin");
         }
 
         // Carregar credenciais salvas se existirem
-        loadSavedCredentials();
+        if (isMounted.current) {
+            loadSavedCredentials();
+        }
+
+        return () => {
+            isMounted.current = false;
+        };
     }, []);
 
     const loadSavedCredentials = () => {
@@ -99,12 +109,14 @@ const Login = () => {
         setChecked(false);
         setShowClearDialog(false);
 
-        toast.current.show({
-            severity: 'success',
-            summary: 'Credenciais removidas',
-            detail: 'Suas credenciais salvas foram removidas com sucesso.',
-            life: 3000,
-        });
+        if (toast.current && isMounted.current) {
+            toast.current.show({
+                severity: 'success',
+                summary: 'Credenciais removidas',
+                detail: 'Suas credenciais salvas foram removidas com sucesso.',
+                life: 3000,
+            });
+        }
     };
 
     const confirmClearCredentials = () => {
@@ -115,32 +127,38 @@ const Login = () => {
         e.preventDefault();
 
         if (!email || !password) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Campos obrigatórios',
-                detail: 'Por favor, preencha o e-mail e a senha.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Campos obrigatórios',
+                    detail: 'Por favor, preencha o e-mail e a senha.',
+                    life: 3000,
+                });
+            }
             return;
         }
 
         if (!email.includes("@") || !email.includes(".")) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'E-mail inválido',
-                detail: 'O e-mail deve conter "@" e "."',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'E-mail inválido',
+                    detail: 'O e-mail deve conter "@" e "."',
+                    life: 3000,
+                });
+            }
             return;
         }
 
         if (password.length < 8) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Senha muito curta',
-                detail: 'A senha deve ter no mínimo 8 caracteres.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Senha muito curta',
+                    detail: 'A senha deve ter no mínimo 8 caracteres.',
+                    life: 3000,
+                });
+            }
             return;
         }
 
@@ -156,51 +174,63 @@ const Login = () => {
             // Salvar credenciais se "Lembrar-me" estiver marcado
             saveCredentials();
 
-            toast.current.show({
-                severity: 'success',
-                summary: 'Login bem-sucedido',
-                detail: 'Você foi logado com sucesso!',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Login bem-sucedido',
+                    detail: 'Você foi logado com sucesso!',
+                    life: 3000,
+                });
+            }
 
             // Se há credenciais salvas, dar mais tempo para o usuário decidir se quer limpar
             const redirectDelay = localStorage.getItem("rememberedEmail") ? 8000 : 3000;
 
             setTimeout(() => {
-                navigate("/app/home");
+                if (isMounted.current) {
+                    navigate("/app/home");
+                }
             }, redirectDelay);
 
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 403) {
-                    toast.current.show({
-                        severity: 'error',
-                        summary: 'Não autorizado',
-                        detail: 'Usuário ou senha incorretos.',
-                        life: 3000,
-                    });
+                    if (toast.current && isMounted.current) {
+                        toast.current.show({
+                            severity: 'error',
+                            summary: 'Não autorizado',
+                            detail: 'Usuário ou senha incorretos.',
+                            life: 3000,
+                        });
+                    }
                 } else if (error.response.status === 401) {
-                    toast.current.show({
-                        severity: 'warn',
-                        summary: 'Conta bloqueada',
-                        detail: 'Sua conta está bloqueada. Entre em contato com o suporte.',
-                        life: 4000,
-                    });
+                    if (toast.current && isMounted.current) {
+                        toast.current.show({
+                            severity: 'warn',
+                            summary: 'Conta bloqueada',
+                            detail: 'Sua conta está bloqueada. Entre em contato com o suporte.',
+                            life: 4000,
+                        });
+                    }
                 } else {
+                    if (toast.current && isMounted.current) {
+                        toast.current.show({
+                            severity: 'error',
+                            summary: 'Erro',
+                            detail: error.response.data.message || 'Erro desconhecido.',
+                            life: 3000,
+                        });
+                    }
+                }
+            } else {
+                if (toast.current && isMounted.current) {
                     toast.current.show({
                         severity: 'error',
                         summary: 'Erro',
-                        detail: error.response.data.message || 'Erro desconhecido.',
+                        detail: error.message || "Erro ao conectar com o servidor.",
                         life: 3000,
                     });
                 }
-            } else {
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Erro',
-                    detail: error.message || "Erro ao conectar com o servidor.",
-                    life: 3000,
-                });
             }
         }
     };
@@ -262,6 +292,7 @@ const Login = () => {
                                 label="Limpar credenciais salvas"
                                 className={`${styles.clearButton} p-button-text p-button-danger`}
                                 onClick={confirmClearCredentials}
+                                type="button"
                                 size="small"
                             />
                         )}
@@ -284,6 +315,7 @@ const Login = () => {
                                 icon="pi pi-arrow-right"
                                 className={`${styles.registerButton} p-button-outlined p-button-primary`}
                                 onClick={() => navigate('/')}
+                                type="button"
                                 size="small"
                             />
                         </div>

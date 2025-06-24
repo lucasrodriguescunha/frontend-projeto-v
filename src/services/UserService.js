@@ -52,6 +52,29 @@ class UserService {
         }
     }
 
+    async lockUser(email) {
+        try {
+            console.log('=== LOCK USER ===');
+            console.log('Email para bloquear:', email);
+            
+            const params = new URLSearchParams({
+                emailUsuario: email,
+                operacao: "true",
+                ativo: "false"
+            });
+
+            console.log('Parâmetros da requisição:', params.toString());
+            console.log('URL da requisição:', `/auth/controle?${params.toString()}`);
+
+            const response = await userApi.put(`/auth/controle?${params.toString()}`);
+            console.log('Resposta do lockUser:', response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Erro no lockUser:', error);
+            this.handleError(error);
+        }
+    }
+
     async login(dados) {
         try {
             const response = await userApi.post("/auth/login", dados);

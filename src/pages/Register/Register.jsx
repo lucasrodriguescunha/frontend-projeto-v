@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
@@ -20,40 +20,54 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [permission, setPermission] = useState(null);
     const navigate = useNavigate();
-    const toast = React.useRef(null);
+    const toast = useRef(null);
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const handleAccess = async (e) => {
         e.preventDefault();
 
         if (!email || !password || !name || !permission) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Campos obrigatórios',
-                detail: 'Preencha todos os campos.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Campos obrigatórios',
+                    detail: 'Preencha todos os campos.',
+                    life: 3000,
+                });
+            }
             return;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'E-mail inválido',
-                detail: 'Por favor, insira um e-mail válido.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'E-mail inválido',
+                    detail: 'Por favor, insira um e-mail válido.',
+                    life: 3000,
+                });
+            }
             return;
         }
 
         const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
         if (!senhaRegex.test(password)) {
-            toast.current.show({
-                severity: 'error',
-                summary: 'Senha inválida',
-                detail: 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Senha inválida',
+                    detail: 'A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais.',
+                    life: 3000,
+                });
+            }
             return;
         }
 
@@ -65,26 +79,32 @@ const Register = () => {
                 permissao: permission
             });
 
-            toast.current.show({
-                severity: 'success',
-                summary: 'Cadastro bem-sucedido',
-                detail: 'Você foi cadastrado com sucesso!',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Cadastro bem-sucedido',
+                    detail: 'Você foi cadastrado com sucesso!',
+                    life: 3000,
+                });
+            }
 
             setTimeout(() => {
-                navigate("/login");
+                if (isMounted.current) {
+                    navigate("/login");
+                }
             }, 3000);
 
 
         } catch (error) {
             console.error("Erro ao cadastrar:", error);
-            toast.current.show({
-                severity: 'error',
-                summary: 'Erro no cadastro',
-                detail: error.message || 'Erro ao enviar os dados.',
-                life: 3000,
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Erro no cadastro',
+                    detail: error.message || 'Erro ao enviar os dados.',
+                    life: 3000,
+                });
+            }
         }
     };
 
@@ -157,6 +177,7 @@ const Register = () => {
                                 icon="pi pi-arrow-right"
                                 className={`${styles.loginButton} p-button-outlined p-button-primary`}
                                 onClick={() => navigate('/login')}
+                                type="button"
                                 size="small"
                             />
                         </div>

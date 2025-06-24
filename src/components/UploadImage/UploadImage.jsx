@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState, useEffect} from 'react';
 
 import {FileUpload} from 'primereact/fileupload';
 import {Paginator} from 'primereact/paginator';
@@ -26,7 +26,15 @@ const UploadImage = () => {
     const [showWebcam, setShowWebcam] = useState(false);
     const fileUploadRef = useRef(null);
     const toast = useRef(null);
+    const isMounted = useRef(true);
     const rows = 1;
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const customHeaderTemplate = (options) => {
         const {className, chooseButton, cancelButton} = options;
@@ -69,12 +77,14 @@ const UploadImage = () => {
 
     const captureImage = async () => {
         if (!selectedAnalysis) {
-            toast.current.show({
-                severity: 'warn',
-                summary: 'Atenção',
-                detail: 'Por favor, selecione uma categoria de fruta antes de capturar.',
-                life: 3000
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'warn',
+                    summary: 'Atenção',
+                    detail: 'Por favor, selecione uma categoria de fruta antes de capturar.',
+                    life: 3000
+                });
+            }
             return;
         }
 
@@ -150,12 +160,14 @@ const UploadImage = () => {
 
     const onUploadFiles = useCallback(async () => {
         if (!selectedAnalysis) {
-            toast.current.show({
-                severity: 'warn',
-                summary: 'Atenção',
-                detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
-                life: 3000
-            });
+            if (toast.current && isMounted.current) {
+                toast.current.show({
+                    severity: 'warn',
+                    summary: 'Atenção',
+                    detail: 'Por favor, selecione uma categoria de fruta antes de fazer upload.',
+                    life: 3000
+                });
+            }
             return;
         }
 
