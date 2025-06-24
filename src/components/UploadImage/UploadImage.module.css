@@ -45,6 +45,103 @@
     margin-right: 8px;
 }
 
+.webcamContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.webcamModal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.webcamHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #f8f9fa;
+}
+
+.webcamHeader h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.webcamContent {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.webcamVideo {
+    border-radius: 8px;
+    border: 2px solid #e5e5e5;
+    max-width: 100%;
+    height: auto;
+}
+
+.webcamActions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+}
+
+.webcamActions :global(.p-button) {
+    flex: 1;
+    max-width: 150px;
+    background-color: #677FFA !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.webcamActions :global(.p-button:hover) {
+    background-color: #5567d9 !important;
+}
+
+.webcamActions :global(.p-button.p-button-secondary) {
+    background-color: #6c757d !important;
+}
+
+.webcamActions :global(.p-button.p-button-secondary:hover) {
+    background-color: #5a6268 !important;
+}
+
+.webcamHeader :global(.p-button) {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #6c757d !important;
+    width: 2rem;
+    height: 2rem;
+    padding: 0px;
+}
+
+.webcamHeader :global(.p-button:hover) {
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+}
+
 :global(.p-fileupload .p-button) {
     background-color: #677FFA;
     border: none;
@@ -64,10 +161,32 @@
     box-shadow: none;
 }
 
-
 @media (max-width: 768px) {
     .uploadImageContainer {
         display: flex;
         flex-direction: column;
+    }
+    
+    .webcamModal {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+    
+    .webcamContent {
+        padding: 1rem;
+    }
+    
+    .webcamVideo {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+    }
+    
+    .webcamActions {
+        flex-direction: column;
+    }
+    
+    .webcamActions :global(.p-button) {
+        max-width: none !important;
     }
 }
