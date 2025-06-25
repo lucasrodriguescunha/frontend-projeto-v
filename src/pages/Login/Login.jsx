@@ -9,6 +9,7 @@ import { Card } from "primereact/card";
 import { Toast } from "primereact/toast";
 import { Password } from "primereact/password";
 import { Dialog } from "primereact/dialog";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import userService from "../../services/UserService";
 
 import styles from "./Login.module.css";
@@ -30,14 +31,13 @@ const Login = () => {
     const [checked, setChecked] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showClearDialog, setShowClearDialog] = useState(false);
     const navigate = useNavigate();
     const toast = useRef(null);
     const isMounted = useRef(true);
 
     useEffect(() => {
         isMounted.current = true;
-        
+
         const shouldForceLogin = localStorage.getItem("forceLogin");
 
         if (shouldForceLogin === "true") {
@@ -107,8 +107,6 @@ const Login = () => {
         setEmail("");
         setPassword("");
         setChecked(false);
-        setShowClearDialog(false);
-
         if (toast.current && isMounted.current) {
             toast.current.show({
                 severity: 'success',
@@ -120,7 +118,14 @@ const Login = () => {
     };
 
     const confirmClearCredentials = () => {
-        setShowClearDialog(true);
+        confirmDialog({
+            message: 'Deseja realmente remover as credenciais salvas?',
+            header: 'Limpar credenciais',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sim',
+            rejectLabel: 'Não',
+            accept: clearSavedCredentials,
+        });
     };
 
     const handleAccess = async (e) => {
@@ -242,6 +247,15 @@ const Login = () => {
     return (
         <div className={styles.containerLogin}>
             <Toast ref={toast} />
+            <ConfirmDialog />
+            {localStorage.getItem("rememberedEmail") && (
+                <i
+                    className="pi pi-trash"
+                    style={{ position: 'absolute', top: 20, right: 20, cursor: 'pointer', fontSize: 20, color: '#FFFFFF', zIndex: 10 }}
+                    onClick={confirmClearCredentials}
+                    title="Limpar credenciais salvas"
+                />
+            )}
 
             <Card className={styles.customCard}>
                 <p className={styles.loginText}>Bem-vindo(a)</p>
@@ -286,16 +300,6 @@ const Login = () => {
                             Solicitar nova senha
                         </p>
                         */}
-                        {localStorage.getItem("rememberedEmail") && (
-                            <Button
-                                icon="pi pi-trash"
-                                label="Limpar credenciais salvas"
-                                className={`${styles.clearButton} p-button-text p-button-danger`}
-                                onClick={confirmClearCredentials}
-                                type="button"
-                                size="small"
-                            />
-                        )}
                     </div>
 
                     <div className={styles.registerSection}>
@@ -322,38 +326,6 @@ const Login = () => {
                     </div>
                 </form>
             </Card>
-
-            <Dialog
-                visible={showClearDialog}
-                onHide={() => setShowClearDialog(false)}
-                header="Confirmar limpeza"
-                modal
-                className={styles.clearDialog}
-                footer={
-                    <div className={styles.dialogFooter}>
-                        <Button
-                            label="Cancelar"
-                            icon="pi pi-times"
-                            onClick={() => setShowClearDialog(false)}
-                            className="p-button-text"
-                        />
-                        <Button
-                            label="Limpar"
-                            icon="pi pi-trash"
-                            onClick={clearSavedCredentials}
-                            className="p-button-danger"
-                        />
-                    </div>
-                }
-            >
-                <div className={styles.dialogContent}>
-                    <i className="pi pi-exclamation-triangle" style={{ fontSize: '2rem', color: '#dc3545', marginBottom: '1rem' }}></i>
-                    <p>Tem certeza que deseja remover suas credenciais salvas?</p>
-                    <p style={{ fontSize: '0.9rem', color: '#6c757d', marginTop: '0.5rem' }}>
-                        Esta ação não pode ser desfeita. Você precisará inserir suas credenciais novamente na próxima vez.
-                    </p>
-                </div>
-            </Dialog>
         </div>
     );
 };

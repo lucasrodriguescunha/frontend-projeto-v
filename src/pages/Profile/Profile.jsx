@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router';
 import userService from "../../services/UserService";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import styles from "./Profile.module.css";
 
@@ -88,18 +89,28 @@ const Profile = () => {
     const hasChanges = userName !== originalName || userEmail !== originalEmail;
 
     const handleLogout = () => {
-        // Remove os dados do localStorage
         localStorage.removeItem("tokenJWT");
         localStorage.removeItem("userEmail");
+        navigate("/login");
+    };
 
-        // Redireciona para a página de login
-        navigate("/");
+    const confirmLogout = () => {
+        confirmDialog({
+            message: 'Tem certeza que deseja sair?',
+            header: 'Confirmação de saída',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sair',
+            rejectLabel: 'Cancelar',
+            acceptClassName: styles.button,
+            rejectClassName: styles.button,
+            accept: handleLogout,
+        });
     };
 
     return (
         <div className={styles.container}>
             <Toast ref={toast} />
-
+            <ConfirmDialog />
             <Card className={styles.card}>
                 <p className={styles.title}>Perfil</p>
 
@@ -125,12 +136,13 @@ const Profile = () => {
                     />
                 </div>
 
-                <p className={styles.description}>Sua permissão é: <strong>{userPermission}</strong></p>
+                <p className={styles.description}>
+                    Sua permissão é: <strong>{userPermission === 'ADMINISTRADOR' ? 'Administrador' : userPermission === 'USUARIO' ? 'Usuário' : userPermission}</strong>
+                </p>
 
                 <div className={styles.buttonGroup}>
                     <Button
                         label="Salvar alterações"
-                        icon="pi pi-save"
                         iconPos="right"
                         className={styles.button}
                         onClick={handleSave}
@@ -142,10 +154,10 @@ const Profile = () => {
                         onClick={() => navigate("/app/home")}
                     />
                     <Button
-                        icon="pi pi-sign-out"
-                        iconPos="right" 
+                        iconPos="right"
                         className={styles.button}
-                        onClick={handleLogout}
+                        label="Sair"
+                        onClick={confirmLogout}
                     />
                 </div>
             </Card>
