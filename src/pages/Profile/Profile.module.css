@@ -59,14 +59,12 @@
 .button {
     background-color: var(--color-primary);
     width: 100%;
-    max-width: 300px;
     margin-top: 1rem;
     color: white;
     border: none;
-    border-radius: 0.5rem;
-    font-weight: 500;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .button:hover {
@@ -74,6 +72,7 @@
 }
 
 .buttonGroup {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }

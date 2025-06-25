@@ -91,7 +91,7 @@ const Profile = () => {
         // Remove os dados do localStorage
         localStorage.removeItem("tokenJWT");
         localStorage.removeItem("userEmail");
-        
+
         // Redireciona para a página de login
         navigate("/");
     };
@@ -102,15 +102,6 @@ const Profile = () => {
 
             <Card className={styles.card}>
                 <p className={styles.title}>Perfil</p>
-
-                <div className={styles.avatarWrapper}>
-                    <div className={styles.avatarContainer}>
-                        <Avatar label={userName.charAt(0).toUpperCase()} size="xlarge" shape="circle" />
-                        <span className={styles.cameraIcon}>
-                            <i className="pi pi-camera"></i>
-                        </span>
-                    </div>
-                </div>
 
                 <div className={styles.inputField}>
                     <span className={styles.inputIcon}>
@@ -140,7 +131,8 @@ const Profile = () => {
                     <Button
                         label="Salvar alterações"
                         icon="pi pi-save"
-                        className={`${styles.button} p-button-success`}
+                        iconPos="right"
+                        className={styles.button}
                         onClick={handleSave}
                         disabled={!userId || !hasChanges}
                     />
@@ -150,11 +142,11 @@ const Profile = () => {
                         onClick={() => navigate("/app/home")}
                     />
                     <Button
-                        label="Sair"
+                        icon="pi pi-sign-out"
+                        iconPos="right" 
                         className={styles.button}
                         onClick={handleLogout}
-                    >
-                    </Button>
+                    />
                 </div>
             </Card>
         </div>
