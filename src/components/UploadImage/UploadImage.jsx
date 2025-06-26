@@ -141,6 +141,19 @@ const UploadImage = () => {
         return new File([u8arr], filename, {type: mime});
     };
 
+    const formatDateBR = (isoDateString) => {
+    if (!isoDateString) return '';
+    const date = new Date(isoDateString);
+    return date.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+};
+
     const onSelectFiles = useCallback((event) => {
         const newGroupId = uuidv4();
         setGroupId(newGroupId);
@@ -309,10 +322,10 @@ const UploadImage = () => {
                                             )}
                                         </p>
                                         {file.data_analise && (
-                                            <p>Data da análise: {file.data_analise}</p>
+                                            <p>Data da análise: {formatDateBR(file.data_analise)}</p>
                                         )}
                                         {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
-                                            <p>Confiança: {file.confianca}%</p>
+                                            <p>Pontuação: {file.confianca}</p>
                                         )}
                                     </div>
                                 </div>

@@ -75,12 +75,12 @@ const DataTable = ({data, loading, currentPage, onPageChange}) => {
                     style={{minWidth: '150px'}}
                 />
                 <Column
-                    field="confianca"
-                    header="Confiança"
+                    field="pontuacao"
+                    header="Pontuação"
                     body={(rowData) =>
                         loading
                             ? <Skeleton width="50%" height="1.5rem"/>
-                            : `${rowData.confianca}%`
+                            : `${rowData.confianca}`
                     }
                     style={{minWidth: '120px'}}
                 />
