@@ -325,7 +325,7 @@ const UploadImage = () => {
                                             <p>Data da análise: {formatDateBR(file.data_analise)}</p>
                                         )}
                                         {file.status !== 'Aguardando upload...' && file.confianca !== undefined && (
-                                            <p>Confiança: {file.confianca}%</p>
+                                            <p>Pontuação: {file.confianca}</p>
                                         )}
                                     </div>
                                 </div>
