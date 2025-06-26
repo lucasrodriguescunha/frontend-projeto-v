@@ -156,6 +156,7 @@ const Register = () => {
                         options={permissionOptions}
                         optionLabel="permissao"
                         placeholder="Selecione a permissão"
+                        className={styles.permissionDropdown}
                     />
 
                     <Button className={styles.registerButton} label="Cadastrar" type="submit" />

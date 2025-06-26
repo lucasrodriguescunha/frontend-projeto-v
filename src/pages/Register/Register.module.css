@@ -1,148 +1,294 @@
 .container {
-    background-color: var(--color-primary);
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  background-color: var(--color-primary);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #000000;
-    padding: 2rem;
-    border-radius: 0.25rem;
-    background: #FFFFFF;
-    width: 400px;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  padding: 2rem;
+  border-radius: 0.25rem;
+  background: #FFFFFF;
+  width: 400px;
+  max-width: 95vw;
+  text-align: center;
 }
 
 .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0;
-    padding: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
 }
 
 .description {
-    font-size: 1rem;
-    font-weight: normal;
-    color: #8C95A4;
-    margin-bottom: 2.1875rem;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #8C95A4;
+  margin-bottom: 2.1875rem;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
 }
 
 .checkboxContainer {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .checkbox {
-    margin: 0;
+  margin: 0;
 }
 
 .registerButton {
-    background-color: var(--color-primary);
-    width: 80%;
-    margin-top: 1rem;
-    color: white;
-    border: none;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
+  background-color: var(--color-primary);
+  width: 80%;
+  margin-top: 1rem;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
 }
 
 .registerButton:hover {
-    background-color: var(--color-secondary);
+  background-color: var(--color-secondary);
 }
 
 .loginRedirect {
-    margin-bottom: 0;
-    text-align: center;
-    color: var(--color-secondary);
-    cursor: pointer;
+  margin-bottom: 0;
+  text-align: center;
+  color: var(--color-secondary);
+  cursor: pointer;
 }
 
 .loginRedirect:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .loginSection {
-    width: 100%;
+  width: 100%;
 }
 
 .loginDivider {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
 }
 
 .dividerLine {
-    flex: 1;
-    height: 1px;
-    background-color: #e9ecef;
+  flex: 1;
+  height: 1px;
+  background-color: #e9ecef;
 }
 
 .dividerText {
-    padding: 0 1rem;
-    color: #6c757d;
-    font-size: 0.9rem;
-    font-weight: 500;
+  padding: 0 1rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .loginContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
 }
 
 .loginContainer:hover {
-    background-color: #e9ecef;
-    border-color: #007bff;
+  background-color: #e9ecef;
+  border-color: #007bff;
 }
 
 .loginInfo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .loginSpan {
-    color: #495057;
-    font-size: 0.95rem;
-    font-weight: 500;
+  color: #495057;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .loginButton {
-    min-width: 140px;
-    font-weight: 500;
-    transition: all 0.2s ease;
+  min-width: 140px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .loginButton:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+@media (max-width: 900px) {
+  .card {
+    width: 70vw;
+    max-width: 400px;
+    min-width: 260px;
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 95vw;
+    max-width: 340px;
+    min-width: unset;
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 0.95rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+  }
+
+  .form {
+    gap: 0.75rem;
+  }
+
+  .loginContainer,
+  .registerContainer {
+    padding: 0.75rem;
+  }
+
+  input,
+  .p-inputtext,
+  .p-password-input,
+  .p-dropdown-label,
+  .p-dropdown-item,
+  .p-dropdown-trigger,
+  .p-dropdown,
+  .p-component,
+  .p-placeholder,
+  .registerButton,
+  .loginButton,
+  .p-checkbox-label,
+  .loginRedirect,
+  .dividerText,
+  .loginSpan,
+  .registerSpan {
+    font-size: 0.85rem !important;
+  }
+
+  .p-dropdown, .p-dropdown .p-dropdown-label {
+    font-size: 0.85rem !important;
+    height: 2.2rem !important;
+    padding: 0.3rem 0.75rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .card {
+    width: auto;
+    max-width: auto;
+    min-width: unset;
+    padding: 0.5rem;
+  }
+
+  .title {
+    font-size: 0.85rem;
+  }
+
+  .description {
+    font-size: 0.7rem;
+  }
+
+  input,
+  .p-inputtext,
+  .p-password-input,
+  .p-dropdown-label,
+  .p-dropdown-item,
+  .p-dropdown-trigger,
+  .p-input-wrapper,
+  .p-placeholder
+  .p-component,
+  .p-placeholder,
+  .registerButton,
+  .loginButton,
+  .p-checkbox-label,
+  .loginRedirect,
+  .dividerText,
+  .loginSpan,
+  .registerSpan  {
+    font-size: 0.7rem !important;
+  }
+
+  .p-dropdown-label {
+    font-size: 0.7rem !important;
+    height: 1.8rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+}
+
+/* Deixe o Dropdown igual ao InputText */
+.p-dropdown {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  border-radius: 6px !important;
+  border: 1px solid #ced4da !important;
+  background: #fff !important;
+  padding: 0 !important;
+  height: 2.5rem !important;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.p-dropdown .p-dropdown-label {
+  padding: 0.5rem 1rem !important;
+  font-size: 1rem !important;
+  color: #495057 !important;
+  background: transparent !important;
+  border: none !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  padding-right: 0.75rem !important;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+  border-color: #677FFA !important;
+}
+
+.p-dropdown:focus,
+.p-dropdown.p-focus {
+  border-color: #677FFA !important;
+  box-shadow: 0 0 0 0.2rem rgba(103, 127, 250, 0.15) !important;
+}
+
+.permissionDropdown .p-dropdown-label {
+  padding: 0.5rem 1rem !important;
+  font-size: inherit !important;
 }
