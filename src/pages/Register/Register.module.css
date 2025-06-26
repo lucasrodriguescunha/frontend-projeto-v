@@ -182,6 +182,10 @@
     padding: 0.75rem;
   }
 
+  .permissionDropdown {
+    width: 220px !important;
+  }
+  
   input,
   .p-inputtext,
   .p-password-input,
@@ -201,7 +205,8 @@
     font-size: 0.85rem !important;
   }
 
-  .p-dropdown, .p-dropdown .p-dropdown-label {
+  .p-dropdown,
+  .p-dropdown .p-dropdown-label {
     font-size: 0.85rem !important;
     height: 2.2rem !important;
     padding: 0.3rem 0.75rem !important;
@@ -224,6 +229,11 @@
     font-size: 0.7rem;
   }
 
+  .permissionDropdown {
+    width: 194.4px !important;
+  }
+
+
   input,
   .p-inputtext,
   .p-password-input,
@@ -231,8 +241,7 @@
   .p-dropdown-item,
   .p-dropdown-trigger,
   .p-input-wrapper,
-  .p-placeholder
-  .p-component,
+  .p-placeholder .p-component,
   .p-placeholder,
   .registerButton,
   .loginButton,
@@ -240,7 +249,7 @@
   .loginRedirect,
   .dividerText,
   .loginSpan,
-  .registerSpan  {
+  .registerSpan {
     font-size: 0.7rem !important;
   }
 
@@ -291,4 +300,8 @@
 .permissionDropdown .p-dropdown-label {
   padding: 0.5rem 1rem !important;
   font-size: inherit !important;
+}
+
+.permissionDropdown {
+  width: 255.2px;
 }
