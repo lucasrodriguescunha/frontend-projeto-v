@@ -20,9 +20,31 @@ const Admin = () => {
     const [selectedUser, setSelectedUser] = useState(null); // usuário selecionado
     const toast = useRef(null);
     const isMounted = useRef(true);
+    const [userPermission, setUserPermission] = useState("");
 
     useEffect(() => {
         isMounted.current = true;
+        // Buscar permissão do usuário logado
+        const fetchPermission = async () => {
+            const email = localStorage.getItem("userEmail");
+            if (email) {
+                try {
+                    const user = await userService.getUsuarioByEmail(email);
+                    setUserPermission(user?.permissao || "");
+                    if (user?.permissao !== "ADMINISTRADOR") {
+                        toast.current?.show({
+                            severity: 'warn',
+                            summary: 'Acesso restrito',
+                            detail: 'Você precisa ser Administrador para acessar esta funcionalidade.',
+                            life: 5000
+                        });
+                    }
+                } catch (err) {
+                    setUserPermission("");
+                }
+            }
+        };
+        fetchPermission();
         return () => {
             isMounted.current = false;
         };
@@ -128,40 +150,38 @@ const Admin = () => {
         </div>
     );
 
+    // Bloquear ações se não for ADMINISTRADOR
+    const isAdmin = userPermission === 'ADMINISTRADOR';
+
     return (
         <div className={styles.container}>
             <Toast ref={toast} />
-
             <Card className={styles.card}>
                 <p className={styles.title}>Controle de usuários</p>
-
                 <DataTable
-                    value={users.slice(currentPage, currentPage + rowsPerPage)}
+                    value={isAdmin ? users.slice(currentPage, currentPage + rowsPerPage) : []}
                     tableStyle={{ minWidth: '50rem' }}
-                    emptyMessage="Nenhum dado encontrado."
+                    emptyMessage={isAdmin ? "Nenhum dado encontrado." : "Acesso restrito."}
                 >
                     <Column field="nome" header="Nome" />
                     <Column field="email" header="E-mail" />
                     <Column field="permissao" header="Permissão" body={permissionTemplate} />
                     <Column field="ativo" header="Acesso" body={acessoTemplate} />
-                    <Column header="Ações" body={actionBodyTemplate} style={{ textAlign: 'center', width: '100px' }} />
+                    <Column header="Ações" body={isAdmin ? actionBodyTemplate : undefined} style={{ textAlign: 'center', width: '100px' }} />
                 </DataTable>
-
                 <Paginator
                     first={currentPage}
                     rows={rowsPerPage}
-                    totalRecords={users.length}
+                    totalRecords={isAdmin ? users.length : 0}
                     onPageChange={(e) => setCurrentPage(e.first)}
                     template="PrevPageLink PageLinks NextPageLink"
                 />
-
                 <Button
                     label="Voltar para página inicial"
                     className={styles.button}
                     onClick={() => navigate("/app/home")}
                 />
             </Card>
-
             <Dialog
                 header={selectedUser?.ativo ? "Bloquear conta" : "Desbloquear conta"}
                 visible={visible}

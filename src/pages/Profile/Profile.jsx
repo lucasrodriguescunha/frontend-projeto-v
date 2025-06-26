@@ -88,25 +88,6 @@ const Profile = () => {
 
     const hasChanges = userName !== originalName || userEmail !== originalEmail;
 
-    const handleLogout = () => {
-        localStorage.removeItem("tokenJWT");
-        localStorage.removeItem("userEmail");
-        navigate("/login");
-    };
-
-    const confirmLogout = () => {
-        confirmDialog({
-            message: 'Tem certeza que deseja sair?',
-            header: 'Confirmação de saída',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sair',
-            rejectLabel: 'Cancelar',
-            acceptClassName: styles.button,
-            rejectClassName: styles.button,
-            accept: handleLogout,
-        });
-    };
-
     return (
         <div className={styles.container}>
             <Toast ref={toast} />
@@ -152,12 +133,6 @@ const Profile = () => {
                         label="Voltar para página inicial"
                         className={styles.button}
                         onClick={() => navigate("/app/home")}
-                    />
-                    <Button
-                        iconPos="right"
-                        className={styles.button}
-                        label="Sair"
-                        onClick={confirmLogout}
                     />
                 </div>
             </Card>
