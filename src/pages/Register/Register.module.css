@@ -185,7 +185,11 @@
   .permissionDropdown {
     width: 220px !important;
   }
-  
+
+  .permissionDropdown :global(.p-dropdown-label) {
+    font-size: 0.85rem;
+  }
+
   input,
   .p-inputtext,
   .p-password-input,
@@ -233,6 +237,9 @@
     width: 194.4px !important;
   }
 
+  .permissionDropdown :global(.p-dropdown-label) {
+    font-size: 0.7rem;
+  }
 
   input,
   .p-inputtext,
